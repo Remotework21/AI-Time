@@ -52,6 +52,11 @@
   --transition-fast: all 0.2s ease;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --testo-primary:#667eea;
+  --testo-secondary:#764ba2;
+  --testo-success:#4CAF50;
+  --testo-text:#333333;
 }
 
 html, body { font-family: 'Tajawal', sans-serif; }
@@ -107,7 +112,15 @@ body {
   transition: var(--transition);
 }
 
+.logo-center-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+}
+
 .header-content {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,7 +135,7 @@ body {
 }
 
 .logo img {
-  height: 70px;
+  height: 105px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3));
   animation: float 3s ease-in-out infinite;
@@ -140,12 +153,14 @@ body {
 }
 
 .logo-text {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 10px rgba(123, 63, 242, 0.4),
+               0 0 20px rgba(123, 63, 242, 0.2);
 }
 
 /* Navigation */
