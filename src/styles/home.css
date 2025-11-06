@@ -139,6 +139,7 @@ body {
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3));
   animation: float 3s ease-in-out infinite;
+  margin-right: 250px;
 }
 
 @keyframes float {
@@ -207,6 +208,7 @@ body {
   cursor: pointer;
   font-size: 1.2rem;
   transition: var(--transition);
+  margin-right: 25px;
 }
 
 .theme-toggle:hover {

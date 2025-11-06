@@ -13,8 +13,11 @@ export default function Header() {
       <div className="container">
         <div className="header-content">
           <Link to="/" className="logo">
-            <img src="/src/assets/AI-time-logo.png" alt="AI Time Logo" />
             <span className="logo-text">منصة وقت الذكاء</span>
+            <button className="theme-toggle" onClick={toggleTheme}>
+              <i className="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <img src="/src/assets/AI-time-logo.png" alt="AI Time Logo" />
           </Link>
 
           <nav className="nav-menu">
@@ -37,9 +40,7 @@ export default function Header() {
               أخبار الذكاء
             </a>
 
-            <button className="theme-toggle" onClick={toggleTheme}>
-              <i className="fas fa-moon" id="themeIcon"></i>
-            </button>
+            
           </nav>
         </div>
       </div>
