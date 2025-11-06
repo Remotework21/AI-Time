@@ -163,7 +163,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -193,7 +193,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -223,7 +223,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -253,7 +253,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -283,7 +283,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -313,7 +313,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--accent-color)" }}
+                style={{ background: "var(--success-color)" }}
               >
                 متاح الآن
               </div>
@@ -344,7 +344,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--secondary-color)" }}
+                style={{ background: "var(--danger-color)" }}
               >
                 قريباً - فبراير 2025
               </div>
@@ -376,7 +376,7 @@ export default function Home() {
             >
               <div
                 className="product-badge"
-                style={{ background: "var(--secondary-color)" }}
+                style={{ background: "var(--danger-color)" }}
               >
                 قريباً - أبريل 2025
               </div>
