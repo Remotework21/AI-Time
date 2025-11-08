@@ -491,11 +491,11 @@
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
   line-height: 1.6;
-  color: #ff6b6b;
+  color: var(--danger-light);
 }
 
 .code-after .code-block {
-  color: #51cf66;
+  color: #6EE7B7;
 }
 
 /* Free Gifts Section */

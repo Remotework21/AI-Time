@@ -70,14 +70,14 @@ export default function Home() {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title" data-aos="fade-down">
-              اكتشف قوة الذكاء الاصطناعي
+              بوابتك الشاملة نحو عالم الذكاء الاصطناعي
             </h1>
             <p
               className="hero-subtitle"
               data-aos="fade-up"
               data-aos-delay="200"
             >
-              منصة وقت الذكاء - نحول أفكارك إلى واقع ذكي
+              نجعل الذكاء الاصطناعي في متناول الجميع
             </p>
             <div
               className="hero-buttons"
@@ -85,10 +85,10 @@ export default function Home() {
               data-aos-delay="400"
             >
               <a href="#gifts" className="btn btn-primary">
-                <i className="fas fa-gift"></i> ابدأ مجاناً
+                <i className="fas fa-gift"></i>  ابدأ الآن
               </a>
               <a href="#products" className="btn btn-secondary">
-                <i className="fas fa-rocket"></i> استكشف منتجاتنا
+                <i className="fas fa-rocket"></i> تعرف على المزيد
               </a>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function Home() {
               <div className="category-icon">
                 <i className="fas fa-gift"></i>
               </div>
-              <div className="category-title">ابدأ مجاناً</div>
+              <div className="category-title">ابدأ الآن</div>
               <div className="category-desc">احصل على هديتك</div>
             </div>
 
@@ -180,7 +180,7 @@ export default function Home() {
                   className="btn btn-primary"
                   style={{ width: "100%", marginTop: "1.5rem" }}
                 >
-                  <i className="fas fa-arrow-left"></i> اعرف المزيد
+                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
                 </a>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function Home() {
                   className="btn btn-primary"
                   style={{ width: "100%", marginTop: "1.5rem" }}
                 >
-                  <i className="fas fa-arrow-left"></i> اعرف المزيد
+                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
                 </a>
               </div>
             </div>
@@ -240,7 +240,7 @@ export default function Home() {
                   className="btn btn-primary"
                   style={{ width: "100%", marginTop: "1.5rem" }}
                 >
-                  <i className="fas fa-arrow-left"></i> اعرف المزيد
+                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
                 </a>
               </div>
             </div>
@@ -270,7 +270,7 @@ export default function Home() {
                   className="btn btn-primary"
                   style={{ width: "100%", marginTop: "1.5rem" }}
                 >
-                  <i className="fas fa-arrow-left"></i> اعرف المزيد
+                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
                 </a>
               </div>
             </div>
@@ -330,7 +330,7 @@ export default function Home() {
                   className="btn btn-primary"
                   style={{ width: "100%", marginTop: "1.5rem" }}
                 >
-                  <i className="fas fa-arrow-left"></i> اعرف المزيد
+                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
                 </a>
               </div>
             </div>
@@ -420,7 +420,7 @@ export default function Home() {
         <div className="container">
           <div className="vibe-content" data-aos="fade-up">
             <div className="vibe-text">
-              <h2>هل لديك مشكلة في مسار عملك؟</h2>
+              <h2>برمجة بالذكاء الاصطناعي</h2>
               <p>
                 نحن نؤتمتها لك في أسرع وقت! حول العمليات المعقدة والمتكررة إلى
                 أنظمة ذكية تعمل تلقائياً. مع تقنية الفايب كود، نبرمج حلولك
@@ -447,7 +447,7 @@ export default function Home() {
               </div>
 
               <a href="request-program.html" className="btn btn-primary">
-                <i className="fas fa-rocket"></i> ابدأ رحلتك الآن
+                <i className="fas fa-rocket"></i> جرب الآن مجاناً
               </a>
             </div>
 
