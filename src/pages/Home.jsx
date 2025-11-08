@@ -1,5 +1,5 @@
 // src/pages/Home.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
@@ -50,6 +50,101 @@ export default function Home() {
 
   // helper to mark active tab class
   const tabCls = (key) => `tab-btn${activeTab === key ? " active" : ""}`;
+
+  // ==== Animation: typing effect react ====
+
+  // ✅ Refs for code blocks
+  const codeBeforeRef = useRef(null);
+  const codeAfterRef = useRef(null);
+
+  // ==== existing functions (toggleTheme, scrollToSection, etc.) ====
+
+  // ✅ Typing animation function
+  const typeText = (element, text, speed = 50) => {
+    if (!element) return;
+  
+    // Clear and set up
+    element.innerHTML = "";
+    element.style.whiteSpace = "pre";
+    element.style.fontFamily = "Consolas, 'Courier New', monospace";
+    element.style.fontSize = "0.875rem";
+    element.style.lineHeight = "1.5";
+  
+    // Add cursor at end
+    const cursor = document.createElement("span");
+    cursor.className = "typing-cursor";
+    cursor.textContent = "█"; // block cursor (or "|" for pipe)
+    element.appendChild(cursor);
+  
+    let i = 0;
+  
+    const type = () => {
+      if (i < text.length) {
+        const char = text[i];
+        if (char === "\n") {
+          // Insert line break
+          element.insertBefore(document.createElement("br"), cursor);
+        } else {
+          // Insert character
+          const charNode = document.createTextNode(char);
+          element.insertBefore(charNode, cursor);
+        }
+        i++;
+        setTimeout(type, speed);
+      } else {
+        // Done: hide cursor
+        cursor.style.opacity = "0";
+        cursor.style.animation = "none";
+      }
+    };
+  
+    setTimeout(type, 200);
+  };
+
+  // ✅ Trigger typing after AOS animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const beforeText = `// Vibe Code Example
+const ai = new VibeAI();
+
+async function createApp() {
+  const idea = await ai.understand(prompt);
+  const code = await ai.generate(idea);
+  return optimize(code);
+}
+
+Ship faster with AI ✨`;
+
+            const afterText = `// سرعة فائقة
+const app = await vibeCode.create({
+  idea: "منصة تعليمية",
+  features: ["دفع", "محتوى", "تقارير"],
+  deadline: "3 أيام"
+});
+
+// جاهز للنشر! 🚀
+await app.deploy();`;
+
+            typeText(codeBeforeRef.current, beforeText, 80);
+            typeText(codeAfterRef.current, afterText, 50);
+
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 } // trigger when 20% visible
+    );
+
+    const vibeSection = document.querySelector(".vibe-code");
+    if (vibeSection) observer.observe(vibeSection);
+
+    return () => {
+      if (vibeSection) observer.unobserve(vibeSection);
+    };
+  }, []);
 
   return (
     <>
@@ -457,12 +552,7 @@ export default function Home() {
                   <i className="fas fa-times-circle"></i>
                   قبل: الطريقة التقليدية
                 </div>
-                <div className="code-block">
-                  {/* keeping the original line breaks */}
-                  {
-                    "// Vibe Code Example\nconst ai = new VibeAI();\n\nasync function createApp() {\n  const idea = await ai.understand(prompt);\n  const code = await ai.generate(idea);\n  return optimize(code);\n}\n\nShip faster with AI ✨"
-                  }
-                </div>
+                <div className="code-block" ref={codeBeforeRef}></div> {/* 👈 ref added */}
               </div>
 
               <div className="code-after">
@@ -470,11 +560,7 @@ export default function Home() {
                   <i className="fas fa-check-circle"></i>
                   بعد: الفايب كود
                 </div>
-                <div className="code-block">
-                  {
-                    '// سرعة فائقة\nconst app = await vibeCode.create({\n  idea: "منصة تعليمية",\n  features: ["دفع", "محتوى", "تقارير"],\n  deadline: "3 أيام"\n});\n\n// جاهز للنشر! 🚀\nawait app.deploy();'
-                  }
-                </div>
+                <div className="code-block" ref={codeAfterRef}></div> {/* 👈 ref added */}
               </div>
             </div>
           </div>
