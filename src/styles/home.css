@@ -476,6 +476,11 @@
   border-radius: 15px;
   padding: 1.5rem;
   backdrop-filter: blur(10px);
+  height: calc(1.5em * 11 + 2rem);
+  min-height: 220px;
+  width: 100%;
+  max-width: 350px;
+  overflow: hidden;
 }
 
 .code-label {
@@ -489,13 +494,32 @@
 
 .code-block {
   font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--danger-light);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #ff6b6b;
+  white-space: pre;
+  overflow: hidden;
+  flex: 1;
+  margin: 0;
+  direction: ltr;
 }
 
 .code-after .code-block {
-  color: #6EE7B7;
+  color: #51cf66;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: currentColor;
+  margin-left: 2px;
+  vertical-align: baseline;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 /* Free Gifts Section */
@@ -790,7 +814,7 @@
   background: linear-gradient(
     90deg,
     var(--white) 0%,
-    rgba(139, 92, 242, 0.05) 100%
+    rgba(139, 92, 246, 0.05) 100%
   );
 }
 
@@ -866,7 +890,7 @@
   height: 180px;
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 242, 0.8),
+    rgba(139, 92, 246, 0.8),
     rgba(236, 72, 153, 0.8)
   );
   display: flex;
@@ -887,7 +911,7 @@
   gap: 0.5rem;
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 242, 0.1),
+    rgba(139, 92, 246, 0.1),
     rgba(236, 72, 153, 0.1)
   );
   color: var(--primary-color);
@@ -979,40 +1003,6 @@
   transform: translateX(-5px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-  .vibe-code-content {
-    grid-template-columns: 1fr;
-  }
-  .nav-menu {
-    display: none;
-  }
-  .mobile-menu-btn {
-    display: block;
-  }
-  .info-panel {
-    width: 100%;
-    left: -100%;
-  }
-  .featured-news {
-    grid-template-columns: 1fr;
-  }
-  .side-news {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  .news-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Loading Animation */
 .loading {
   position: fixed;
@@ -1057,49 +1047,295 @@
   transition: width 0.3s;
 }
 
-/* Fixed-size code containers */
-.code-before,
-.code-after {
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 15px;
-  padding: 1.5rem;
-  backdrop-filter: blur(10px);
-  /* 👇 FIXED HEIGHT & overflow control */
-  height: calc(1.5em * 11 + 2rem); /* 9 lines + padding */
-  min-height: 220px; /* fallback */
-  width: 350px;
-  overflow: hidden;
+/* ========================================
+   RESPONSIVE: MOBILE FIXES
+   ======================================== */
+
+@media (max-width: 991px) {
+  /* Hero Section */
+  .hero {
+    margin-top: 80px;
+    padding: 4rem 0;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  /* Categories */
+  .categories-container {
+    gap: 1rem;
+  }
+
+  .category-item {
+    min-width: 120px;
+    padding: 1rem;
+  }
+
+  /* ✅ VIBE CODE SECTION - MOBILE FIX */
+  .vibe-code {
+    padding: 3rem 0;
+  }
+
+  .vibe-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .vibe-text h2 {
+    font-size: 1.75rem;
+  }
+
+  .vibe-text p {
+    font-size: 1rem;
+  }
+
+  .vibe-features {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .vibe-feature {
+    padding: 0.75rem;
+  }
+
+  .code-comparison {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .code-before,
+  .code-after {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 200px;
+    padding: 1rem;
+  }
+
+  .code-label {
+    font-size: 0.9rem;
+  }
+
+  .code-block {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  /* ✅ FREE GIFTS SECTION - MOBILE FIX */
+  .gifts-section {
+    padding: 3rem 0;
+  }
+
+  .gifts-container {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .gifts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gift-item {
+    padding: 1.25rem;
+  }
+
+  .gift-icon {
+    font-size: 2.5rem;
+  }
+
+  .gift-title {
+    font-size: 1.1rem;
+  }
+
+  .gift-desc {
+    font-size: 0.85rem;
+  }
+
+  .register-form {
+    padding: 1.5rem;
+  }
+
+  .register-form h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-group input {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  /* Other sections */
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-news {
+    grid-template-columns: 1fr;
+  }
+
+  .side-news {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .info-panel {
+    width: 100%;
+    left: -100%;
+  }
 }
 
-.code-block {
-  font-family: "Courier New", monospace;
-  font-size: 0.875rem;
-  line-height: 1.5; /* fixed line height */
-  color: #ff6b6b;
-  white-space: pre; /* preserve line breaks & spaces */
-  overflow: hidden; /* hide overflow if too long */
-  flex: 1;
-  margin: 0;
-  direction: ltr;
+/* Small phones (480px and below) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .hero {
+    padding: 3rem 0;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  /* Vibe Code - Extra small screens */
+  .vibe-text h2 {
+    font-size: 1.5rem;
+  }
+
+  .vibe-text p {
+    font-size: 0.95rem;
+  }
+
+  .code-before,
+  .code-after {
+    padding: 0.75rem;
+    min-height: 180px;
+  }
+
+  .code-block {
+    font-size: 0.7rem;
+  }
+
+  /* Gifts Section - Extra small screens */
+  .gifts-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .register-form {
+    padding: 1.25rem;
+  }
+
+  .register-form h3 {
+    font-size: 1.1rem;
+  }
+
+  .form-group input {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .category-item {
+    min-width: 100px;
+    padding: 0.75rem;
+  }
+
+  .category-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
+  }
+
+  .category-title {
+    font-size: 0.9rem;
+  }
+
+  .category-desc {
+    font-size: 0.75rem;
+  }
 }
 
-.code-after .code-block {
-  color: #51cf66;
-}
+/* Extra small phones (360px and below) */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 1.35rem;
+  }
 
-/* Cursor styling — ensure it doesn’t affect layout */
-.typing-cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background-color: currentColor;
-  margin-left: 2px;
-  /* Critical: align baseline like text */
-  vertical-align: baseline;
-  /* Blink animation */
-  animation: blink 1s step-end infinite;
-}
+  .vibe-text h2 {
+    font-size: 1.35rem;
+  }
 
-@keyframes blink {
-  50% { opacity: 0; }
+  .code-block {
+    font-size: 0.65rem;
+  }
+
+  .gifts-container {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .gift-icon {
+    font-size: 2rem;
+  }
+
+  .register-form h3 {
+    font-size: 1rem;
+  }
 }
