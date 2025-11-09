@@ -1,7 +1,7 @@
 /* src/styles/header.css */
 
 .header {
-  background: var(--white);
+  background: var(--black);
   position: fixed;
   top: 0;
   width: 100%;
@@ -92,8 +92,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 /* LEFT SIDE: Desktop Navigation */
@@ -112,7 +117,7 @@
 }
 
 .nav-link {
-  color: var(--text-dark);
+  color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   transition: var(--transition);
@@ -192,7 +197,7 @@
   width: 85%;
   max-width: 320px;
   height: 100vh;
-  background: var(--white);
+  background: var(--black);
   box-shadow: var(--shadow-xl);
   z-index: 2500;
   transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -211,7 +216,7 @@
   background: transparent;
   border: none;
   font-size: 1.5rem;
-  color: var(--text-dark);
+  color: var(--text-primary);
   cursor: pointer;
   z-index: 2501;
   transition: var(--transition);
@@ -228,7 +233,7 @@
 .mobile-nav-link {
   display: block;
   padding: 1rem 0;
-  color: var(--text-dark);
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 1.2rem;
   font-weight: 500;
