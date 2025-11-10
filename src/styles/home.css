@@ -9,7 +9,6 @@
 
 /* Hero Section */
 .hero {
-  margin-top: 80px;
   padding: 6rem 0;
   background: radial-gradient(
       ellipse at top left,
@@ -1060,7 +1059,6 @@
 @media (max-width: 991px) {
   /* Hero Section */
   .hero {
-    margin-top: 80px;
     padding: 4rem 0;
   }
 
