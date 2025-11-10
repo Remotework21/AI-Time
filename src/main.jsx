@@ -1,22 +1,19 @@
+// src/main.jsx
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
-<<<<<<< Updated upstream
 
-// ✅ Import all CSS files (order matters!)
-import "./index.css";            // 1st: base styles ✅
-import "./styles/variables.css"; // 2nd: variables
-import "./styles/header.css";    // 3rd: header
-import "./styles/home.css";      // 4th: main content
-import "./styles/footer.css";    // 5th: footer & floats
-=======
-import "./styles/home.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+/* Vendor CSS first (so our styles can override them) */
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-
->>>>>>> Stashed changes
+/* Project CSS (order matters) */
+import "./styles/variables.css"; // CSS variables / theme tokens
+import "./index.css"; // base / resets that use variables
+import "./styles/header.css"; // header-specific styles
+import "./styles/home.css"; // home / main content
+import "./styles/footer.css"; // footer & floats
 
 function InitAOS() {
   useEffect(() => {
