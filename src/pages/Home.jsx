@@ -163,7 +163,10 @@ await app.deploy();`;
       {/* Hero Section */}
       <section className="hero" id="home">
         <div className="container">
-          <div className="hero-content">
+          <div
+            className="hero-content text-center d-flex flex-column justify-content-center"
+            style={{ minHeight: "calc(50vh - 40px)" }}
+          >
             <h1 className="hero-title" data-aos="fade-down">
               بوابتك الشاملة نحو عالم الذكاء الاصطناعي
             </h1>
