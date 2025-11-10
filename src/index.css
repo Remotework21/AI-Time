@@ -17,3 +17,7 @@
     overflow-x: hidden;
     transition: var(--transition);
   }
+
+  *[id] {
+    scroll-margin-top: 120px; /* fallback for anchor links; ~header height + buffer */
+  }

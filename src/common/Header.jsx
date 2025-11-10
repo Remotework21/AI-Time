@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/AI-time-logo.png";
+import { scrollToSection } from "../utils/scroll";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -66,20 +67,48 @@ export default function Header() {
             <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>
               من نحن
             </Link>
-            <a href="#products" className="mobile-nav-link" onClick={closeMenu}>
+            <a 
+              href="#products" 
+              className="mobile-nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("products");
+                closeMenu();
+              }}
+            >
               المنتجات
             </a>
-            <a
-              href="#vibe-code"
+            <a 
+              href="#vibe-code" 
               className="mobile-nav-link"
-              onClick={closeMenu}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("vibe-code");
+                closeMenu();
+              }}
             >
               الفايب كود
             </a>
-            <a href="#videos" className="mobile-nav-link" onClick={closeMenu}>
+            <a 
+              href="#videos" 
+              className="mobile-nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("videos");
+                closeMenu();
+              }}
+            >
               الفيديوهات
             </a>
-            <a href="#news" className="mobile-nav-link" onClick={closeMenu}>
+            <a 
+              href="#news" 
+              className="mobile-nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("news");
+                closeMenu();
+              }}
+            >
               أخبار الذكاء
             </a>
             <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>
@@ -131,38 +160,66 @@ export default function Header() {
 
           {/* LEFT: Desktop Nav */}
           <div className="desktop-nav-group">
-            <nav className="nav-menu desktop-menu">
-              <Link
-                to="/"
-                className={`nav-link${isActive("/") ? " active" : ""}`}
-              >
-                الرئيسية
-              </Link>
-              <Link
-                to="/about"
-                className={`nav-link${isActive("/about") ? " active" : ""}`}
-              >
-                من نحن
-              </Link>
-              <a href="#products" className="nav-link">
-                المنتجات
-              </a>
-              <a href="#vibe-code" className="nav-link">
-                الفايب كود
-              </a>
-              <a href="#videos" className="nav-link">
-                الفيديوهات
-              </a>
-              <a href="#news" className="nav-link">
-                أخبار الذكاء
-              </a>
-              <Link
-                to="/contact"
-                className={`nav-link${isActive("/contact") ? " active" : ""}`}
-              >
-                تواصل معنا
-              </Link>
-            </nav>
+          <nav className="nav-menu desktop-menu">
+            <Link
+              to="/"
+              className={`nav-link${isActive("/") ? " active" : ""}`}
+            >
+              الرئيسية
+            </Link>
+            <Link
+              to="/about"
+              className={`nav-link${isActive("/about") ? " active" : ""}`}
+            >
+              من نحن
+            </Link>
+            <a 
+              href="#products" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("products");
+              }}
+            >
+              المنتجات
+            </a>
+            <a 
+              href="#vibe-code" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("vibe-code");
+              }}
+            >
+              الفايب كود
+            </a>
+            <a 
+              href="#videos" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("videos");
+              }}
+            >
+              الفيديوهات
+            </a>
+            <a 
+              href="#news" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("news");
+              }}
+            >
+              أخبار الذكاء
+            </a>
+            <Link
+              to="/contact"
+              className={`nav-link${isActive("/contact") ? " active" : ""}`}
+            >
+              تواصل معنا
+            </Link>
+          </nav>
           </div>
         </div>
       </div>

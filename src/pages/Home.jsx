@@ -1,5 +1,6 @@
 // src/pages/Home.jsx
 import { useEffect, useState, useRef } from "react";
+import { scrollToSection } from "../utils/scroll";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
@@ -11,11 +12,6 @@ export default function Home() {
     const next = isDark ? "light" : "dark";
     html.setAttribute("data-theme", next);
     localStorage.setItem("theme", next);
-  };
-
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const handleRegister = (e) => {
