@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 // src/common/Header.jsx
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -8,6 +7,7 @@ export default function Header() {
   const [isDark, setIsDark] = useState(false);
   const location = useLocation();
 
+  // init theme from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("theme") || "light";
     setIsDark(saved === "dark");
@@ -20,16 +20,10 @@ export default function Header() {
     localStorage.setItem("theme", next);
     document.documentElement.setAttribute("data-theme", next);
   };
-=======
-import { Link, useLocation } from "react-router-dom";
-
-export default function Header() {
-  const location = useLocation();
 
   const isActive = (to) => location.pathname === to;
->>>>>>> Stashed changes
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen((v) => !v);
   const closeMenu = () => setIsMenuOpen(false);
 
   // Close menu on route change
@@ -39,13 +33,9 @@ export default function Header() {
 
   // Prevent body scroll when menu is open
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isMenuOpen]);
 
@@ -53,7 +43,10 @@ export default function Header() {
     <header className="header" id="header">
       <div className="container">
         {/* Mobile Overlay & Menu */}
-        {isMenuOpen && <div className="mobile-menu-overlay" onClick={closeMenu}></div>}
+        {isMenuOpen && (
+          <div className="mobile-menu-overlay" onClick={closeMenu}></div>
+        )}
+
         <nav
           className={`mobile-menu ${isMenuOpen ? "active" : ""}`}
           aria-hidden={!isMenuOpen}
@@ -66,13 +59,31 @@ export default function Header() {
             <i className="fas fa-times"></i>
           </button>
           <div className="mobile-menu-content">
-            <Link to="/" className="mobile-nav-link" onClick={closeMenu}>الرئيسية</Link>
-            <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>من نحن</Link>
-            <a href="#products" className="mobile-nav-link" onClick={closeMenu}>المنتجات</a>
-            <a href="#vibe-code" className="mobile-nav-link" onClick={closeMenu}>الفايب كود</a>
-            <a href="#videos" className="mobile-nav-link" onClick={closeMenu}>الفيديوهات</a>
-            <a href="#news" className="mobile-nav-link" onClick={closeMenu}>أخبار الذكاء</a>
-            <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>تواصل معنا</Link>
+            <Link to="/" className="mobile-nav-link" onClick={closeMenu}>
+              الرئيسية
+            </Link>
+            <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>
+              من نحن
+            </Link>
+            <a href="#products" className="mobile-nav-link" onClick={closeMenu}>
+              المنتجات
+            </a>
+            <a
+              href="#vibe-code"
+              className="mobile-nav-link"
+              onClick={closeMenu}
+            >
+              الفايب كود
+            </a>
+            <a href="#videos" className="mobile-nav-link" onClick={closeMenu}>
+              الفيديوهات
+            </a>
+            <a href="#news" className="mobile-nav-link" onClick={closeMenu}>
+              أخبار الذكاء
+            </a>
+            <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>
+              تواصل معنا
+            </Link>
 
             <div className="mobile-theme-toggle">
               <button className="theme-toggle" onClick={toggleTheme}>
@@ -84,7 +95,7 @@ export default function Header() {
         </nav>
 
         <div className="header-content">
-          {/* Mobile Hamburger - Shows on mobile only (LEFT) */}
+          {/* Mobile Hamburger (LEFT) */}
           <button
             className="mobile-menu-btn"
             onClick={toggleMenu}
@@ -96,13 +107,12 @@ export default function Header() {
             <span className="hamburger-line"></span>
           </button>
 
-          {/* CENTER: Logo Image Only */}
+          {/* CENTER: Logo */}
           <Link to="/" className="logo-image-center" onClick={closeMenu}>
             <img src="/src/assets/AI-time-logo.png" alt="AI Time Logo" />
           </Link>
-<<<<<<< Updated upstream
 
-          {/* RIGHT SIDE: Slogan + Theme Toggle */}
+          {/* RIGHT: Slogan + Theme Toggle */}
           <div className="right-group">
             <Link to="/" className="logo-text-link" onClick={closeMenu}>
               <span className="logo-text">منصة وقت الذكاء</span>
@@ -110,35 +120,47 @@ export default function Header() {
             <button
               className="theme-toggle desktop-theme-toggle"
               onClick={toggleTheme}
-              aria-label={isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"}
+              aria-label={
+                isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"
+              }
             >
               <i className={isDark ? "fas fa-sun" : "fas fa-moon"}></i>
-=======
-          <nav className="nav-menu">
-            <Link to="/" className={`nav-link${isActive("/") ? " active" : ""}`}>الرئيسية</Link>
-            <Link to="/about" className={`nav-link${isActive("/about") ? " active" : ""}`}>من نحن</Link>
-            <Link to="/products" className={`nav-link${isActive("/products") ? " active" : ""}`}>المنتجات</Link>
-            <Link to="/videos" className={`nav-link${isActive("/videos") ? " active" : ""}`}>الفيديوهات</Link>
-            <Link to="/news" className={`nav-link${isActive("/news") ? " active" : ""}`}>أخبار الذكاء</Link>
-            <Link to="/faq" className={`nav-link${isActive("/faq") ? " active" : ""}`}>الأسئلة الشائعة</Link>
-            <Link to="/contact" className={`nav-link${isActive("/contact") ? " active" : ""}`}>تواصل معنا</Link>
-            {/* زر تغيير الثيم */}
-            <button className="theme-toggle" onClick={/* نفس دالة التغيير */ undefined}>
-              <i className="fas fa-moon" id="themeIcon"></i>
->>>>>>> Stashed changes
             </button>
           </div>
 
-          {/* LEFT SIDE: Desktop Nav */}
+          {/* LEFT: Desktop Nav */}
           <div className="desktop-nav-group">
             <nav className="nav-menu desktop-menu">
-              <a href="#home" className="nav-link">الرئيسية</a>
-              <Link to="/about" className="nav-link">من نحن</Link>
-              <a href="#products" className="nav-link">المنتجات</a>
-              <a href="#vibe-code" className="nav-link">الفايب كود</a>
-              <a href="#videos" className="nav-link">الفيديوهات</a>
-              <a href="#news" className="nav-link">أخبار الذكاء</a>
-              <Link to="/contact" className="nav-link">تواصل معنا</Link>
+              <Link
+                to="/"
+                className={`nav-link${isActive("/") ? " active" : ""}`}
+              >
+                الرئيسية
+              </Link>
+              <Link
+                to="/about"
+                className={`nav-link${isActive("/about") ? " active" : ""}`}
+              >
+                من نحن
+              </Link>
+              <a href="#products" className="nav-link">
+                المنتجات
+              </a>
+              <a href="#vibe-code" className="nav-link">
+                الفايب كود
+              </a>
+              <a href="#videos" className="nav-link">
+                الفيديوهات
+              </a>
+              <a href="#news" className="nav-link">
+                أخبار الذكاء
+              </a>
+              <Link
+                to="/contact"
+                className={`nav-link${isActive("/contact") ? " active" : ""}`}
+              >
+                تواصل معنا
+              </Link>
             </nav>
           </div>
         </div>
