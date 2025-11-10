@@ -1,6 +1,7 @@
 // src/common/Header.jsx
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/AI-time-logo.png";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -109,7 +110,7 @@ export default function Header() {
 
           {/* CENTER: Logo */}
           <Link to="/" className="logo-image-center" onClick={closeMenu}>
-            <img src="/src/assets/AI-time-logo.png" alt="AI Time Logo" />
+            <img src={logo} alt="AI Time Logo" />
           </Link>
 
           {/* RIGHT: Slogan + Theme Toggle */}
