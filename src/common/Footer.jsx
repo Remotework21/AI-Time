@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -6,59 +8,33 @@ export default function Footer() {
           <div className="footer-section">
             <h3>عن وقت الذكاء</h3>
             <p>
-              منصة رائدة في تقديم حلول الذكاء الاصطناعي للشركات والأفراد في
-              العالم العربي
+              منصة رائدة في تقديم حلول الذكاء الاصطناعي للشركات والأفراد في العالم العربي
             </p>
             <div className="social-links">
-              <a href="#">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#">
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a href="#">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
+              <a href="#"><i className="fab fa-facebook-f"></i></a>
+              <a href="#"><i className="fab fa-twitter"></i></a>
+              <a href="#"><i className="fab fa-instagram"></i></a>
+              <a href="#"><i className="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-
           <div className="footer-section">
             <h3>روابط سريعة</h3>
             <ul>
-              <li>
-                <a href="#products">المنتجات</a>
-              </li>
-              <li>
-                <a href="#vibe-code">الفايب كود</a>
-              </li>
-              <li>
-                <a href="#videos">الفيديوهات</a>
-              </li>
-              <li>
-                <a href="#news">أخبار الذكاء</a>
-              </li>
+              <li><Link to="/products">المنتجات</Link></li>
+              <li><a href="#vibe-code">الفايب كود</a></li>
+              <li><Link to="/videos">الفيديوهات</Link></li>
+              <li><Link to="/news">أخبار الذكاء</Link></li>
             </ul>
           </div>
-
           <div className="footer-section">
             <h3>خدمات العملاء</h3>
             <ul>
-              <li>
-                <a href="#">الدعم الفني</a>
-              </li>
-              <li>
-                <a href="#">الأسئلة الشائعة</a>
-              </li>
-              <li>
-                <a href="#">تواصل معنا</a>
-              </li>
+              <li><Link to="/contact">الدعم الفني</Link></li>
+              <li><Link to="/faq">الأسئلة الشائعة</Link></li>
+              <li><Link to="/contact">تواصل معنا</Link></li>
             </ul>
           </div>
         </div>
-
         <div className="footer-bottom">
           جميع الحقوق محفوظة © {new Date().getFullYear()} منصة وقت الذكاء
         </div>

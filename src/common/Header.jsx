@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 // src/common/Header.jsx
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -19,6 +20,14 @@ export default function Header() {
     localStorage.setItem("theme", next);
     document.documentElement.setAttribute("data-theme", next);
   };
+=======
+import { Link, useLocation } from "react-router-dom";
+
+export default function Header() {
+  const location = useLocation();
+
+  const isActive = (to) => location.pathname === to;
+>>>>>>> Stashed changes
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -91,6 +100,7 @@ export default function Header() {
           <Link to="/" className="logo-image-center" onClick={closeMenu}>
             <img src="/src/assets/AI-time-logo.png" alt="AI Time Logo" />
           </Link>
+<<<<<<< Updated upstream
 
           {/* RIGHT SIDE: Slogan + Theme Toggle */}
           <div className="right-group">
@@ -103,6 +113,19 @@ export default function Header() {
               aria-label={isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"}
             >
               <i className={isDark ? "fas fa-sun" : "fas fa-moon"}></i>
+=======
+          <nav className="nav-menu">
+            <Link to="/" className={`nav-link${isActive("/") ? " active" : ""}`}>الرئيسية</Link>
+            <Link to="/about" className={`nav-link${isActive("/about") ? " active" : ""}`}>من نحن</Link>
+            <Link to="/products" className={`nav-link${isActive("/products") ? " active" : ""}`}>المنتجات</Link>
+            <Link to="/videos" className={`nav-link${isActive("/videos") ? " active" : ""}`}>الفيديوهات</Link>
+            <Link to="/news" className={`nav-link${isActive("/news") ? " active" : ""}`}>أخبار الذكاء</Link>
+            <Link to="/faq" className={`nav-link${isActive("/faq") ? " active" : ""}`}>الأسئلة الشائعة</Link>
+            <Link to="/contact" className={`nav-link${isActive("/contact") ? " active" : ""}`}>تواصل معنا</Link>
+            {/* زر تغيير الثيم */}
+            <button className="theme-toggle" onClick={/* نفس دالة التغيير */ undefined}>
+              <i className="fas fa-moon" id="themeIcon"></i>
+>>>>>>> Stashed changes
             </button>
           </div>
 
