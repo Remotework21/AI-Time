@@ -8,7 +8,7 @@ export function scrollToSection(id) {
     const elementTop = el.getBoundingClientRect().top;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   
-    const scrollTo = scrollTop + elementTop - headerHeight - 10;
+    const scrollTo = scrollTop + elementTop - headerHeight - 1;
   
     window.scrollTo({
       top: scrollTo,

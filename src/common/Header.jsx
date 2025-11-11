@@ -1,7 +1,7 @@
 // src/common/Header.jsx
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/AI-time-logo.png";
+import logo from "../assets/AI-time-logo_cr.png";
 import { scrollToSection } from "../utils/scroll";
 
 export default function Header() {
