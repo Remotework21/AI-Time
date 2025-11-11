@@ -1039,58 +1039,6 @@ await app.deploy();`;
 
       {/* Footer موجود كـ Component منفصل في مشروعك */}
 
-      {/* Floating WhatsApp Button */}
-      <a
-        className="whatsapp-float"
-        href="https://wa.me/"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="WhatsApp"
-      >
-        <i className="fab fa-whatsapp"></i>
-      </a>
-
-      {/* Info Button */}
-      <button
-        type="button"
-        className="info-button"
-        onClick={() =>
-          document.querySelector(".info-panel")?.classList.add("active")
-        }
-        aria-label="info panel"
-      >
-        <i className="fas fa-info"></i>
-      </button>
-
-      {/* Info Panel */}
-      <aside className="info-panel">
-        <span
-          className="close-info"
-          onClick={() =>
-            document.querySelector(".info-panel")?.classList.remove("active")
-          }
-          aria-label="close info"
-        >
-          <i className="fas fa-times"></i>
-        </span>
-
-        <h3>معلومات المنصة</h3>
-
-        <h4>عن وقت الذكاء</h4>
-        <p>
-          منصة رائدة في تقديم حلول الذكاء الاصطناعي للشركات والأفراد في العالم
-          العربي.
-        </p>
-
-        <h4>ماذا نقدم؟</h4>
-        <ul>
-          <li>منتجات ذكاء اصطناعي جاهزة</li>
-          <li>حلول أتمتة ذكية (Vibe Code)</li>
-          <li>دورات ومواد تعليمية</li>
-          <li>أخبار وتحديثات مستمرة</li>
-        </ul>
-      </aside>
-
       {/* Theme toggle button كان داخل الهيدر الأصلي؛ 
           لو حبيتي نفس الزر هنا، تقدري تضيفيه أو تسيبيه داخل Header.jsx */}
     </>

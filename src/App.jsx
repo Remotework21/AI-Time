@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
+import FloatingBtn from "./common/FloatingBtn"
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -13,6 +14,7 @@ import Contact from "./pages/Contact";
 export default function App() {
   return (
     <>
+      <FloatingBtn />
       <Header />
       <main>
         <Routes>
@@ -27,6 +29,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      
     </>
   );
 }
