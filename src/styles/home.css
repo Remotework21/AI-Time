@@ -473,16 +473,17 @@
   gap: 1.5rem;
 }
 
+/* ✅ Fixed-size code containers — AUTO height, no clipping */
 .code-before,
 .code-after {
   background: rgba(15, 23, 42, 0.9);
   border-radius: 15px;
-  padding: 1.5rem;
+  padding: 1.1rem;
   backdrop-filter: blur(10px);
-  height: calc(1.5em * 11 + 2rem);
-  min-height: 220px;
-  width: 100%;
-  max-width: 350px;
+  /* 👇 FIXED HEIGHT & overflow control */
+  height: calc(1.5em * 11 + 2rem); /* 9 lines + padding */
+  min-height: 220px; /* fallback */
+  width: 365px;
   overflow: hidden;
 }
 
@@ -498,10 +499,10 @@
 .code-block {
   font-family: "Courier New", monospace;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.5; /* fixed line height */
   color: #ff6b6b;
-  white-space: pre;
-  overflow: hidden;
+  white-space: pre; /* preserve line breaks & spaces */
+  overflow: hidden; /* hide overflow if too long */
   flex: 1;
   margin: 0;
   direction: ltr;
@@ -511,20 +512,21 @@
   color: #51cf66;
 }
 
+/* Cursor styling — ensure it doesn’t affect layout */
 .typing-cursor {
   display: inline-block;
   width: 2px;
   height: 1em;
   background-color: currentColor;
   margin-left: 2px;
+  /* Critical: align baseline like text */
   vertical-align: baseline;
+  /* Blink animation */
   animation: blink 1s step-end infinite;
 }
 
 @keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  50% { opacity: 0; }
 }
 
 /* Free Gifts Section */

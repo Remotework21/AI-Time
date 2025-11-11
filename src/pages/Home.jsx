@@ -47,7 +47,7 @@ export default function Home() {
   // helper to mark active tab class
   const tabCls = (key) => `tab-btn${activeTab === key ? " active" : ""}`;
 
-  // ==== Animation: typing effect react ====
+   // ==== Animation: typing effect react ====
 
   // ✅ Refs for code blocks
   const codeBeforeRef = useRef(null);
@@ -58,22 +58,22 @@ export default function Home() {
   // ✅ Typing animation function
   const typeText = (element, text, speed = 50) => {
     if (!element) return;
-
+  
     // Clear and set up
     element.innerHTML = "";
     element.style.whiteSpace = "pre";
     element.style.fontFamily = "Consolas, 'Courier New', monospace";
     element.style.fontSize = "0.875rem";
     element.style.lineHeight = "1.5";
-
+  
     // Add cursor at end
     const cursor = document.createElement("span");
     cursor.className = "typing-cursor";
     cursor.textContent = "█"; // block cursor (or "|" for pipe)
     element.appendChild(cursor);
-
+  
     let i = 0;
-
+  
     const type = () => {
       if (i < text.length) {
         const char = text[i];
@@ -93,7 +93,7 @@ export default function Home() {
         cursor.style.animation = "none";
       }
     };
-
+  
     setTimeout(type, 200);
   };
 
@@ -551,7 +551,7 @@ await app.deploy();`;
                   <i className="fas fa-times-circle"></i>
                   قبل: الطريقة التقليدية
                 </div>
-                <div className="code-block" ref={codeBeforeRef}></div>{" "}
+                <div className="code-block" ref={codeBeforeRef}></div>
                 {/* 👈 ref added */}
               </div>
 
@@ -560,7 +560,7 @@ await app.deploy();`;
                   <i className="fas fa-check-circle"></i>
                   بعد: الفايب كود
                 </div>
-                <div className="code-block" ref={codeAfterRef}></div>{" "}
+                <div className="code-block" ref={codeAfterRef}></div>
                 {/* 👈 ref added */}
               </div>
             </div>
