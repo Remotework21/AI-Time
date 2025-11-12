@@ -11,6 +11,7 @@ import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import VibeCode from "./pages/VibeCode";
+import ProductRequest from "./pages/ProductRequest";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/news" element={<News />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/product_request" element={<ProductRequest />} />
         </Routes>
       </main>
       <Footer />

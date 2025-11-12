@@ -105,7 +105,7 @@ body {
 .page-hero {
     background: var(--primary-gradient);
     padding: 8rem 0 4rem;
-    margin-top: 80px;
+    margin-top: 1px;
     text-align: center;
     color: white;
     position: relative;
