@@ -164,16 +164,12 @@ export default function Header() {
             >
               المنتجات
             </Link>
-            <a 
-              href="#vibe-code" 
-              className="nav-link"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("vibe-code");
-              }}
+            <Link
+              to="/vibecode" 
+              className={`nav-link${isActive("/vibecode") ? " active" : ""}`}
             >
               الفايب كود
-            </a>
+            </Link>
             <Link
               to="/videos" 
               className={`nav-link${isActive("/videos") ? " active" : ""}`}

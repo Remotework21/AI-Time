@@ -10,6 +10,7 @@ import Videos from "./pages/Videos";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import VibeCode from "./pages/VibeCode";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/vibecode" element={<VibeCode />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/news" element={<News />} />
           <Route path="/faq" element={<FAQ />} />

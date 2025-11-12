@@ -1,0 +1,333 @@
+/* src/styles/vibecode.css */
+
+/* ✅ Import variables (if not globally imported) */
+@import "./variables.css";
+
+/* Section Spacing */
+.vibe-hero,
+.vibe-video,
+.vibe-code-comparison,
+.vibe-cases,
+.vibe-dev-portal,
+.vibe-cta {
+  padding: 5rem 0;
+}
+
+/* Hero Section — Business-Focused */
+.vibe-hero {
+  background: linear-gradient(
+      135deg,
+      rgba(123, 63, 242, 0.15) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(233, 30, 140, 0.1) 0%,
+      transparent 50%
+    ),
+    linear-gradient(to bottom, var(--light-bg), #f5f0ff);
+  position: relative;
+  overflow: hidden;
+}
+.vibe-hero::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(123, 63, 242, 0.08) 0%,
+    transparent 60%
+  );
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.vibe-hero-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.vibe-hero-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+.vibe-hero-title .highlight {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.vibe-hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+.vibe-hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-lg {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+.btn-outline:hover {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+/* Video Section */
+.vibe-video .video-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+.video-placeholder {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #f8f9ff, #eef2ff);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+.video-placeholder i {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Code Comparison — Same as Home, but centered & responsive */
+.vibe-code-comparison {
+  background: linear-gradient(135deg, #faf5ff, #fff5fa);
+}
+.code-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+.code-card {
+  background: var(--black);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-md);
+}
+.code-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: white;
+}
+.code-label i {
+  font-size: 1rem;
+}
+.code-before .code-label { color: #ff6b6b; }
+.code-after .code-label { color: #51cf66; }
+.code-before .code-label i { color: #ff6b6b; }
+.code-after .code-label i { color: #51cf66; }
+
+.code-block {
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre;
+  color: #e2e8f0;
+  min-height: 200px;
+}
+.code-after .code-block {
+  color: #c3e88d;
+}
+
+.code-block::before {
+    content: "جارٍ التحميل...";
+    color: var(--text-muted);
+    font-style: italic;
+    opacity: 0.6;
+  }
+  
+  /* Hide placeholder once content loads (cursor appears or lines added) */
+  .code-block:empty::before {
+    display: block;
+  }
+  .code-block:not(:empty)::before {
+    display: none;
+  }
+
+/* Case Studies */
+.vibe-cases {
+  background: linear-gradient(to bottom, #f8f9ff, #ffffff);
+}
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.case-card {
+  background: var(--black);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+.case-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: var(--primary-gradient);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.case-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1rem 0 0.75rem;
+}
+.case-desc {
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.case-result {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--success-color);
+  font-weight: 600;
+}
+.case-result i {
+  font-size: 0.9rem;
+}
+
+/* Developer Portal */
+.vibe-dev-portal {
+  background: linear-gradient(135deg, #8b5cf615, #f472b610);
+}
+.dev-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.dev-feature {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: var(--black);
+  border-radius: 20px;
+  transition: var(--transition);
+}
+.dev-feature:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+.dev-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.25rem;
+  background: var(--primary-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+.dev-feature h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+.dev-feature p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.dev-cta {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* CTA Section */
+.vibe-cta {
+  background: var(--primary-gradient);
+  color: white;
+  text-align: center;
+  border-radius: 24px;
+  margin: 4rem 0;
+  box-shadow: var(--shadow-xl);
+}
+.cta-content {
+  padding: 3rem 2rem;
+}
+.cta-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.cta-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* ✅ Responsive Fixes */
+@media (max-width: 991px) {
+  .vibe-hero-title { font-size: 2rem; }
+  .vibe-hero-subtitle { font-size: 1.1rem; }
+  .code-comparison { grid-template-columns: 1fr; }
+  .vibe-hero-buttons { flex-direction: column; }
+  .btn-lg { width: 100%; max-width: 320px; }
+}
+
+@media (max-width: 768px) {
+  .vibe-hero,
+  .vibe-video,
+  .vibe-code-comparison,
+  .vibe-cases,
+  .vibe-dev-portal,
+  .vibe-cta {
+    padding: 3rem 0;
+  }
+  .vibe-hero-title { font-size: 1.75rem; }
+  .cases-grid,
+  .dev-features { grid-template-columns: 1fr; }
+  .cta-content { padding: 2rem 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .vibe-hero-title { font-size: 1.5rem; }
+  .vibe-hero-buttons { gap: 0.75rem; }
+  .btn-lg { padding: 0.85rem 2rem; font-size: 1rem; }
+}
