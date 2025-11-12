@@ -158,16 +158,12 @@ export default function Header() {
             >
               من نحن
             </Link>
-            <a 
-              href="#products" 
-              className="nav-link"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("products");
-              }}
+            <Link
+              to="/products" 
+              className={`nav-link${isActive("/products") ? " active" : ""}`}
             >
               المنتجات
-            </a>
+            </Link>
             <a 
               href="#vibe-code" 
               className="nav-link"
@@ -178,26 +174,18 @@ export default function Header() {
             >
               الفايب كود
             </a>
-            <a 
-              href="#videos" 
-              className="nav-link"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("videos");
-              }}
+            <Link
+              to="/videos" 
+              className={`nav-link${isActive("/videos") ? " active" : ""}`}
             >
               الفيديوهات
-            </a>
-            <a 
-              href="#news" 
-              className="nav-link"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("news");
-              }}
+            </Link>
+            <Link
+              to="/news" 
+              className={`nav-link${isActive("/news") ? " active" : ""}`}
             >
               أخبار الذكاء
-            </a> 
+            </Link> 
           </nav>
           </div>
         </div>
