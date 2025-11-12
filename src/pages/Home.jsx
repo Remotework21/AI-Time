@@ -572,7 +572,7 @@ await app.deploy();`;
       <section className="gifts-section" id="gifts">
         <div className="container">
           <div className="gifts-container">
-            <div className="section-header" data-aos="fade-up">
+            {/*<div className="section-header" data-aos="fade-up">
               <h2 className="section-title">ابدأ رحلتك مع الذكاء مجاناً</h2>
               <p className="section-subtitle">
                 احصل على هدايا قيمة لتبدأ رحلتك في عالم الذكاء الاصطناعي
@@ -611,7 +611,7 @@ await app.deploy();`;
                 <h3 className="gift-title">استشارة مجانية</h3>
                 <p className="gift-desc">15 دقيقة مع خبير بعد: الفايب كود</p>
               </a>
-            </div>
+            </div>*/}
 
             <div
               className="register-form"
@@ -619,7 +619,7 @@ await app.deploy();`;
               data-aos-delay="400"
             >
               <h3 style={{ textAlign: "center", marginBottom: "2rem" }}>
-                سجل الآن واحصل على هداياك
+                خاص بالاستفسارات
               </h3>
               <form onSubmit={handleRegister}>
                 <div className="form-grid">
