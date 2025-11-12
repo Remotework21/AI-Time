@@ -179,13 +179,13 @@
 }
 
 .btn-secondary {
-  background: var(--black);
-  color: var(--primary-color);
+  background: var(--primary-gradient);
+  color: var(--white);
   border: 2px solid var(--primary-lighter);
 }
 
 .btn-secondary:hover {
-  background: var(--primary-lightest);
+  background: var(--primary-gradient);
   transform: translateY(-2px);
 }
 

@@ -111,9 +111,6 @@ export default function Header() {
             >
               أخبار الذكاء
             </a>
-            <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>
-              تواصل معنا
-            </Link>
 
             <div className="mobile-theme-toggle">
               <button className="theme-toggle" onClick={toggleTheme}>
@@ -125,42 +122,30 @@ export default function Header() {
         </nav>
 
         <div className="header-content">
-          {/* Mobile Hamburger (LEFT) */}
-          <button
-            className="mobile-menu-btn"
-            onClick={toggleMenu}
-            aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
-            aria-expanded={isMenuOpen}
-          >
+          {/* Mobile Hamburger */}
+          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={isMenuOpen}>
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
           </button>
 
-          {/* CENTER: Logo */}
-          <Link to="/" className="logo-image-center" onClick={closeMenu}>
-            <img src={logo} alt="AI Time Logo" />
-          </Link>
-
-          {/* RIGHT: Slogan + Theme Toggle */}
+          {/* RIGHT GROUP (Desktop: right | Mobile: center) */}
           <div className="right-group">
-            <Link to="/" className="logo-text-link" onClick={closeMenu}>
-              <span className="logo-text">منصة وقت الذكاء</span>
+            <Link to="/" className="logo-link" onClick={closeMenu}>
+              <img src={logo} alt="AI Time Logo" className="logo-image" />
             </Link>
             <button
               className="theme-toggle desktop-theme-toggle"
               onClick={toggleTheme}
-              aria-label={
-                isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"
-              }
+              aria-label={isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"}
             >
               <i className={isDark ? "fas fa-sun" : "fas fa-moon"}></i>
             </button>
           </div>
 
-          {/* LEFT: Desktop Nav */}
+          {/* LEFT: Desktop Nav (hidden on mobile) */}
           <div className="desktop-nav-group">
-          <nav className="nav-menu desktop-menu">
+            <nav className="nav-menu desktop-menu">
             <Link
               to="/"
               className={`nav-link${isActive("/") ? " active" : ""}`}
@@ -212,13 +197,7 @@ export default function Header() {
               }}
             >
               أخبار الذكاء
-            </a>
-            <Link
-              to="/contact"
-              className={`nav-link${isActive("/contact") ? " active" : ""}`}
-            >
-              تواصل معنا
-            </Link>
+            </a> 
           </nav>
           </div>
         </div>
