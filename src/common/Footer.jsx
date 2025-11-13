@@ -21,7 +21,7 @@ export default function Footer() {
             <h3>روابط سريعة</h3>
             <ul>
               <li><Link to="/products">المنتجات</Link></li>
-              <li><a href="/vibecode">الفايب كود</a></li>
+              <li><Link to="/vibecode">الفايب كود</Link></li>
               <li><Link to="/videos">الفيديوهات</Link></li>
               <li><Link to="/news">أخبار الذكاء</Link></li>
             </ul>

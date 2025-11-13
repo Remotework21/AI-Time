@@ -1,5 +1,6 @@
 // src/pages/Home.jsx
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { scrollToSection } from "../utils/scroll";
 import { useNavigate } from 'react-router-dom';
 import { submitGiftLead } from '../services/api';
@@ -1292,13 +1293,10 @@ await app.deploy();`;
 
             {/* View More Button */}
             <div className="news-more" data-aos="fade-up" data-aos-delay="800">
-              <button 
-                onClick={() => navigate('/news')} 
-                className="btn-view-more"
-              >
+            <Link to="/news" className="btn-view-more">
                 <span>اكتشف المزيد من الأخبار</span>
                 <i className="fas fa-arrow-left"></i>
-              </button>
+            </Link>
             </div>
           </div>
         </div>

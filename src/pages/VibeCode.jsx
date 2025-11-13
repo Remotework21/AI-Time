@@ -1,5 +1,6 @@
 // src/pages/VibeCode.jsx
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import "../styles/vibecode.css";
 
 export default function VibeCode() {
@@ -288,9 +289,9 @@ export default function VibeCode() {
           <div className="cta-content" data-aos="fade-up">
             <h2>جاهز لتحويل فكرتك إلى واقع؟</h2>
             <p>املأ النموذج — وسنعاود الاتصال خلال ٢٤ ساعة لبدء العمل.</p>
-            <a href="request-program.html" className="btn btn-primary btn-lg">
+            <Link to="/product_request" className="btn btn-primary btn-lg">
               <i className="fas fa-paper-plane"></i> أرسل طلبك الآن
-            </a>
+            </Link>
           </div>
         </div>
       </section>
