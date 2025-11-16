@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Gifts.css';
+import '../styles/gifts.css';
 
 const Gifts = () => {
   const navigate = useNavigate();
