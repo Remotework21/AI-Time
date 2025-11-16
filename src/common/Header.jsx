@@ -67,8 +67,11 @@ export default function Header() {
             <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>
               من نحن
             </Link>
-            <a 
-              href="#products" 
+            <Link to="/products" className="mobile-nav-link" onClick={closeMenu}>
+              المنتجات
+            </Link>
+            {/* <a 
+              href="/products" 
               className="mobile-nav-link"
               onClick={(e) => {
                 e.preventDefault();
@@ -77,8 +80,8 @@ export default function Header() {
               }}
             >
               المنتجات
-            </a>
-            <a 
+            </a> */}
+            {/* <a 
               href="#vibe-code" 
               className="mobile-nav-link"
               onClick={(e) => {
@@ -110,7 +113,13 @@ export default function Header() {
               }}
             >
               أخبار الذكاء
+
             </a>
+            </a> */}
+            <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>
+              تواصل معنا
+            </Link>
+
 
             <div className="mobile-theme-toggle">
               <button className="theme-toggle" onClick={toggleTheme}>
@@ -176,6 +185,7 @@ export default function Header() {
             >
               الفيديوهات
             </Link>
+
             <Link
               to="/news" 
               className={`nav-link${isActive("/news") ? " active" : ""}`}

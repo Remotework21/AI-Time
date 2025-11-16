@@ -1,11 +1,185 @@
 // src/pages/Home.jsx
 import { useEffect, useState, useRef } from "react";
 import { scrollToSection } from "../utils/scroll";
+import { useNavigate } from 'react-router-dom';
+import { submitGiftLead } from '../services/api';
+import '../styles/Products.css';
+ import { saveGiftRegistration } from '../services/firebaseService';
+
+
+
+// ✅ Product Card Component - خارج Home
+const ProductCard = ({ product, navigate, getProductIcon }) => {
+  const isAvailable = product.readinessStatus === 'متاح';
+  
+  const getReleaseDate = () => {
+    if (isAvailable) return null;
+    const date = new Date(product.createdAt);
+    date.setMonth(date.getMonth() + 2);
+    return date.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long' });
+  };
+
+  return (
+    <div className="product-card-new" onClick={() => navigate(`/product/${product.id}`)}>
+      {/* Header with Gradient */}
+      <div className="product-header-gradient">
+        <div className="product-icon-large">
+          <i className={`fas ${getProductIcon(product.subCategory)}`}></i>
+        </div>
+        
+        {/* Status Badge */}
+        <div className="status-badge-top">
+          <span className={`status-badge ${isAvailable ? 'status-available' : 'status-coming'}`}>
+            {isAvailable ? 'متاح الآن' : `قريباً - ${getReleaseDate()}`}
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="product-content-white">
+        <h3 className="product-title-new">{product.name}</h3>
+        <p className="product-description-new">
+          {product.targetAudiences || 'منتج ذكاء اصطناعي متطور'}
+        </p>
+
+        {/* Action Button */}
+        <button className="product-action-btn">
+          {isAvailable ? (
+            <>
+              اعرف المزيد
+              <i className="fas fa-arrow-left"></i>
+            </>
+          ) : (
+            <>
+              قريباً
+              <i className="fas fa-clock"></i>
+            </>
+          )}
+        </button>
+
+        <div className="info-circle">
+          <i className="fas fa-info"></i>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ✅ Gift Card Component - خارج Home
+const GiftCard = ({ gift, navigate }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  
+  const description = gift.description || gift.purpose || 'هدية مميزة من منصة وقت الذكاء';
+  const shortDescription = description.split('\n').slice(0, 3).join('\n');
+  const hasMoreContent = description.split('\n').length > 3 || description.length > 150;
+
+  return (
+    <div className="gift-card-new" onClick={() => navigate('/gifts')}>
+      {/* Header with Gradient */}
+      <div className="gift-header-gradient">
+        <div className="gift-icon-large">
+          <i className="fas fa-gift"></i>
+        </div>
+        
+        {/* Status Badge */}
+        <div className="status-badge-top">
+          <span className="status-badge status-gift">
+            هدية مجانية
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="gift-content-white">
+        <h3 className="gift-title-new">{gift.giftName}</h3>
+        
+        {/* Description with Show More */}
+        <p className="gift-description-new" style={{ 
+          display: '-webkit-box',
+          WebkitLineClamp: showFullDescription ? 'unset' : 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minHeight: '3.4rem'
+        }}>
+          {showFullDescription ? description : shortDescription}
+        </p>
+
+        {/* Show More Button */}
+        {hasMoreContent && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFullDescription(!showFullDescription);
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#8B5CF6',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              padding: '0.5rem 0',
+              marginBottom: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem'
+            }}
+          >
+            {showFullDescription ? (
+              <>
+                <i className="fas fa-chevron-up"></i>
+                عرض أقل
+              </>
+            ) : (
+              <>
+                <i className="fas fa-chevron-down"></i>
+                عرض المزيد
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Action Button */}
+        <button 
+          className="gift-action-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate('/gifts');
+          }}
+        >
+          احصل على هديتك الآن
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
+  const navigate = useNavigate();
+  
+  // Products & Gifts States
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [gifts, setGifts] = useState([]);
+  const [loadingGifts, setLoadingGifts] = useState(true);
 
-  // ==== functions converted from inline scripts in index.html ====
+  // Form States
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formMessage, setFormMessage] = useState({ type: '', text: '' });
+
+  // Refs
+  const codeBeforeRef = useRef(null);
+  const codeAfterRef = useRef(null);
+
+  // Theme toggle
   const toggleTheme = () => {
     const html = document.documentElement;
     const isDark = html.getAttribute("data-theme") === "dark";
@@ -14,16 +188,82 @@ export default function Home() {
     localStorage.setItem("theme", next);
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    alert("تم استلام بياناتك ✨");
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear message when user types
+    if (formMessage.text) {
+      setFormMessage({ type: '', text: '' });
+    }
   };
+
+  // Handle form submit
+
+// ... في الـ component
+
+const handleRegister = async (e) => {
+  e.preventDefault();
+  setFormSubmitting(true);
+  setFormMessage({ type: '', text: '' });
+
+  // Validation
+  if (!formData.name.trim()) {
+    setFormMessage({ type: 'error', text: 'الرجاء إدخال الاسم' });
+    setFormSubmitting(false);
+    return;
+  }
+
+  if (!formData.email.trim() || !formData.email.includes('@')) {
+    setFormMessage({ type: 'error', text: 'الرجاء إدخال بريد إلكتروني صحيح' });
+    setFormSubmitting(false);
+    return;
+  }
+
+  if (!formData.phone.match(/^(05|5)[0-9]{8}$/)) {
+    setFormMessage({ type: 'error', text: 'رقم الجوال يجب أن يكون بصيغة: 05xxxxxxxx' });
+    setFormSubmitting(false);
+    return;
+  }
+
+  try {
+    // ✅ حفظ في Firebase
+    const result = await saveGiftRegistration(formData);
+    
+    console.log('🎉 تم التسجيل بنجاح! Document ID:', result.id);
+    
+    setFormMessage({ 
+      type: 'success', 
+      text: '🎉 تم التسجيل بنجاح! سنتواصل معك قريباً'
+    });
+    
+    // Reset form
+    setFormData({ name: '', email: '', phone: '' });
+    
+    // Auto clear message after 5 seconds
+    setTimeout(() => {
+      setFormMessage({ type: '', text: '' });
+    }, 5000);
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+    setFormMessage({ 
+      type: 'error', 
+      text: 'حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى'
+    });
+  } finally {
+    setFormSubmitting(false);
+  }
+};
 
   const filterVideos = (tab) => {
     setActiveTab(tab);
   };
 
-  // ==== effects for progress bar + loading + theme restore ====
+  // Initial setup
   useEffect(() => {
     // restore theme
     const saved = localStorage.getItem("theme") || "light";
@@ -44,32 +284,68 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // helper to mark active tab class
-  const tabCls = (key) => `tab-btn${activeTab === key ? " active" : ""}`;
+  // Fetch Products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          'https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=6'
+        );
+        const data = await response.json();
+        
+        if (data.ok && data.items) {
+          setProducts(data.items);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-   // ==== Animation: typing effect react ====
+    fetchProducts();
+  }, []);
 
-  // ✅ Refs for code blocks
-  const codeBeforeRef = useRef(null);
-  const codeAfterRef = useRef(null);
+  // Fetch Gifts
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        setLoadingGifts(true);
+        const response = await fetch(
+          'https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiGifts?limit=6'
+        );
+        const data = await response.json();
+        
+        console.log('🎁 Gifts data:', data);
+        
+        if (data.ok && data.items) {
+          console.log('✅ Gifts count:', data.items.length);
+          setGifts(data.items);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching gifts:', error);
+      } finally {
+        setLoadingGifts(false);
+      }
+    };
 
-  // ==== existing functions (toggleTheme, scrollToSection, etc.) ====
+    fetchGifts();
+  }, []);
 
-  // ✅ Typing animation function
+  // Typing animation
   const typeText = (element, text, speed = 50) => {
     if (!element) return;
   
-    // Clear and set up
     element.innerHTML = "";
     element.style.whiteSpace = "pre";
     element.style.fontFamily = "Consolas, 'Courier New', monospace";
     element.style.fontSize = "0.875rem";
     element.style.lineHeight = "1.5";
   
-    // Add cursor at end
     const cursor = document.createElement("span");
     cursor.className = "typing-cursor";
-    cursor.textContent = "█"; // block cursor (or "|" for pipe)
+    cursor.textContent = "█";
     element.appendChild(cursor);
   
     let i = 0;
@@ -78,17 +354,14 @@ export default function Home() {
       if (i < text.length) {
         const char = text[i];
         if (char === "\n") {
-          // Insert line break
           element.insertBefore(document.createElement("br"), cursor);
         } else {
-          // Insert character
           const charNode = document.createTextNode(char);
           element.insertBefore(charNode, cursor);
         }
         i++;
         setTimeout(type, speed);
       } else {
-        // Done: hide cursor
         cursor.style.opacity = "0";
         cursor.style.animation = "none";
       }
@@ -97,7 +370,7 @@ export default function Home() {
     setTimeout(type, 200);
   };
 
-  // ✅ Trigger typing after AOS animation
+  // Trigger typing animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -131,7 +404,7 @@ await app.deploy();`;
           }
         });
       },
-      { threshold: 0.2 } // trigger when 20% visible
+      { threshold: 0.2 }
     );
 
     const vibeSection = document.querySelector(".vibe-code");
@@ -142,6 +415,20 @@ await app.deploy();`;
     };
   }, []);
 
+  // Helper functions
+  const tabCls = (key) => `tab-btn${activeTab === key ? " active" : ""}`;
+  
+  const getProductIcon = (subCategory) => {
+    const icons = {
+      'شركات': 'fa-building',
+      'جمعيات': 'fa-hands-helping',
+      'أفراد': 'fa-user',
+      'أسر منتجة': 'fa-home',
+      'default': 'fa-robot'
+    };
+    return icons[subCategory] || icons.default;
+  };
+
   return (
     <>
       {/* Progress Bar */}
@@ -151,10 +438,6 @@ await app.deploy();`;
       <div className="loading" id="loading">
         <div className="loading-spinner"></div>
       </div>
-
-      {/* Header (موجودة عندك كـ Component منفصل) 
-          كان في index.html هنا، لكن في المشروع الحالي معمولة في Header.jsx
-          أسيبه للـ App يحقنه فوق. */}
 
       {/* Hero Section */}
       <section className="hero" id="home">
@@ -178,12 +461,12 @@ await app.deploy();`;
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <a href="#gifts" className="btn btn-primary">
-                <i className="fas fa-gift"></i> ابدأ الآن
-              </a>
-              <a href="#products" className="btn btn-secondary">
-                <i className="fas fa-rocket"></i> تعرف على المزيد
-              </a>
+              <button 
+                onClick={() => navigate('/gifts')} 
+                className="btn btn-primary"
+              >
+                <i className="fas fa-gift"></i> احصل على هديتك الآن
+              </button>
             </div>
           </div>
         </div>
@@ -195,7 +478,8 @@ await app.deploy();`;
           <div className="categories-container" data-aos="fade-up">
             <div
               className="category-item"
-              onClick={() => scrollToSection("business")}
+              onClick={() => navigate('/products?audience=audience_3')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="category-icon">
                 <i className="fas fa-building"></i>
@@ -206,7 +490,8 @@ await app.deploy();`;
 
             <div
               className="category-item"
-              onClick={() => scrollToSection("individuals")}
+              onClick={() => navigate('/products?audience=audience_4')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="category-icon">
                 <i className="fas fa-user-tie"></i>
@@ -217,294 +502,269 @@ await app.deploy();`;
 
             <div
               className="category-item"
-              onClick={() => scrollToSection("free-gifts")}
+              onClick={() => navigate('/products?audience=audience_5')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="category-icon">
-                <i className="fas fa-gift"></i>
+                <i className="fas fa-hands-helping"></i>
               </div>
-              <div className="category-title">ابدأ الآن</div>
-              <div className="category-desc">احصل على هديتك</div>
+              <div className="category-title">للجمعيات</div>
+              <div className="category-desc">حلول للمنظمات غير الربحية</div>
             </div>
 
             <div
               className="category-item"
-              onClick={() => scrollToSection("students")}
+              onClick={() => navigate('/products?audience=audience_2')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="category-icon">
-                <i className="fas fa-graduation-cap"></i>
+                <i className="fas fa-code"></i>
               </div>
-              <div className="category-title">للطلاب</div>
-              <div className="category-desc">تعلم بأسلوب مبتكر</div>
+              <div className="category-title">للمبرمجين</div>
+              <div className="category-desc">أدوات وموارد تقنية</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Products Section */}
-      <section className="products-section" id="products">
+      <section className="products-section" style={{ padding: '4rem 0' }}>
         <div className="container">
-          <div className="section-header" data-aos="fade-up">
-            <h2 className="section-title">منتجاتنا وخدماتنا</h2>
-            <p className="section-subtitle">حلول ذكية متكاملة لتحويل أعمالك</p>
-          </div>
-
-          <div className="products-grid">
-            {/* Product 1 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-home"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">ذكاء الأسر المنتجة</h3>
-                <p className="product-desc">
-                  حول مشروعك المنزلي إلى قوة اقتصادية بالذكاء الاصطناعي
-                </p>
-                <a
-                  href="product-details.html?id=1"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
+          <h2 className="section-title" data-aos="fade-up">
+            منتجاتنا المميزة
+          </h2>
+          
+          {loading ? (
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>جاري تحميل المنتجات...</p>
             </div>
-
-            {/* Product 2 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-building"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الذكاء المؤسسي</h3>
-                <p className="product-desc">
-                  نظام متكامل يحول معرفة مؤسستك إلى مستشار ذكي متاح 24/7
-                </p>
-                <a
-                  href="product-details.html?id=2"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
+          ) : (
+            <div className="products-grid">
+              {products.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  navigate={navigate}
+                  getProductIcon={getProductIcon}
+                />
+              ))}
             </div>
-
-            {/* Product 3 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-brain"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">بطاقات الإتقان الذكية</h3>
-                <p className="product-desc">
-                  نظام ثوري لإدارة المعرفة وتطوير المهارات بالذكاء الاصطناعي
-                </p>
-                <a
-                  href="product-details.html?id=3"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
-
-            {/* Product 4 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-rocket"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">منصة صفحات الهبوط</h3>
-                <p className="product-desc">
-                  أنشئ صفحات هبوط احترافية بالذكاء الاصطناعي في دقائق
-                </p>
-                <a
-                  href="product-details.html?id=4"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
-
-            {/* Product 5 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="500"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-cogs"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الأتمتة الذكية (Vibe Code)</h3>
-                <p className="product-desc">
-                  برمجة حلول مخصصة بالذكاء الاصطناعي في وقت قياسي
-                </p>
-                <a
-                  href="request-program.html"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-code"></i> اطلب برنامجك
-                </a>
-              </div>
-            </div>
-
-            {/* Product 6 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="600"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-robot"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الذكاءات المخصصة</h3>
-                <p className="product-desc">
-                  بعد: الفايب كود مخصص لمجالك واحتياجاتك الخاصة
-                </p>
-                <a
-                  href="product-details.html?id=6"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
-
-            {/* Product 7 - Coming Soon */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="700"
-              style={{ opacity: 0.9 }}
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--danger-color)" }}
-              >
-                قريباً - فبراير 2025
-              </div>
-              <div className="product-image" style={{ opacity: 0.7 }}>
-                <i className="fas fa-graduation-cap"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">برنامج وظيفة ذكية</h3>
-                <p className="product-desc">
-                  برنامج تدريبي متكامل للعمل كمساعد ذكي باستخدام الذكاء
-                  الاصطناعي
-                </p>
-                <button
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem", opacity: 0.7 }}
-                  disabled
-                >
-                  <i className="fas fa-clock"></i> قريباً
-                </button>
-              </div>
-            </div>
-
-            {/* Product 8 - Coming Soon */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="800"
-              style={{ opacity: 0.9 }}
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--danger-color)" }}
-              >
-                قريباً - أبريل 2025
-              </div>
-              <div className="product-image" style={{ opacity: 0.7 }}>
-                <i className="fas fa-exchange-alt"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">منصة تبادل الخبرات</h3>
-                <p className="product-desc">
-                  منصة لتبادل الخبرات البرمجية والتقنية بين المتخصصين
-                </p>
-                <button
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem", opacity: 0.7 }}
-                  disabled
-                >
-                  <i className="fas fa-clock"></i> قريباً
-                </button>
-              </div>
-            </div>
-          </div>
+          )}
 
           {/* View All Products Button */}
-          <div
-            style={{ textAlign: "center", marginTop: "3rem" }}
-            data-aos="fade-up"
-          >
-            <a
-              href="products.html"
+          <div style={{ textAlign: "center", marginTop: "3rem" }} data-aos="fade-up">
+            <button
+              onClick={() => navigate('/products')}
               className="btn btn-primary"
-              style={{ fontSize: "1.1rem", padding: "1rem 3rem" }}
+              style={{ 
+                fontSize: "1.1rem", 
+                padding: "1rem 3rem",
+                cursor: "pointer",
+                border: "none"
+              }}
             >
               <i className="fas fa-th"></i> عرض جميع المنتجات والخدمات
-            </a>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Free Gifts Section */}
+      <section className="gifts-section" id="gifts" style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%)', padding: '4rem 0' }}>
+        <div className="container">
+          <div className="gifts-container">
+            <div className="section-header" data-aos="fade-up">
+              <h2 className="section-title">
+                <i className="fas fa-gift"></i>
+                ابدأ رحلتك مع الذكاء مجاناً
+              </h2>
+              <p className="section-subtitle">
+                احصل على هدايا قيمة لتبدأ رحلتك في عالم الذكاء الاصطناعي
+              </p>
+            </div>
+
+            {/* Gifts Grid */}
+            {loadingGifts ? (
+              <div className="loading-state" style={{ padding: '2rem', textAlign: 'center' }}>
+                <div className="spinner"></div>
+                <p>جاري تحميل الهدايا...</p>
+              </div>
+            ) : (
+              <div className="gifts-grid" data-aos="fade-up" data-aos-delay="200">
+  {gifts.slice(0, 6).map((gift) => {
+    console.log('🎁 Rendering gift card:', gift.giftName, gift);
+    return <GiftCard key={gift.id} gift={gift} navigate={navigate} />;
+  })}
+</div>
+            )}
+
+            {/* Register Form */}
+            <div
+              className="register-form"
+              data-aos="fade-up"
+              data-aos-delay="400"
+              style={{ 
+                marginTop: '3rem',
+                background: 'white',
+                padding: '2rem',
+                borderRadius: '20px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+              }}
+            >
+              <h3 style={{ textAlign: "center", marginBottom: "2rem", color: '#1E293B' }}>
+                <i className="fas fa-user-plus"></i> سجل الآن واحصل على هداياك
+              </h3>
+
+              {/* Form Message */}
+              {formMessage.text && (
+                <div style={{
+                  padding: '1rem',
+                  marginBottom: '1.5rem',
+                  borderRadius: '10px',
+                  textAlign: 'center',
+                  background: formMessage.type === 'success' ? '#D1FAE5' : '#FEE2E2',
+                  color: formMessage.type === 'success' ? '#065F46' : '#991B1B',
+                  fontWeight: '600'
+                }}>
+                  {formMessage.text}
+                </div>
+              )}
+
+              <form onSubmit={handleRegister}>
+                <div className="form-grid" style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                  gap: '1.5rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#475569' }}>
+                      الاسم الكامل *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required 
+                      placeholder="أدخل اسمك"
+                      disabled={formSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        border: '2px solid #E2E8F0',
+                        borderRadius: '10px',
+                        fontSize: '1rem',
+                        fontFamily: 'Tajawal, sans-serif',
+                        transition: 'all 0.3s'
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#475569' }}>
+                      البريد الإلكتروني *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="email@example.com"
+                      disabled={formSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        border: '2px solid #E2E8F0',
+                        borderRadius: '10px',
+                        fontSize: '1rem',
+                        fontFamily: 'Tajawal, sans-serif',
+                        transition: 'all 0.3s'
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#475569' }}>
+                      رقم الواتساب *
+                    </label>
+                    <input 
+                      type="tel" 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required 
+                      placeholder="05xxxxxxxx"
+                      pattern="^(05|5)[0-9]{8}$"
+                      disabled={formSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        border: '2px solid #E2E8F0',
+                        borderRadius: '10px',
+                        fontSize: '1rem',
+                        fontFamily: 'Tajawal, sans-serif',
+                        direction: 'ltr',
+                        textAlign: 'right',
+                        transition: 'all 0.3s'
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={formSubmitting}
+                  className="btn btn-primary"
+                  style={{
+                    width: "100%",
+                    padding: '1rem',
+                    fontSize: '1.1rem',
+                    background: formSubmitting ? '#9CA3AF' : 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+                    border: 'none',
+                    borderRadius: '50px',
+                    color: 'white',
+                    fontWeight: '700',
+                    cursor: formSubmitting ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s',
+                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)'
+                  }}
+                >
+                  {formSubmitting ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-gift"></i> احصل على هداياك الآن
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* View All Gifts Button */}
+            <div style={{ textAlign: "center", marginTop: "2rem" }} data-aos="fade-up">
+              <button
+                onClick={() => navigate('/gifts')}
+                className="btn btn-secondary"
+                style={{ 
+                  fontSize: "1rem", 
+                  padding: "0.75rem 2rem",
+                  cursor: "pointer",
+                  border: "2px solid #8B5CF6",
+                  background: "transparent",
+                  color: "#8B5CF6",
+                  borderRadius: "50px",
+                  fontWeight: "600",
+                  transition: "all 0.3s"
+                }}
+              >
+                <i className="fas fa-arrow-left"></i> عرض جميع الهدايا
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -523,50 +783,50 @@ await app.deploy();`;
 
               <div className="vibe-features">
                 <div className="vibe-feature">
-                  <i className="fas fa-bolt"></i>
-                  <span>سرعة فائقة</span>
+                  <i className="fas fa-check-circle"></i>
+                  <span>أتمتة كاملة</span>
                 </div>
                 <div className="vibe-feature">
-                  <i className="fas fa-code"></i>
-                  <span>قبل: الطريقة التقليدية</span>
+                  <i className="fas fa-check-circle"></i>
+                  <span>توفير 80% من الوقت</span>
                 </div>
                 <div className="vibe-feature">
-                  <i className="fas fa-brain"></i>
-                  <span>بعد: الفايب كود</span>
+                  <i className="fas fa-check-circle"></i>
+                  <span>برمجة ذكية</span>
                 </div>
                 <div className="vibe-feature">
-                  <i className="fas fa-users"></i>
-                  <span>عمل تعاوني</span>
+                  <i className="fas fa-check-circle"></i>
+                  <span>تطوير سريع</span>
                 </div>
               </div>
 
-              <a href="request-program.html" className="btn btn-primary">
-                <i className="fas fa-rocket"></i> جرب الآن مجاناً
-              </a>
+              <button 
+                onClick={() => navigate('/products')} 
+                className="btn btn-secondary"
+              >
+                <i className="fas fa-arrow-left"></i> اكتشف المزيد
+              </button>
             </div>
 
             <div className="code-comparison">
               <div className="code-before">
                 <div className="code-label">
-                  <i className="fas fa-times-circle"></i>
-                  قبل: الطريقة التقليدية
+                  <i className="fas fa-clock"></i> قبل: برمجة تقليدية
                 </div>
                 <div className="code-block" ref={codeBeforeRef}></div>
-                {/* 👈 ref added */}
               </div>
 
               <div className="code-after">
                 <div className="code-label">
-                  <i className="fas fa-check-circle"></i>
-                  بعد: الفايب كود
+                  <i className="fas fa-bolt"></i> بعد: الفايب كود
                 </div>
                 <div className="code-block" ref={codeAfterRef}></div>
-                {/* 👈 ref added */}
               </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* Free Gifts Section */}
       <section className="gifts-section" id="gifts">
@@ -658,111 +918,115 @@ await app.deploy();`;
         </div>
       </section>
 
+
+
       {/* Videos Section */}
       <section className="videos-section" id="videos">
         <div className="container">
           <div className="section-header" data-aos="fade-up">
-            <h2 className="section-title">مكتبة الفيديوهات التعليمية</h2>
+            <h2 className="section-title">مكتبة الفيديوهات</h2>
             <p className="section-subtitle">
-              تعلم استخدام الذكاء الاصطناعي خطوة بخطوة
+              شاهد دروس ومحتوى مميز عن الذكاء الاصطناعي
             </p>
           </div>
 
-          <div className="videos-tabs" data-aos="fade-up" data-aos-delay="100">
-            <button
-              className={tabCls("all")}
-              onClick={() => filterVideos("all")}
-            >
+          <div className="video-tabs" data-aos="fade-up" data-aos-delay="100">
+            <button className={tabCls("all")} onClick={() => filterVideos("all")}>
               الكل
             </button>
             <button
-              className={tabCls("beginner")}
-              onClick={() => filterVideos("beginner")}
+              className={tabCls("tutorials")}
+              onClick={() => filterVideos("tutorials")}
             >
-              مبتدئ
+              دروس تعليمية
             </button>
             <button
-              className={tabCls("intermediate")}
-              onClick={() => filterVideos("intermediate")}
+              className={tabCls("reviews")}
+              onClick={() => filterVideos("reviews")}
             >
-              متوسط
+              مراجعات
             </button>
-            <button
-              className={tabCls("advanced")}
-              onClick={() => filterVideos("advanced")}
-            >
-              متقدم
+            <button className={tabCls("tips")} onClick={() => filterVideos("tips")}>
+              نصائح
             </button>
           </div>
 
-          <div className="videos-grid" data-aos="fade-up" data-aos-delay="200">
-            <div className="video-card" data-level="beginner">
+          <div className="videos-grid">
+            <div
+              className="video-card"
+              data-aos="fade-up"
+              data-aos-delay="200"
+              style={{
+                display:
+                  activeTab === "all" || activeTab === "tutorials" ? "block" : "none",
+              }}
+            >
               <div className="video-thumbnail">
-                <div className="play-button">
-                  <i className="fas fa-play"></i>
-                </div>
+                <iframe
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="فيديو 1"
+                ></iframe>
               </div>
               <div className="video-info">
-                <h3 className="video-title">
-                  مقدمة في الذكاء الاصطناعي للأعمال
-                </h3>
-                <div className="video-meta">
-                  <span>
-                    <i className="fas fa-clock"></i> 12:45
-                  </span>
-                  <span>
-                    <i className="fas fa-eye"></i> 1.2K
-                  </span>
-                  <span>
-                    <i className="fas fa-heart"></i> 234
-                  </span>
-                </div>
+                <h3>مقدمة في ChatGPT للمبتدئين</h3>
+                <p className="video-meta">
+                  <i className="fas fa-play-circle"></i> 10K مشاهدة • منذ أسبوع
+                </p>
               </div>
             </div>
 
-            <div className="video-card" data-level="intermediate">
+            <div
+              className="video-card"
+              data-aos="fade-up"
+              data-aos-delay="300"
+              style={{
+                display:
+                  activeTab === "all" || activeTab === "reviews" ? "block" : "none",
+              }}
+            >
               <div className="video-thumbnail">
-                <div className="play-button">
-                  <i className="fas fa-play"></i>
-                </div>
+                <iframe
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="فيديو 2"
+                ></iframe>
               </div>
               <div className="video-info">
-                <h3 className="video-title">كيف تستخدم ChatGPT في التسويق</h3>
-                <div className="video-meta">
-                  <span>
-                    <i className="fas fa-clock"></i> 15:30
-                  </span>
-                  <span>
-                    <i className="fas fa-eye"></i> 2.5K
-                  </span>
-                  <span>
-                    <i className="fas fa-heart"></i> 456
-                  </span>
-                </div>
+                <h3>مراجعة شاملة لـ Claude AI</h3>
+                <p className="video-meta">
+                  <i className="fas fa-play-circle"></i> 8K مشاهدة • منذ 3 أيام
+                </p>
               </div>
             </div>
 
-            <div className="video-card" data-level="advanced">
+            <div
+              className="video-card"
+              data-aos="fade-up"
+              data-aos-delay="400"
+              style={{
+                display:
+                  activeTab === "all" || activeTab === "tips" ? "block" : "none",
+              }}
+            >
               <div className="video-thumbnail">
-                <div className="play-button">
-                  <i className="fas fa-play"></i>
-                </div>
+                <iframe
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="فيديو 3"
+                ></iframe>
               </div>
               <div className="video-info">
-                <h3 className="video-title">
-                  البرمجة بالفايب كود - الدرس الأول
-                </h3>
-                <div className="video-meta">
-                  <span>
-                    <i className="fas fa-clock"></i> 20:15
-                  </span>
-                  <span>
-                    <i className="fas fa-eye"></i> 3.8K
-                  </span>
-                  <span>
-                    <i className="fas fa-heart"></i> 789
-                  </span>
-                </div>
+                <h3>5 نصائح لكتابة Prompts أفضل</h3>
+                <p className="video-meta">
+                  <i className="fas fa-play-circle"></i> 15K مشاهدة • منذ يومين
+                </p>
               </div>
             </div>
           </div>
@@ -773,32 +1037,32 @@ await app.deploy();`;
       <section className="news-section" id="news">
         <div className="container">
           <div className="section-header" data-aos="fade-up">
-            <h2 className="section-title">أخبار الذكاء</h2>
+            <h2 className="section-title">أخبار الذكاء الاصطناعي</h2>
             <p className="section-subtitle">
-              آخر التطورات والمستجدات في عالم الذكاء الاصطناعي
+              تابع آخر التطورات في عالم الذكاء الاصطناعي
             </p>
           </div>
 
-          <div className="news-container">
-            {/* Featured News */}
-            <div
-              className="featured-news"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div className="featured-article">
+          <div className="news-layout">
+            <div className="featured-news">
+              <article
+                className="featured-article"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
                 <div className="featured-image">
                   <i className="fas fa-robot"></i>
-                  <span className="featured-badge">حصري</span>
                 </div>
                 <div className="featured-content">
-                  <h3 className="featured-title">
-                    OpenAI تطلق GPT-5 بقدرات غير مسبوقة
-                  </h3>
+                  <span className="news-category">
+                    <i className="fas fa-tag"></i> أبرز الأخبار
+                  </span>
+                  <h2 className="featured-title">
+                    OpenAI تطلق GPT-4 Turbo بإمكانيات جديدة
+                  </h2>
                   <p className="featured-excerpt">
-                    في تطور مذهل، أعلنت شركة OpenAI عن إطلاق الجيل الخامس من
-                    نموذج GPT بقدرات تفوق كل التوقعات، حيث يمكنه الآن فهم السياق
-                    بشكل أعمق والقيام بمهام معقدة كانت تعتبر مستحيلة سابقاً...
+                    أطلقت OpenAI النسخة الجديدة من GPT-4 Turbo مع تحسينات
+                    كبيرة في السرعة والدقة...
                   </p>
                   <div className="news-meta">
                     <div className="news-author">
@@ -808,7 +1072,7 @@ await app.deploy();`;
                     <span>منذ ساعتين</span>
                   </div>
                 </div>
-              </div>
+              </article>
 
               <div className="side-news">
                 <div className="side-article">
@@ -1028,19 +1292,17 @@ await app.deploy();`;
 
             {/* View More Button */}
             <div className="news-more" data-aos="fade-up" data-aos-delay="800">
-              <a href="news.html" className="btn-view-more">
+              <button 
+                onClick={() => navigate('/news')} 
+                className="btn-view-more"
+              >
                 <span>اكتشف المزيد من الأخبار</span>
                 <i className="fas fa-arrow-left"></i>
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Footer موجود كـ Component منفصل في مشروعك */}
-
-      {/* Theme toggle button كان داخل الهيدر الأصلي؛ 
-          لو حبيتي نفس الزر هنا، تقدري تضيفيه أو تسيبيه داخل Header.jsx */}
     </>
   );
 }

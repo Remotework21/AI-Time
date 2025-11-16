@@ -12,6 +12,7 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import VibeCode from "./pages/VibeCode";
 import ProductRequest from "./pages/ProductRequest";
+import Gifts from "./pages/Gifts"
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
+                    <Route path="/Gifts" element={<Gifts />} />
+
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/vibecode" element={<VibeCode />} />
           <Route path="/videos" element={<Videos />} />

@@ -204,36 +204,36 @@ const ProductCard = ({ product }) => {
 };
 
 // بطاقة الهدية
-const GiftCard = ({ gift }) => (
-  <div className="product-card-new" onClick={() => navigate(`/gift/${gift.id}`)}>
-    <div className="product-header-gradient">
-      <div className="product-icon-large">
-        <i className="fas fa-gift"></i>
-      </div>
-      <div className="status-badge-top">
-        <span className="status-badge status-gift">
-          هدية
-        </span>
-      </div>
-    </div>
+// const GiftCard = ({ gift }) => (
+//   <div className="product-card-new" onClick={() => navigate(`/gift/${gift.id}`)}>
+//     <div className="product-header-gradient">
+//       <div className="product-icon-large">
+//         <i className="fas fa-gift"></i>
+//       </div>
+//       <div className="status-badge-top">
+//         <span className="status-badge status-gift">
+//           هدية
+//         </span>
+//       </div>
+//     </div>
 
-    <div className="product-content-white">
-      <h3 className="product-title-new">{gift.giftName}</h3>
-      <p className="product-description-new">
-        {gift.description || gift.purpose || 'هدية مميزة'}
-      </p>
+//     <div className="product-content-white">
+//       <h3 className="product-title-new">{gift.giftName}</h3>
+//       <p className="product-description-new">
+//         {gift.description || gift.purpose || 'هدية مميزة'}
+//       </p>
 
-      <button className="product-action-btn">
-        اعرف المزيد
-        <i className="fas fa-arrow-left"></i>
-      </button>
+//       <button className="product-action-btn">
+//         اعرف المزيد
+//         <i className="fas fa-arrow-left"></i>
+//       </button>
 
-      <div className="info-circle">
-        <i className="fas fa-info"></i>
-      </div>
-    </div>
-  </div>
-);
+//       <div className="info-circle">
+//         <i className="fas fa-info"></i>
+//       </div>
+//     </div>
+//   </div>
+// );
 
   return (
     <div className="products-page">
@@ -360,7 +360,7 @@ const GiftCard = ({ gift }) => (
       </section>
      
 {/* Gifts Section */}
-{!loading && gifts.length > 0 && (
+{/* {!loading && gifts.length > 0 && (
   <section className="gifts-section">
     <div className="container">
       <div className="section-header">
@@ -378,7 +378,7 @@ const GiftCard = ({ gift }) => (
       </div>
     </div>
   </section>
-)}
+)} */}
     </div>
   );
 };
