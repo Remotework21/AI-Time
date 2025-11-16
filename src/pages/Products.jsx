@@ -37,12 +37,10 @@ const [filteredGifts, setFilteredGifts] = useState([]);
     setLoading(true);
     setError(null);
     
-    // جلب المنتجات
     const productsResponse = await fetch(
       'https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=200'
     );
     
-    // جلب الهدايا
     const giftsResponse = await fetch(
       'https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiGifts?limit=200'
     );
