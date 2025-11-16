@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { scrollToSection } from "../utils/scroll";
 import { useNavigate } from 'react-router-dom';
 import { submitGiftLead } from '../services/api';
-import '../styles/Products.css';
+import '../styles/products.css';
  import { saveGiftRegistration } from '../services/firebaseService';
 
 
