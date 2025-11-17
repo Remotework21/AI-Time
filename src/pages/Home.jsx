@@ -1,6 +1,160 @@
 // src/pages/Home.jsx
 import { useEffect, useState, useRef } from "react";
 import { scrollToSection } from "../utils/scroll";
+import { useNavigate } from 'react-router-dom';
+import { submitGiftLead } from '../services/api';
+import '../styles/products.css';
+import { saveGiftRegistration } from '../services/firebaseService';
+
+
+
+// ✅ Product Card Component - خارج Home
+const ProductCard = ({ product, navigate, getProductIcon }) => {
+  const isAvailable = product.readinessStatus === 'متاح';
+  
+  const getReleaseDate = () => {
+    if (isAvailable) return null;
+    const date = new Date(product.createdAt);
+    date.setMonth(date.getMonth() + 2);
+    return date.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long' });
+  };
+
+  return (
+    <div className="product-card-new" onClick={() => navigate(`/product/${product.id}`)}>
+      {/* Header with Gradient */}
+      <div className="product-header-gradient">
+        <div className="product-icon-large">
+          <i className={`fas ${getProductIcon(product.subCategory)}`}></i>
+        </div>
+        
+        {/* Status Badge */}
+        <div className="status-badge-top">
+          <span className={`status-badge ${isAvailable ? 'status-available' : 'status-coming'}`}>
+            {isAvailable ? 'متاح الآن' : `قريباً - ${getReleaseDate()}`}
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="product-content-white">
+        <h3 className="product-title-new">{product.name}</h3>
+        <p className="product-description-new">
+          {product.targetAudiences || 'منتج ذكاء اصطناعي متطور'}
+        </p>
+
+        {/* Action Button */}
+        <button className="product-action-btn">
+          {isAvailable ? (
+            <>
+              اعرف المزيد
+              <i className="fas fa-arrow-left"></i>
+            </>
+          ) : (
+            <>
+              قريباً
+              <i className="fas fa-clock"></i>
+            </>
+          )}
+        </button>
+
+        <div className="info-circle">
+          <i className="fas fa-info"></i>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ✅ Gift Card Component - خارج Home
+const GiftCard = ({ gift, navigate }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  
+  const description = gift.description || gift.purpose || 'هدية مميزة من منصة وقت الذكاء';
+  const shortDescription = description.split('\n').slice(0, 3).join('\n');
+  const hasMoreContent = description.split('\n').length > 3 || description.length > 150;
+
+  return (
+    <div className="gift-card-new" onClick={() => navigate('/gifts')}>
+      {/* Header with Gradient */}
+      <div className="gift-header-gradient">
+        <div className="gift-icon-large">
+          <i className="fas fa-gift"></i>
+        </div>
+        
+        {/* Status Badge */}
+        <div className="status-badge-top">
+          <span className="status-badge status-gift">
+            هدية مجانية
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="gift-content-white">
+        <h3 className="gift-title-new">{gift.giftName}</h3>
+        
+        {/* Description with Show More */}
+        <p className="gift-description-new" style={{ 
+          display: '-webkit-box',
+          WebkitLineClamp: showFullDescription ? 'unset' : 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minHeight: '3.4rem'
+        }}>
+          {showFullDescription ? description : shortDescription}
+        </p>
+
+        {/* Show More Button */}
+        {hasMoreContent && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowFullDescription(!showFullDescription);
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#8B5CF6',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              padding: '0.5rem 0',
+              marginBottom: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem'
+            }}
+          >
+            {showFullDescription ? (
+              <>
+                <i className="fas fa-chevron-up"></i>
+                عرض أقل
+              </>
+            ) : (
+              <>
+                <i className="fas fa-chevron-down"></i>
+                عرض المزيد
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Action Button */}
+        <button 
+          className="gift-action-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate('/gifts');
+          }}
+        >
+          احصل على هديتك الآن
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
