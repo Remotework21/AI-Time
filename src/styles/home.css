@@ -530,7 +530,7 @@
 }
 
 /* Free Gifts Section */
-.gifts-section {
+.inquiry-section {
   padding: 4rem 0;
   background: linear-gradient(135deg, #8b5cf6 0%, #f472b663 100%);
 }
@@ -1054,6 +1054,431 @@
   transition: width 0.3s;
 }
 
+/* ============================================
+   🎯 INQUIRY FORM SECTION
+   (أرسل استفسارك - Form Styles)
+   ============================================ */
+
+/* Base Responsive Setup */
+.register-form {
+  width: 100%;
+  max-width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.inquiry-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.inquiry-subtitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Alert Messages */
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-success {
+  background: var(--success-lightest);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
+}
+
+.alert-error {
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
+}
+
+.alert i {
+  font-size: 1.1rem;
+}
+
+/* Form Groups */
+.inquiry-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.inquiry-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.required-mark {
+  color: var(--danger-color);
+  margin-right: 0.2rem;
+}
+
+/* Input Fields */
+.inquiry-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: var(--transition-fast);
+  background: var(--white);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.inquiry-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.inquiry-input.error,
+.inquiry-textarea.error {
+  border-color: var(--danger-color);
+  background: var(--white) !important; /* Forces white background */
+}
+
+.inquiry-input.error:focus,
+.inquiry-textarea.error:focus {
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.1);
+  /* Keep background white */
+  background: var(--white) !important;
+}
+
+.inquiry-input::placeholder {
+  color: var(--text-light);
+}
+
+/* Phone Input */
+.phone-input-wrapper {
+  position: relative;
+}
+
+.phone-input {
+  padding-right: 2.5rem !important;
+}
+
+.whatsapp-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #25D366;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+/* Textarea */
+.inquiry-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: var(--transition-fast);
+  background: var(--white);
+  color: var(--text-primary);
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.inquiry-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+
+.inquiry-textarea::placeholder {
+  color: var(--text-light);
+}
+
+/* Error Messages */
+.error-message {
+  color: #fcc632; /* Strong red - high contrast on purple */
+  font-size: 0.85rem;
+  font-weight: 600; /* Bold for emphasis */
+  display: block;
+  margin-top: 0.3rem;
+  animation: fadeInError 0.2s ease-out;
+  padding: 0.25rem 0.5rem;
+  background: rgba(244, 67, 54, 0.1); /* Light red background for extra visibility */
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.error-message i {
+  margin-left: 0.2rem;
+}
+
+/* Submit Button */
+.inquiry-submit-btn {
+  width: 100%;
+  margin-top: 1rem;
+  transition: var(--transition-fast);
+  font-size: 1.05rem;
+  padding: 1rem 2rem;
+}
+
+.inquiry-submit-btn.submitting {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inquiry-submit-btn i {
+  margin-left: 0.5rem;
+}
+
+/* Prevent zoom on iOS */
+@supports (-webkit-touch-callout: none) {
+  .inquiry-input,
+  .inquiry-textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ============================================
+   📱 INQUIRY FORM - RESPONSIVE
+   ============================================ */
+
+/* Small Mobile: 320px - 480px */
+@media (max-width: 480px) {
+  .inquiry-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .inquiry-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .inquiry-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .inquiry-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .inquiry-input {
+    padding: 0.75rem 0.875rem;
+    font-size: 16px !important; /* Prevent iOS zoom */
+  }
+  
+  .phone-input {
+    padding-right: 2.5rem !important;
+  }
+  
+  .whatsapp-icon {
+    font-size: 1.1rem;
+    right: 0.875rem;
+  }
+  
+  .inquiry-textarea {
+    padding: 0.875rem;
+    font-size: 16px !important; /* Prevent iOS zoom */
+    min-height: 100px;
+  }
+  
+  .inquiry-submit-btn {
+    font-size: 0.95rem;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .alert {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+    gap: 0.4rem;
+  }
+  
+  .error-message {
+    font-size: 0.8rem;
+  }
+  
+  .register-form {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Mobile: 481px - 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .inquiry-title {
+    font-size: 1.5rem;
+  }
+  
+  .inquiry-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .inquiry-form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .inquiry-input,
+  .inquiry-textarea {
+    font-size: 0.95rem;
+  }
+  
+  .inquiry-submit-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* Tablet: 769px - 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .inquiry-title {
+    font-size: 1.65rem;
+  }
+  
+  .inquiry-subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .register-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop: 1025px+ */
+@media (min-width: 1025px) {
+  .register-form {
+    max-width: 650px;
+    margin: 0 auto;
+  }
+  
+  .inquiry-input:hover:not(:focus),
+  .inquiry-textarea:hover:not(:focus) {
+    border-color: var(--primary-light);
+  }
+  
+  .inquiry-submit-btn:hover:not(.submitting) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+/* Landscape Mode */
+@media (max-height: 500px) and (orientation: landscape) {
+  .inquiry-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .inquiry-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  
+  .inquiry-form-group {
+    margin-bottom: 0.75rem;
+  }
+  
+  .inquiry-textarea {
+    min-height: 80px;
+  }
+}
+
+/* Extra Large Screens: 1440px+ */
+@media (min-width: 1440px) {
+  .register-form {
+    max-width: 700px;
+  }
+  
+  .inquiry-title {
+    font-size: 2rem;
+  }
+  
+  .inquiry-subtitle {
+    font-size: 1.05rem;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .inquiry-input,
+  .inquiry-textarea,
+  .inquiry-submit-btn {
+    min-height: 44px;
+  }
+  
+  .inquiry-label {
+    font-size: 1rem;
+  }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .inquiry-input,
+[data-theme="dark"] .inquiry-textarea {
+  background: var(--gray-100);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .inquiry-input:focus,
+[data-theme="dark"] .inquiry-textarea:focus {
+  background: var(--gray-50);
+}
+
+[data-theme="dark"] .alert-success {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: var(--success-color);
+}
+
+[data-theme="dark"] .alert-error {
+  background: rgba(233, 30, 140, 0.1);
+  border-color: var(--danger-color);
+}
+
+[data-theme="dark"] .error-message {
+  color: #ffd415; /* Brighter red for dark mode */
+  background: rgba(255, 82, 82, 0.15);
+}
+
 /* ========================================
    RESPONSIVE: MOBILE FIXES
    ======================================== */
@@ -1144,11 +1569,11 @@
   }
 
   /* ✅ FREE GIFTS SECTION - MOBILE FIX */
-  .gifts-section {
+  .inquiry-section {
     padding: 3rem 0;
   }
 
-  .gifts-container {
+  .inquiry-container {
     padding: 2rem 1.5rem;
     border-radius: 20px;
   }
@@ -1345,3 +1770,4 @@
     font-size: 1rem;
   }
 }
+

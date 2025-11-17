@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { scrollToSection } from "../utils/scroll";
 import { useNavigate } from 'react-router-dom';
-import { submitGiftLead } from '../services/api';
+import { submitGiftLead, submitGeneralInquiry } from '../services/api';
 import '../styles/products.css';
 import { saveGiftRegistration } from '../services/firebaseService';
 
@@ -159,6 +159,46 @@ const GiftCard = ({ gift, navigate }) => {
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
 
+  // ✅ ==== inquiry function ====
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    inquiry: ''
+  });
+
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+
+  // ✅ دالة فحص البيانات
+  const validateForm = () => {
+    const errors = {};
+    
+    // فحص الاسم
+    if (!formData.name.trim()) {
+      errors.name = 'الرجاء إدخال الاسم';
+    } else if (formData.name.trim().length < 3) {
+      errors.name = 'الاسم يجب أن يكون 3 أحرف على الأقل';
+    }
+    
+    // فحص رقم الهاتف
+    const phoneRegex = /^(05|5)[0-9]{8}$/;
+    if (!formData.phone.trim()) {
+      errors.phone = 'الرجاء إدخال رقم الواتساب';
+    } else if (!phoneRegex.test(formData.phone.trim())) {
+      errors.phone = 'رقم الهاتف يجب أن يبدأ بـ 05 ويتكون من 10 أرقام';
+    }
+    
+    // فحص الاستفسار
+    if (!formData.inquiry.trim()) {
+      errors.inquiry = 'الرجاء كتابة استفسارك';
+    } else if (formData.inquiry.trim().length < 10) {
+      errors.inquiry = 'الاستفسار يجب أن يكون 10 أحرف على الأقل';
+    }
+    
+    return errors;
+  };
+
   // ==== functions converted from inline scripts in index.html ====
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -168,9 +208,61 @@ export default function Home() {
     localStorage.setItem("theme", next);
   };
 
-  const handleRegister = (e) => {
+  // ✅ دالة إرسال الفورم
+  const handleRegister = async (e) => {
     e.preventDefault();
-    alert("تم استلام بياناتك ✨");
+    
+    // مسح الأخطاء السابقة
+    setFormErrors({});
+    setSubmitStatus(null);
+    
+    // فحص البيانات
+    const errors = validateForm();
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+    
+    // بدء الإرسال
+    setIsSubmitting(true);
+    
+    try {
+      // إرسال البيانات للداتابيز
+      await submitGeneralInquiry({
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        notes: formData.inquiry.trim(),
+        ref: '', // يمكن إضافة referral code لو موجود
+        sessionId: '', // يمكن إضافة session ID
+        utm: {}, // يمكن إضافة tracking data
+        eventId: ''
+      });
+      
+      // نجح الإرسال
+      setSubmitStatus('success');
+      
+      // مسح الفورم
+      setFormData({
+        name: '',
+        phone: '',
+        inquiry: ''
+      });
+      
+      // إخفاء رسالة النجاح بعد 5 ثوانٍ
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+      
+    } catch (error) {
+      console.error('خطأ في الإرسال:', error);
+      setSubmitStatus('error');
+      setFormErrors({ 
+        submit: error.message || 'حدث خطأ أثناء إرسال الاستفسار. الرجاء المحاولة مرة أخرى.' 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const filterVideos = (tab) => {
@@ -332,8 +424,8 @@ await app.deploy();`;
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <a href="#gifts" className="btn btn-primary">
-                <i className="fas fa-gift"></i> ابدأ الآن
+              <a href="#inquiry" className="btn btn-primary">
+                <i className="fas fa-paper-plane"></i> لديك استفسار؟
               </a>
               <a href="#products" className="btn btn-secondary">
                 <i className="fas fa-rocket"></i> تعرف على المزيد
@@ -722,89 +814,115 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* Free Gifts Section */}
-      <section className="gifts-section" id="gifts">
+      {/* Inquiry Section */}
+      <section className="inquiry-section" id="inquiry">
         <div className="container">
-          <div className="gifts-container">
-            {/*<div className="section-header" data-aos="fade-up">
-              <h2 className="section-title">ابدأ رحلتك مع الذكاء مجاناً</h2>
-              <p className="section-subtitle">
-                احصل على هدايا قيمة لتبدأ رحلتك في عالم الذكاء الاصطناعي
-              </p>
-            </div>
-
-            <div className="gifts-grid" data-aos="fade-up" data-aos-delay="200">
-              <a
-                href="gift-details.html?id=guide"
-                className="gift-item"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <div className="gift-icon">📚</div>
-                <h3 className="gift-title">دليل الذكاء للأعمال</h3>
-                <p className="gift-desc">
-                  10 طرق مبتكرة لاستخدام ChatGPT في عملك
-                </p>
-              </a>
-
-              <a
-                href="gift-details.html?id=template"
-                className="gift-item"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <div className="gift-icon">🎯</div>
-                <h3 className="gift-title">قالب بطاقات الإتقان</h3>
-                <p className="gift-desc">نظام جاهز لتنظيم معرفتك</p>
-              </a>
-
-              <a
-                href="gift-details.html?id=consultation"
-                className="gift-item"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <div className="gift-icon">💬</div>
-                <h3 className="gift-title">استشارة مجانية</h3>
-                <p className="gift-desc">15 دقيقة مع خبير بعد: الفايب كود</p>
-              </a>
-            </div>*/}
-
+          <div className="inquiry-container">
             <div
               className="register-form"
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <h3 style={{ textAlign: "center", marginBottom: "2rem" }}>
-                خاص بالاستفسارات
+              <h3 className="inquiry-title">
+                أرسل استفسارك
               </h3>
-              <form onSubmit={handleRegister}>
-                <div className="form-grid">
-                  <div className="form-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" required placeholder="أدخل اسمك" />
-                  </div>
-                  <div className="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>رقم الواتساب</label>
-                    <input type="tel" required placeholder="05xxxxxxxx" />
-                  </div>
+              <p className="inquiry-subtitle">
+                نحن هنا للإجابة على جميع استفساراتك
+              </p>
+              
+              {/* رسالة النجاح */}
+              {submitStatus === 'success' && (
+                <div className="alert alert-success">
+                  <i className="fas fa-check-circle"></i>
+                  <span>تم إرسال استفسارك بنجاح! سنتواصل معك قريباً.</span>
                 </div>
+              )}
+              
+              {/* رسالة الخطأ */}
+              {submitStatus === 'error' && formErrors.submit && (
+                <div className="alert alert-error">
+                  <i className="fas fa-exclamation-circle"></i>
+                  <span>{formErrors.submit}</span>
+                </div>
+              )}
+              
+              <form onSubmit={handleRegister}>
+                {/* حقل الاسم */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    الاسم الكامل <span className="required-mark">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="أدخل اسمك الكامل"
+                    className={`inquiry-input ${formErrors.name ? 'error' : ''}`}
+                  />
+                  {formErrors.name && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i> {formErrors.name}
+                    </span>
+                  )}
+                </div>
+
+                {/* حقل رقم الواتساب */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    رقم الواتساب <span className="required-mark">*</span>
+                  </label>
+                  <div className="phone-input-wrapper">
+                    <input 
+                      type="tel" 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      placeholder="05xxxxxxxx"
+                      maxLength="10"
+                      className={`inquiry-input phone-input ${formErrors.phone ? 'error' : ''}`}
+                    />
+                    <i className="fab fa-whatsapp whatsapp-icon"></i>
+                  </div>
+                  {formErrors.phone && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i> {formErrors.phone}
+                    </span>
+                  )}
+                </div>
+
+                {/* حقل الاستفسار */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    استفسارك <span className="required-mark">*</span>
+                  </label>
+                  <textarea 
+                    value={formData.inquiry}
+                    onChange={(e) => setFormData({...formData, inquiry: e.target.value})}
+                    placeholder="اكتب استفسارك هنا..."
+                    rows="5"
+                    className={`inquiry-textarea ${formErrors.inquiry ? 'error' : ''}`}
+                  ></textarea>
+                  {formErrors.inquiry && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i> {formErrors.inquiry}
+                    </span>
+                  )}
+                </div>
+
+                {/* زر الإرسال */}
                 <button
                   type="submit"
-                  className="btn btn-secondary"
-                  style={{
-                    width: "100%",
-                    marginTop: "1rem",
-                    background: "white",
-                    color: "var(--primary-color)",
-                  }}
+                  className={`btn btn-primary inquiry-submit-btn ${isSubmitting ? 'submitting' : ''}`}
+                  disabled={isSubmitting}
                 >
-                  <i className="fas fa-gift"></i> احصل على هداياك الآن
+                  {isSubmitting ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-paper-plane"></i> إرسال الاستفسار
+                    </>
+                  )}
                 </button>
               </form>
             </div>
