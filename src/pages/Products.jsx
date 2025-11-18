@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/products.css";
-import { saveGiftRegistration } from "../services/firebaseService"; // ✅ استيراد دالة الحفظ
+import { saveGiftRegistration } from "../services/firebaseService";
 
 const Products = () => {
   const navigate = useNavigate();

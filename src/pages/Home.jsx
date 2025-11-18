@@ -7,8 +7,7 @@ import "../styles/products.css";
 import { saveGiftRegistration } from "../services/firebaseService";
 import { Link } from "react-router-dom";
 
-
-// ✅ Product Card Component - خارج Home
+// ✅ Product Card Component - خارج Home (غير مستخدم حالياً في السكشن الرئيسي)
 const ProductCard = ({ product, navigate, getProductIcon }) => {
   const isAvailable = product.readinessStatus === "متاح";
 
@@ -169,6 +168,9 @@ const GiftCard = ({ gift, navigate }) => {
 export default function Home() {
   const [activeTab, setActiveTab] = useState("all");
 
+  // ✅ navigator لاستخدامه في زر "اكتشف المزيد" و غيره
+  const navigate = useNavigate();
+
   // ✅ ==== inquiry function ====
   const [formData, setFormData] = useState({
     name: "",
@@ -179,6 +181,116 @@ export default function Home() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+
+  const [homeProducts, setHomeProducts] = useState([]);
+  const [homeProductsLoading, setHomeProductsLoading] = useState(true);
+  const [homeProductsError, setHomeProductsError] = useState(null);
+
+  // 🟢 جلب المنتجات من الـ API
+  useEffect(() => {
+    const fetchHomeProducts = async () => {
+      try {
+        setHomeProductsLoading(true);
+        setHomeProductsError(null);
+
+        const response = await fetch(
+          "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=100"
+        );
+
+        if (!response.ok) {
+          throw new Error("فشل تحميل المنتجات");
+        }
+
+        const data = await response.json();
+        console.log("🏠 Home - Products API Response:", data);
+
+        if (data.ok && Array.isArray(data.items)) {
+          setHomeProducts(data.items);
+        } else {
+          setHomeProducts([]);
+        }
+      } catch (error) {
+        console.error("❌ Home - Error fetching products:", error);
+        setHomeProductsError("فشل تحميل المنتجات");
+      } finally {
+        setHomeProductsLoading(false);
+      }
+    };
+
+    fetchHomeProducts();
+  }, []);
+
+  // 🟢 أيقونة حسب الفئة
+  const getHomeProductIcon = (subCategory) => {
+    const icons = {
+      "أسر منتجة": "fa-home",
+      شركات: "fa-building",
+      جمعيات: "fa-hands-helping",
+      أفراد: "fa-user",
+      default: "fa-robot",
+    };
+    return icons[subCategory] || icons.default;
+  };
+
+  // 🟢 نص البادج + اللون حسب حالة الجاهزية
+  const getHomeBadge = (product) => {
+    const isAvailable = product.readinessStatus === "متاح";
+
+    let text = "قريباً";
+    if (isAvailable) {
+      text = "متاح الآن";
+    } else if (product.createdAt) {
+      const d = new Date(product.createdAt);
+      if (!isNaN(d.getTime())) {
+        d.setMonth(d.getMonth() + 2);
+        const label = d.toLocaleDateString("ar-SA", {
+          year: "numeric",
+          month: "long",
+        });
+        text = `قريباً - ${label}`;
+      }
+    }
+
+    const colorVar = isAvailable
+      ? "var(--success-color)"
+      : "var(--danger-color)";
+
+    return { text, colorVar, isAvailable };
+  };
+
+  // 🟢 وصف مختصر من الـ sellingPoints / features إن وُجِدت
+  const getHomeProductDescription = (product) => {
+    if (
+      Array.isArray(product.sellingPoints) &&
+      product.sellingPoints.length > 0
+    ) {
+      return product.sellingPoints[0];
+    }
+    if (Array.isArray(product.features) && product.features.length > 0) {
+      return product.features[0];
+    }
+    return "حل ذكاء اصطناعي متكامل لتحويل أعمالك.";
+  };
+
+  // ✅ نص البادج حسب حالة الجاهزية
+  const getBadgeText = (product) => {
+    const isAvailable = product.readinessStatus === "متاح";
+    if (isAvailable) return "متاح الآن";
+
+    if (product.createdAt) {
+      const date = new Date(product.createdAt);
+      if (!isNaN(date.getTime())) {
+        date.setMonth(date.getMonth() + 2);
+        const label = date.toLocaleDateString("ar-SA", {
+          year: "numeric",
+          month: "long",
+        });
+        return `قريباً - ${label}`;
+      }
+    }
+
+    return "قريباً";
+  };
 
   // ✅ دالة فحص البيانات
   const validateForm = () => {
@@ -243,9 +355,9 @@ export default function Home() {
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         notes: formData.inquiry.trim(),
-        ref: "", // يمكن إضافة referral code لو موجود
-        sessionId: "", // يمكن إضافة session ID
-        utm: {}, // يمكن إضافة tracking data
+        ref: "",
+        sessionId: "",
+        utm: {},
         eventId: "",
       });
 
@@ -310,8 +422,6 @@ export default function Home() {
   const codeBeforeRef = useRef(null);
   const codeAfterRef = useRef(null);
 
-  // ==== existing functions (toggleTheme, scrollToSection, etc.) ====
-
   // ✅ Typing animation function
   const typeText = (element, text, speed = 50) => {
     if (!element) return;
@@ -326,7 +436,7 @@ export default function Home() {
     // Add cursor at end
     const cursor = document.createElement("span");
     cursor.className = "typing-cursor";
-    cursor.textContent = "█"; // block cursor (or "|" for pipe)
+    cursor.textContent = "█"; // block cursor
     element.appendChild(cursor);
 
     let i = 0;
@@ -335,17 +445,14 @@ export default function Home() {
       if (i < text.length) {
         const char = text[i];
         if (char === "\n") {
-          // Insert line break
           element.insertBefore(document.createElement("br"), cursor);
         } else {
-          // Insert character
           const charNode = document.createTextNode(char);
           element.insertBefore(charNode, cursor);
         }
         i++;
         setTimeout(type, speed);
       } else {
-        // Done: hide cursor
         cursor.style.opacity = "0";
         cursor.style.animation = "none";
       }
@@ -388,7 +495,7 @@ await app.deploy();`;
           }
         });
       },
-      { threshold: 0.2 } // trigger when 20% visible
+      { threshold: 0.2 }
     );
 
     const vibeSection = document.querySelector(".vibe-code");
@@ -408,10 +515,6 @@ await app.deploy();`;
       <div className="loading" id="loading">
         <div className="loading-spinner"></div>
       </div>
-
-      {/* Header (موجودة عندك كـ Component منفصل) 
-          كان في index.html هنا، لكن في المشروع الحالي معمولة في Header.jsx
-          أسيبه للـ App يحقنه فوق. */}
 
       {/* Hero Section */}
       <section className="hero" id="home">
@@ -494,7 +597,6 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* Products Section */}
       <section className="products-section" id="products">
         <div className="container">
           <div className="section-header" data-aos="fade-up">
@@ -503,248 +605,135 @@ await app.deploy();`;
           </div>
 
           <div className="products-grid">
-            {/* Product 1 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
+            {/* حالة التحميل */}
+            {homeProductsLoading && (
               <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
+                style={{
+                  textAlign: "center",
+                  width: "100%",
+                  padding: "2rem 0",
+                }}
               >
-                متاح الآن
+                <div className="spinner" style={{ marginBottom: "1rem" }}></div>
+                <p>جاري تحميل المنتجات...</p>
               </div>
-              <div className="product-image">
-                <i className="fas fa-home"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">ذكاء الأسر المنتجة</h3>
-                <p className="product-desc">
-                  حول مشروعك المنزلي إلى قوة اقتصادية بالذكاء الاصطناعي
-                </p>
-                <a
-                  href="product-details.html?id=1"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
+            )}
 
-            {/* Product 2 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
+            {/* حالة الخطأ */}
+            {homeProductsError && !homeProductsLoading && (
               <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
+                style={{
+                  textAlign: "center",
+                  width: "100%",
+                  padding: "2rem 0",
+                  color: "var(--danger-color)",
+                }}
               >
-                متاح الآن
+                <i
+                  className="fas fa-exclamation-circle"
+                  style={{ marginLeft: 8 }}
+                ></i>
+                <p>{homeProductsError}</p>
               </div>
-              <div className="product-image">
-                <i className="fas fa-building"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الذكاء المؤسسي</h3>
-                <p className="product-desc">
-                  نظام متكامل يحول معرفة مؤسستك إلى مستشار ذكي متاح 24/7
-                </p>
-                <a
-                  href="product-details.html?id=2"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
+            )}
 
-            {/* Product 3 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-brain"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">بطاقات الإتقان الذكية</h3>
-                <p className="product-desc">
-                  نظام ثوري لإدارة المعرفة وتطوير المهارات بالذكاء الاصطناعي
-                </p>
-                <a
-                  href="product-details.html?id=3"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
+            {/* المنتجات */}
+            {!homeProductsLoading &&
+              !homeProductsError &&
+              homeProducts.length > 0 &&
+              homeProducts.slice(0, 8).map((product, index) => {
+                const {
+                  text: badgeText,
+                  colorVar,
+                  isAvailable,
+                } = getHomeBadge(product);
 
-            {/* Product 4 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-rocket"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">منصة صفحات الهبوط</h3>
-                <p className="product-desc">
-                  أنشئ صفحات هبوط احترافية بالذكاء الاصطناعي في دقائق
-                </p>
-                <a
-                  href="product-details.html?id=4"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
+                const delay = (index + 1) * 100;
 
-            {/* Product 5 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="500"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-cogs"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الأتمتة الذكية (Vibe Code)</h3>
-                <p className="product-desc">
-                  برمجة حلول مخصصة بالذكاء الاصطناعي في وقت قياسي
-                </p>
-                <a
-                  href="request-program.html"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-code"></i> اطلب برنامجك
-                </a>
-              </div>
-            </div>
+                return (
+                  <div
+                    key={product.id}
+                    className="product-card"
+                    data-aos="fade-up"
+                    data-aos-delay={delay}
+                    style={{
+                      ...(isAvailable ? {} : { opacity: 0.9 }),
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                    }}
+                  >
+                    <div
+                      className="product-badge"
+                      style={{ background: colorVar }}
+                    >
+                      {badgeText}
+                    </div>
 
-            {/* Product 6 */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="600"
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--success-color)" }}
-              >
-                متاح الآن
-              </div>
-              <div className="product-image">
-                <i className="fas fa-robot"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">الذكاءات المخصصة</h3>
-                <p className="product-desc">
-                  بعد: الفايب كود مخصص لمجالك واحتياجاتك الخاصة
-                </p>
-                <a
-                  href="product-details.html?id=6"
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem" }}
-                >
-                  <i className="fas fa-arrow-left"></i> اكتشف المزيد
-                </a>
-              </div>
-            </div>
+                    <div
+                      className="product-image"
+                      style={!isAvailable ? { opacity: 0.7 } : {}}
+                    >
+                      <i
+                        className={`fas ${getHomeProductIcon(
+                          product.subCategory
+                        )}`}
+                      ></i>
+                    </div>
 
-            {/* Product 7 - Coming Soon */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="700"
-              style={{ opacity: 0.9 }}
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--danger-color)" }}
-              >
-                قريباً - فبراير 2025
-              </div>
-              <div className="product-image" style={{ opacity: 0.7 }}>
-                <i className="fas fa-graduation-cap"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">برنامج وظيفة ذكية</h3>
-                <p className="product-desc">
-                  برنامج تدريبي متكامل للعمل كمساعد ذكي باستخدام الذكاء
-                  الاصطناعي
-                </p>
-                <button
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem", opacity: 0.7 }}
-                  disabled
-                >
-                  <i className="fas fa-clock"></i> قريباً
-                </button>
-              </div>
-            </div>
+                    <div
+                      className="product-content"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 1,
+                      }}
+                    >
+                      <h3 className="product-title">{product.name}</h3>
+                      <p className="product-desc">
+                        {getHomeProductDescription(product)}
+                      </p>
 
-            {/* Product 8 - Coming Soon */}
-            <div
-              className="product-card"
-              data-aos="fade-up"
-              data-aos-delay="800"
-              style={{ opacity: 0.9 }}
-            >
-              <div
-                className="product-badge"
-                style={{ background: "var(--danger-color)" }}
-              >
-                قريباً - أبريل 2025
-              </div>
-              <div className="product-image" style={{ opacity: 0.7 }}>
-                <i className="fas fa-exchange-alt"></i>
-              </div>
-              <div className="product-content">
-                <h3 className="product-title">منصة تبادل الخبرات</h3>
-                <p className="product-desc">
-                  منصة لتبادل الخبرات البرمجية والتقنية بين المتخصصين
-                </p>
-                <button
-                  className="btn btn-primary"
-                  style={{ width: "100%", marginTop: "1.5rem", opacity: 0.7 }}
-                  disabled
+                      <button
+                        className="btn btn-primary"
+                        style={{
+                          width: "100%",
+                          marginTop: "auto", // 👈 يخلي الزر ثابت تحت
+                          ...(isAvailable ? {} : { opacity: 0.7 }),
+                        }}
+                        onClick={() => navigate(`/products/${product.id}`)}
+                        disabled={!isAvailable}
+                      >
+                        <i
+                          className={
+                            isAvailable ? "fas fa-arrow-left" : "fas fa-clock"
+                          }
+                        ></i>{" "}
+                        {isAvailable ? "اكتشف المزيد" : "قريباً"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/* لا توجد منتجات */}
+            {!homeProductsLoading &&
+              !homeProductsError &&
+              homeProducts.length === 0 && (
+                <div
+                  style={{
+                    textAlign: "center",
+                    width: "100%",
+                    padding: "2rem 0",
+                  }}
                 >
-                  <i className="fas fa-clock"></i> قريباً
-                </button>
-              </div>
-            </div>
+                  <i
+                    className="fas fa-inbox"
+                    style={{ fontSize: "2rem", marginBottom: "0.5rem" }}
+                  ></i>
+                  <p>لا توجد منتجات متاحة حالياً.</p>
+                </div>
+              )}
           </div>
 
           {/* View All Products Button */}
@@ -752,13 +741,13 @@ await app.deploy();`;
             style={{ textAlign: "center", marginTop: "3rem" }}
             data-aos="fade-up"
           >
-            <a
-              href="products.html"
+            <Link
+              to="/products"
               className="btn btn-primary"
               style={{ fontSize: "1.1rem", padding: "1rem 3rem" }}
             >
               <i className="fas fa-th"></i> عرض جميع المنتجات والخدمات
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -806,7 +795,6 @@ await app.deploy();`;
                   قبل: الطريقة التقليدية
                 </div>
                 <div className="code-block" ref={codeBeforeRef}></div>
-                {/* 👈 ref added */}
               </div>
 
               <div className="code-after">
@@ -815,7 +803,6 @@ await app.deploy();`;
                   بعد: الفايب كود
                 </div>
                 <div className="code-block" ref={codeAfterRef}></div>
-                {/* 👈 ref added */}
               </div>
             </div>
           </div>
@@ -1331,11 +1318,6 @@ await app.deploy();`;
           </div>
         </div>
       </section>
-
-      {/* Footer موجود كـ Component منفصل في مشروعك */}
-
-      {/* Theme toggle button كان داخل الهيدر الأصلي؛ 
-          لو حبيتي نفس الزر هنا، تقدري تضيفيه أو تسيبيه داخل Header.jsx */}
     </>
   );
 }
