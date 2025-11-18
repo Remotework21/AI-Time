@@ -1,36 +1,43 @@
 // src/pages/Home.jsx
 import { useEffect, useState, useRef } from "react";
 import { scrollToSection } from "../utils/scroll";
-import { useNavigate } from 'react-router-dom';
-import { submitGiftLead, submitGeneralInquiry } from '../services/api';
-import '../styles/products.css';
-import { saveGiftRegistration } from '../services/firebaseService';
-
+import { useNavigate } from "react-router-dom";
+import { submitGiftLead, submitGeneralInquiry } from "../services/api";
+import "../styles/products.css";
+import { saveGiftRegistration } from "../services/firebaseService";
+import { Link } from "react-router-dom";
 
 
 // ✅ Product Card Component - خارج Home
 const ProductCard = ({ product, navigate, getProductIcon }) => {
-  const isAvailable = product.readinessStatus === 'متاح';
-  
+  const isAvailable = product.readinessStatus === "متاح";
+
   const getReleaseDate = () => {
     if (isAvailable) return null;
     const date = new Date(product.createdAt);
     date.setMonth(date.getMonth() + 2);
-    return date.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long' });
+    return date.toLocaleDateString("ar-SA", { year: "numeric", month: "long" });
   };
 
   return (
-    <div className="product-card-new" onClick={() => navigate(`/product/${product.id}`)}>
+    <div
+      className="product-card-new"
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
       {/* Header with Gradient */}
       <div className="product-header-gradient">
         <div className="product-icon-large">
           <i className={`fas ${getProductIcon(product.subCategory)}`}></i>
         </div>
-        
+
         {/* Status Badge */}
         <div className="status-badge-top">
-          <span className={`status-badge ${isAvailable ? 'status-available' : 'status-coming'}`}>
-            {isAvailable ? 'متاح الآن' : `قريباً - ${getReleaseDate()}`}
+          <span
+            className={`status-badge ${
+              isAvailable ? "status-available" : "status-coming"
+            }`}
+          >
+            {isAvailable ? "متاح الآن" : `قريباً - ${getReleaseDate()}`}
           </span>
         </div>
       </div>
@@ -39,7 +46,7 @@ const ProductCard = ({ product, navigate, getProductIcon }) => {
       <div className="product-content-white">
         <h3 className="product-title-new">{product.name}</h3>
         <p className="product-description-new">
-          {product.targetAudiences || 'منتج ذكاء اصطناعي متطور'}
+          {product.targetAudiences || "منتج ذكاء اصطناعي متطور"}
         </p>
 
         {/* Action Button */}
@@ -68,62 +75,65 @@ const ProductCard = ({ product, navigate, getProductIcon }) => {
 // ✅ Gift Card Component - خارج Home
 const GiftCard = ({ gift, navigate }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  
-  const description = gift.description || gift.purpose || 'هدية مميزة من منصة وقت الذكاء';
-  const shortDescription = description.split('\n').slice(0, 3).join('\n');
-  const hasMoreContent = description.split('\n').length > 3 || description.length > 150;
+
+  const description =
+    gift.description || gift.purpose || "هدية مميزة من منصة وقت الذكاء";
+  const shortDescription = description.split("\n").slice(0, 3).join("\n");
+  const hasMoreContent =
+    description.split("\n").length > 3 || description.length > 150;
 
   return (
-    <div className="gift-card-new" onClick={() => navigate('/gifts')}>
+    <div className="gift-card-new" onClick={() => navigate("/gifts")}>
       {/* Header with Gradient */}
       <div className="gift-header-gradient">
         <div className="gift-icon-large">
           <i className="fas fa-gift"></i>
         </div>
-        
+
         {/* Status Badge */}
         <div className="status-badge-top">
-          <span className="status-badge status-gift">
-            هدية مجانية
-          </span>
+          <span className="status-badge status-gift">هدية مجانية</span>
         </div>
       </div>
 
       {/* Content */}
       <div className="gift-content-white">
         <h3 className="gift-title-new">{gift.giftName}</h3>
-        
+
         {/* Description with Show More */}
-        <p className="gift-description-new" style={{ 
-          display: '-webkit-box',
-          WebkitLineClamp: showFullDescription ? 'unset' : 3,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          minHeight: '3.4rem'
-        }}>
+        <p
+          className="gift-description-new"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: showFullDescription ? "unset" : 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            minHeight: "3.4rem",
+          }}
+        >
           {showFullDescription ? description : shortDescription}
         </p>
 
         {/* Show More Button */}
         {hasMoreContent && (
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               setShowFullDescription(!showFullDescription);
             }}
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#8B5CF6',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              padding: '0.5rem 0',
-              marginBottom: '0.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem'
+              background: "none",
+              border: "none",
+              color: "#8B5CF6",
+              cursor: "pointer",
+              fontSize: "0.9rem",
+              fontWeight: "600",
+              padding: "0.5rem 0",
+              marginBottom: "0.5rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.3rem",
             }}
           >
             {showFullDescription ? (
@@ -141,11 +151,11 @@ const GiftCard = ({ gift, navigate }) => {
         )}
 
         {/* Action Button */}
-        <button 
+        <button
           className="gift-action-btn"
           onClick={(e) => {
             e.stopPropagation();
-            navigate('/gifts');
+            navigate("/gifts");
           }}
         >
           احصل على هديتك الآن
@@ -161,9 +171,9 @@ export default function Home() {
 
   // ✅ ==== inquiry function ====
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    inquiry: ''
+    name: "",
+    phone: "",
+    inquiry: "",
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -173,29 +183,29 @@ export default function Home() {
   // ✅ دالة فحص البيانات
   const validateForm = () => {
     const errors = {};
-    
+
     // فحص الاسم
     if (!formData.name.trim()) {
-      errors.name = 'الرجاء إدخال الاسم';
+      errors.name = "الرجاء إدخال الاسم";
     } else if (formData.name.trim().length < 3) {
-      errors.name = 'الاسم يجب أن يكون 3 أحرف على الأقل';
+      errors.name = "الاسم يجب أن يكون 3 أحرف على الأقل";
     }
-    
+
     // فحص رقم الهاتف
     const phoneRegex = /^(05|5)[0-9]{8}$/;
     if (!formData.phone.trim()) {
-      errors.phone = 'الرجاء إدخال رقم الواتساب';
+      errors.phone = "الرجاء إدخال رقم الواتساب";
     } else if (!phoneRegex.test(formData.phone.trim())) {
-      errors.phone = 'رقم الهاتف يجب أن يبدأ بـ 05 ويتكون من 10 أرقام';
+      errors.phone = "رقم الهاتف يجب أن يبدأ بـ 05 ويتكون من 10 أرقام";
     }
-    
+
     // فحص الاستفسار
     if (!formData.inquiry.trim()) {
-      errors.inquiry = 'الرجاء كتابة استفسارك';
+      errors.inquiry = "الرجاء كتابة استفسارك";
     } else if (formData.inquiry.trim().length < 10) {
-      errors.inquiry = 'الاستفسار يجب أن يكون 10 أحرف على الأقل';
+      errors.inquiry = "الاستفسار يجب أن يكون 10 أحرف على الأقل";
     }
-    
+
     return errors;
   };
 
@@ -211,54 +221,55 @@ export default function Home() {
   // ✅ دالة إرسال الفورم
   const handleRegister = async (e) => {
     e.preventDefault();
-    
+
     // مسح الأخطاء السابقة
     setFormErrors({});
     setSubmitStatus(null);
-    
+
     // فحص البيانات
     const errors = validateForm();
-    
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-    
+
     // بدء الإرسال
     setIsSubmitting(true);
-    
+
     try {
       // إرسال البيانات للداتابيز
       await submitGeneralInquiry({
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         notes: formData.inquiry.trim(),
-        ref: '', // يمكن إضافة referral code لو موجود
-        sessionId: '', // يمكن إضافة session ID
+        ref: "", // يمكن إضافة referral code لو موجود
+        sessionId: "", // يمكن إضافة session ID
         utm: {}, // يمكن إضافة tracking data
-        eventId: ''
+        eventId: "",
       });
-      
+
       // نجح الإرسال
-      setSubmitStatus('success');
-      
+      setSubmitStatus("success");
+
       // مسح الفورم
       setFormData({
-        name: '',
-        phone: '',
-        inquiry: ''
+        name: "",
+        phone: "",
+        inquiry: "",
       });
-      
+
       // إخفاء رسالة النجاح بعد 5 ثوانٍ
       setTimeout(() => {
         setSubmitStatus(null);
       }, 5000);
-      
     } catch (error) {
-      console.error('خطأ في الإرسال:', error);
-      setSubmitStatus('error');
-      setFormErrors({ 
-        submit: error.message || 'حدث خطأ أثناء إرسال الاستفسار. الرجاء المحاولة مرة أخرى.' 
+      console.error("خطأ في الإرسال:", error);
+      setSubmitStatus("error");
+      setFormErrors({
+        submit:
+          error.message ||
+          "حدث خطأ أثناء إرسال الاستفسار. الرجاء المحاولة مرة أخرى.",
       });
     } finally {
       setIsSubmitting(false);
@@ -293,7 +304,7 @@ export default function Home() {
   // helper to mark active tab class
   const tabCls = (key) => `tab-btn${activeTab === key ? " active" : ""}`;
 
-   // ==== Animation: typing effect react ====
+  // ==== Animation: typing effect react ====
 
   // ✅ Refs for code blocks
   const codeBeforeRef = useRef(null);
@@ -304,22 +315,22 @@ export default function Home() {
   // ✅ Typing animation function
   const typeText = (element, text, speed = 50) => {
     if (!element) return;
-  
+
     // Clear and set up
     element.innerHTML = "";
     element.style.whiteSpace = "pre";
     element.style.fontFamily = "Consolas, 'Courier New', monospace";
     element.style.fontSize = "0.875rem";
     element.style.lineHeight = "1.5";
-  
+
     // Add cursor at end
     const cursor = document.createElement("span");
     cursor.className = "typing-cursor";
     cursor.textContent = "█"; // block cursor (or "|" for pipe)
     element.appendChild(cursor);
-  
+
     let i = 0;
-  
+
     const type = () => {
       if (i < text.length) {
         const char = text[i];
@@ -339,7 +350,7 @@ export default function Home() {
         cursor.style.animation = "none";
       }
     };
-  
+
     setTimeout(type, 200);
   };
 
@@ -424,12 +435,9 @@ await app.deploy();`;
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <a href="#inquiry" className="btn btn-primary">
-                <i className="fas fa-paper-plane"></i> لديك استفسار؟
-              </a>
-              <a href="#products" className="btn btn-secondary">
-                <i className="fas fa-rocket"></i> تعرف على المزيد
-              </a>
+              <Link to="/gifts" className="btn btn-secondary">
+                <i className="fas fa-rocket"></i> احصل على هديتك الآن
+              </Link>
             </div>
           </div>
         </div>
@@ -823,45 +831,48 @@ await app.deploy();`;
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <h3 className="inquiry-title">
-                أرسل استفسارك
-              </h3>
+              <h3 className="inquiry-title">أرسل استفسارك</h3>
               <p className="inquiry-subtitle">
                 نحن هنا للإجابة على جميع استفساراتك
               </p>
-              
+
               {/* رسالة النجاح */}
-              {submitStatus === 'success' && (
+              {submitStatus === "success" && (
                 <div className="alert alert-success">
                   <i className="fas fa-check-circle"></i>
                   <span>تم إرسال استفسارك بنجاح! سنتواصل معك قريباً.</span>
                 </div>
               )}
-              
+
               {/* رسالة الخطأ */}
-              {submitStatus === 'error' && formErrors.submit && (
+              {submitStatus === "error" && formErrors.submit && (
                 <div className="alert alert-error">
                   <i className="fas fa-exclamation-circle"></i>
                   <span>{formErrors.submit}</span>
                 </div>
               )}
-              
+
               <form onSubmit={handleRegister}>
                 {/* حقل الاسم */}
                 <div className="inquiry-form-group">
                   <label className="inquiry-label">
                     الاسم الكامل <span className="required-mark">*</span>
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     placeholder="أدخل اسمك الكامل"
-                    className={`inquiry-input ${formErrors.name ? 'error' : ''}`}
+                    className={`inquiry-input ${
+                      formErrors.name ? "error" : ""
+                    }`}
                   />
                   {formErrors.name && (
                     <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i> {formErrors.name}
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.name}
                     </span>
                   )}
                 </div>
@@ -872,19 +883,24 @@ await app.deploy();`;
                     رقم الواتساب <span className="required-mark">*</span>
                   </label>
                   <div className="phone-input-wrapper">
-                    <input 
-                      type="tel" 
+                    <input
+                      type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="05xxxxxxxx"
                       maxLength="10"
-                      className={`inquiry-input phone-input ${formErrors.phone ? 'error' : ''}`}
+                      className={`inquiry-input phone-input ${
+                        formErrors.phone ? "error" : ""
+                      }`}
                     />
                     <i className="fab fa-whatsapp whatsapp-icon"></i>
                   </div>
                   {formErrors.phone && (
                     <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i> {formErrors.phone}
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.phone}
                     </span>
                   )}
                 </div>
@@ -894,16 +910,21 @@ await app.deploy();`;
                   <label className="inquiry-label">
                     استفسارك <span className="required-mark">*</span>
                   </label>
-                  <textarea 
+                  <textarea
                     value={formData.inquiry}
-                    onChange={(e) => setFormData({...formData, inquiry: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, inquiry: e.target.value })
+                    }
                     placeholder="اكتب استفسارك هنا..."
                     rows="5"
-                    className={`inquiry-textarea ${formErrors.inquiry ? 'error' : ''}`}
+                    className={`inquiry-textarea ${
+                      formErrors.inquiry ? "error" : ""
+                    }`}
                   ></textarea>
                   {formErrors.inquiry && (
                     <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i> {formErrors.inquiry}
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.inquiry}
                     </span>
                   )}
                 </div>
@@ -911,7 +932,9 @@ await app.deploy();`;
                 {/* زر الإرسال */}
                 <button
                   type="submit"
-                  className={`btn btn-primary inquiry-submit-btn ${isSubmitting ? 'submitting' : ''}`}
+                  className={`btn btn-primary inquiry-submit-btn ${
+                    isSubmitting ? "submitting" : ""
+                  }`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
