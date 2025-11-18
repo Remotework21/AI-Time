@@ -1,5 +1,5 @@
 // Products.jsx
-// صفحة عرض جميع المنتجات مع البحث والفلترة + فورم التسجيل
+// صفحة عرض جميع المنتجات مع البحث والفلترة + فورم الطلب
 // API: https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts
 
 import React, { useState, useEffect } from "react";
@@ -26,10 +26,7 @@ const Products = () => {
   const [categories, setCategories] = useState(["الكل"]);
   const statuses = ["الكل", "متاح", "قريباً", "تحت التطوير"];
 
-  const [gifts, setGifts] = useState([]);
-  const [filteredGifts, setFilteredGifts] = useState([]);
-
-  // ✅ Modal & Form States
+  // Modal & Form States
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -40,7 +37,7 @@ const Products = () => {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formMessage, setFormMessage] = useState({ type: "", text: "" });
 
-  // ✅ جلب المنتجات من API
+  // جلب المنتجات من API
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -62,7 +59,6 @@ const Products = () => {
         setProducts(data.items);
         setFilteredProducts(data.items);
 
-        // لو حابب تطلع الكاتيجوريز ديناميك من المنتجات:
         const uniqueCategories = [
           "الكل",
           ...Array.from(
@@ -83,7 +79,7 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  // ✅ Handle form input change
+  // Handle form input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -95,7 +91,7 @@ const Products = () => {
     }
   };
 
-  // ✅ Handle form submit
+  // Handle form submit
   const handleRegister = async (e) => {
     e.preventDefault();
     setFormSubmitting(true);
@@ -140,29 +136,27 @@ const Products = () => {
 
       setFormMessage({
         type: "success",
-        text: "🎉 تم التسجيل بنجاح! سنتواصل معك قريباً",
+        text: "🎉 تم إرسال طلبك بنجاح! سنتواصل معك قريباً",
       });
 
-      // Reset form
       setFormData({ name: "", email: "", phone: "" });
 
-      // Auto close modal after 2 seconds
       setTimeout(() => {
         setShowModal(false);
         setFormMessage({ type: "", text: "" });
-      }, 2000);
+      }, 2500);
     } catch (error) {
       console.error("❌ Error:", error);
       setFormMessage({
         type: "error",
-        text: "حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى",
+        text: "حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى",
       });
     } finally {
       setFormSubmitting(false);
     }
   };
 
-  // ✅ Open Modal
+  // Open Modal
   const openModal = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
@@ -170,7 +164,7 @@ const Products = () => {
     setFormMessage({ type: "", text: "" });
   };
 
-  // ✅ Close Modal
+  // Close Modal
   const closeModal = () => {
     setShowModal(false);
     setSelectedProduct(null);
@@ -182,7 +176,6 @@ const Products = () => {
   useEffect(() => {
     let result = [...products];
 
-    // البحث
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       result = result.filter(
@@ -193,17 +186,14 @@ const Products = () => {
       );
     }
 
-    // فلتر الفئة
     if (selectedCategory !== "الكل") {
       result = result.filter((p) => p.subCategory === selectedCategory);
     }
 
-    // فلتر الحالة
     if (selectedStatus !== "الكل") {
       result = result.filter((p) => p.readinessStatus === selectedStatus);
     }
 
-    // الترتيب
     switch (sortBy) {
       case "newest":
         result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -249,7 +239,7 @@ const Products = () => {
     return icons[subCategory] || icons.default;
   };
 
-  // ✅ بطاقة المنتج - معدلة مع زر التسجيل
+  // بطاقة المنتج المحسّنة
   const ProductCard = ({ product }) => {
     const isAvailable = product.readinessStatus === "متاح";
     const getReleaseDate = () => {
@@ -263,121 +253,145 @@ const Products = () => {
     };
 
     return (
-      <div className="product-card-new">
-        {/* Header with Gradient */}
-        <div className="product-header-gradient">
-          <div className="product-icon-large">
-            <i className={`fas ${getProductIcon(product.subCategory)}`}></i>
+      <div className="product-card-premium">
+        <div className="card-glow"></div>
+
+        <div className="product-header-modern">
+          <div className="product-icon-wrapper">
+            <div className="icon-bg-circle"></div>
+            <i
+              className={`fas ${getProductIcon(
+                product.subCategory
+              )} product-icon-modern`}
+            ></i>
           </div>
 
-          {/* Status Badge */}
-          <div className="status-badge-top">
+          <div className="status-badge-modern">
             <span
-              className={`status-badge ${
-                isAvailable ? "status-available" : "status-coming"
+              className={`badge-pill ${
+                isAvailable ? "badge-available" : "badge-coming"
               }`}
             >
-              {isAvailable ? "متاح الآن" : `قريباً - ${getReleaseDate()}`}
+              <i
+                className={`fas ${
+                  isAvailable ? "fa-check-circle" : "fa-clock"
+                }`}
+              ></i>
+              {isAvailable ? "متاح الآن" : `قريباً`}
             </span>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="product-content-white">
-          <h3 className="product-title-new">{product.name}</h3>
-          <p className="product-description-new">
-            {product.targetAudiences || "منتج ذكاء اصطناعي متطور"}
+        <div className="product-body-modern">
+          <div className="product-category-tag">
+            <i className="fas fa-tag"></i>
+            {product.subCategory || "منتجات AI"}
+          </div>
+
+          <h3 className="product-title-modern">{product.name}</h3>
+
+          <p className="product-description-modern">
+            {product.targetAudiences ||
+              "حلول ذكاء اصطناعي متطورة لتحسين أعمالك"}
           </p>
 
-          {/* ✅ Buttons Container */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              marginTop: "auto",
-            }}
-          >
-            {/* زر التفاصيل */}
+          {!isAvailable && getReleaseDate() && (
+            <div className="release-date-badge">
+              <i className="fas fa-calendar-alt"></i>
+              متوقع: {getReleaseDate()}
+            </div>
+          )}
+
+          <div className="product-actions-modern">
             <button
-              className="product-action-btn"
+              className="btn-details-modern"
               onClick={() => navigate(`/product/${product.id}`)}
             >
-              {isAvailable ? (
-                <>
-                  اعرف المزيد
-                  <i className="fas fa-arrow-left"></i>
-                </>
-              ) : (
-                <>
-                  قريباً
-                  <i className="fas fa-clock"></i>
-                </>
-              )}
+              <span>التفاصيل</span>
+              <i className="fas fa-arrow-left"></i>
             </button>
 
-            {/* ✅ زر التسجيل/الاستفسار */}
             <button
-              className="product-register-btn"
+              className="btn-order-modern"
               onClick={(e) => {
                 e.stopPropagation();
                 openModal(product);
               }}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                color: "white",
-                border: "none",
-                borderRadius: "12px",
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.5rem",
-                transition: "all 0.3s ease",
-              }}
             >
-              <i className="fas fa-clipboard-list"></i>
-              سجل اهتمامك
+              <div className="btn-shine"></div>
+              <i className="fas fa-shopping-cart"></i>
+              <span>اطلب الآن</span>
             </button>
           </div>
         </div>
+
+        <div className="card-pattern"></div>
       </div>
     );
   };
 
   return (
     <div className="products-page">
-      {/* Hero */}
-      <section className="products-hero">
-        <div className="container">
-          <h1 className="hero-title">منتجات الذكاء الاصطناعي</h1>
-          <p className="hero-subtitle">
-            اكتشف مجموعة متنوعة من حلول الذكاء الاصطناعي
+      {/* Hero Section المحسّن */}
+      <section className="products-hero-premium">
+        <div className="hero-background-animation">
+          <div className="gradient-orb orb-1"></div>
+          <div className="gradient-orb orb-2"></div>
+          <div className="gradient-orb orb-3"></div>
+        </div>
+
+        <div className="container hero-content-premium">
+          <div className="hero-badge">
+            <i className="fas fa-sparkles"></i>
+            <span>اكتشف عالم الذكاء الاصطناعي</span>
+          </div>
+
+          <h1 className="hero-title-premium">
+            منتجات الذكاء الاصطناعي
+            <span className="title-gradient">المبتكرة</span>
+          </h1>
+
+          <p className="hero-subtitle-premium">
+            حلول متطورة تجمع بين الابتكار والتكنولوجيا لتحويل أفكارك إلى واقع
           </p>
+
+          <div className="hero-stats">
+            <div className="stat-item">
+              <div className="stat-number">{filteredProducts.length}+</div>
+              <div className="stat-label">منتج متاح</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item">
+              <div className="stat-number">
+                {products.filter((p) => p.readinessStatus === "متاح").length}
+              </div>
+              <div className="stat-label">جاهز للاستخدام</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item">
+              <div className="stat-number">24/7</div>
+              <div className="stat-label">دعم فني</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Filters */}
-      <section className="products-filters">
+      {/* Filters Section المحسّن */}
+      <section className="products-filters-premium">
         <div className="container">
-          <div className="filters-container">
-            {/* Search */}
-            <div className="search-box">
-              <i className="fas fa-search search-icon"></i>
+          <div className="filters-wrapper-modern">
+            <div className="search-box-modern">
+              <i className="fas fa-search search-icon-modern"></i>
               <input
                 type="text"
-                placeholder="ابحث عن منتج..."
+                placeholder="ابحث عن المنتج المناسب لك..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
+                className="search-input-modern"
               />
               {searchTerm && (
                 <button
-                  className="clear-search"
+                  className="clear-search-modern"
                   onClick={() => setSearchTerm("")}
                 >
                   <i className="fas fa-times"></i>
@@ -385,356 +399,269 @@ const Products = () => {
               )}
             </div>
 
-            {/* Category */}
-            <div className="filter-group">
-              <label className="filter-label">الفئة:</label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="filter-select"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="filters-grid">
+              <div className="filter-item-modern">
+                <label className="filter-label-modern">
+                  <i className="fas fa-layer-group"></i>
+                  الفئة
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="filter-select-modern"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Status */}
-            <div className="filter-group">
-              <label className="filter-label">الحالة:</label>
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="filter-select"
-              >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className="filter-item-modern">
+                <label className="filter-label-modern">
+                  <i className="fas fa-check-circle"></i>
+                  الحالة
+                </label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="filter-select-modern"
+                >
+                  {statuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Sort */}
-            <div className="filter-group">
-              <label className="filter-label">الترتيب:</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="filter-select"
-              >
-                <option value="newest">الأحدث</option>
-                <option value="oldest">الأقدم</option>
-                <option value="price-low">السعر: من الأقل للأعلى</option>
-                <option value="price-high">السعر: من الأعلى للأقل</option>
-                <option value="name-asc">الاسم: أ - ي</option>
-              </select>
+              <div className="filter-item-modern">
+                <label className="filter-label-modern">
+                  <i className="fas fa-sort"></i>
+                  الترتيب
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="filter-select-modern"
+                >
+                  <option value="newest">الأحدث</option>
+                  <option value="oldest">الأقدم</option>
+                  <option value="price-low">السعر: الأقل أولاً</option>
+                  <option value="price-high">السعر: الأعلى أولاً</option>
+                  <option value="name-asc">الاسم: أ - ي</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          {/* Results Count */}
-          <div className="results-count">
-            <i className="fas fa-box"></i>
-            <span>
-              {loading ? "جاري التحميل..." : `${filteredProducts.length} منتج`}
-            </span>
+          <div className="results-info-modern">
+            <div className="results-count-modern">
+              <i className="fas fa-cube"></i>
+              <span>
+                {loading
+                  ? "جاري التحميل..."
+                  : `${filteredProducts.length} منتج متاح`}
+              </span>
+            </div>
+
+            {searchTerm && (
+              <div className="active-filter-badge">
+                <i className="fas fa-filter"></i>
+                نتائج البحث عن: "{searchTerm}"
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* Products Grid */}
-      <section className="products-section">
+      <section className="products-section-premium">
         <div className="container">
           {loading && (
-            <div className="loading-state">
-              <div className="spinner"></div>
-              <p>جاري تحميل المنتجات...</p>
+            <div className="loading-state-modern">
+              <div className="spinner-modern">
+                <div className="spinner-ring"></div>
+                <div className="spinner-ring"></div>
+                <div className="spinner-ring"></div>
+              </div>
+              <p className="loading-text">جاري تحميل المنتجات المذهلة...</p>
             </div>
           )}
 
           {error && !loading && (
-            <div className="error-state">
-              <i className="fas fa-exclamation-circle"></i>
+            <div className="error-state-modern">
+              <div className="error-icon">
+                <i className="fas fa-exclamation-triangle"></i>
+              </div>
+              <h3>عذراً، حدث خطأ</h3>
               <p>{error}</p>
-              <button className="btn btn-primary" onClick={fetchProducts}>
-                <i className="fas fa-redo"></i> إعادة المحاولة
+              <button className="btn-retry-modern" onClick={fetchProducts}>
+                <i className="fas fa-redo"></i>
+                إعادة المحاولة
               </button>
             </div>
           )}
 
           {!loading && !error && filteredProducts.length === 0 && (
-            <div className="empty-state">
-              <i className="fas fa-inbox"></i>
-              <h3>لا توجد منتجات</h3>
-              <p>لم نتمكن من العثور على منتجات تطابق بحثك</p>
+            <div className="empty-state-modern">
+              <div className="empty-icon">
+                <i className="fas fa-search"></i>
+              </div>
+              <h3>لا توجد نتائج</h3>
+              <p>لم نجد منتجات تطابق معايير البحث. جرب تغيير الفلاتر.</p>
+              <button
+                className="btn-reset-modern"
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("الكل");
+                  setSelectedStatus("الكل");
+                  setSortBy("newest");
+                }}
+              >
+                <i className="fas fa-undo"></i>
+                إعادة تعيين الفلاتر
+              </button>
             </div>
           )}
 
           {!loading && !error && filteredProducts.length > 0 && (
-            <div className="products-grid">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+            <div className="products-grid-premium">
+              {filteredProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="product-card-container"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* ✅ Modal للفورم */}
+      {/* Modal للفورم المحسّن */}
       {showModal && (
-        <div
-          className="modal-overlay"
-          onClick={closeModal}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0, 0, 0, 0.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-            padding: "1rem",
-          }}
-        >
+        <div className="modal-overlay-premium" onClick={closeModal}>
           <div
-            className="modal-content"
+            className="modal-content-premium"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "white",
-              borderRadius: "20px",
-              padding: "2rem",
-              maxWidth: "500px",
-              width: "100%",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              position: "relative",
-              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
-            }}
           >
-            {/* Close Button */}
-            <button
-              onClick={closeModal}
-              style={{
-                position: "absolute",
-                top: "1rem",
-                left: "1rem",
-                background: "none",
-                border: "none",
-                fontSize: "1.5rem",
-                cursor: "pointer",
-                color: "#666",
-                width: "35px",
-                height: "35px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "50%",
-                transition: "all 0.3s ease",
-              }}
-            >
+            <button className="modal-close-btn" onClick={closeModal}>
               <i className="fas fa-times"></i>
             </button>
 
-            {/* Modal Header */}
-            <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-              <div
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  background:
-                    "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 1rem",
-                  color: "white",
-                  fontSize: "1.5rem",
-                }}
-              >
-                <i className="fas fa-clipboard-list"></i>
+            <div className="modal-header-premium">
+              <div className="modal-icon-wrapper">
+                <div className="modal-icon-bg"></div>
+                <i className="fas fa-shopping-cart modal-icon"></i>
               </div>
-              <h2
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "700",
-                  color: "#1f2937",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                سجل اهتمامك
-              </h2>
-              <p style={{ color: "#6b7280", fontSize: "0.95rem" }}>
-                {selectedProduct?.name}
-              </p>
+              <h2 className="modal-title">اطلب منتجك الآن</h2>
+              <p className="modal-subtitle">{selectedProduct?.name}</p>
+              <div className="modal-divider"></div>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleRegister}>
-              {/* Name */}
-              <div style={{ marginBottom: "1rem" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: "600",
-                    color: "#374151",
-                  }}
-                >
-                  <i
-                    className="fas fa-user"
-                    style={{ marginLeft: "0.5rem", color: "#8B5CF6" }}
-                  ></i>
-                  الاسم
+            <form onSubmit={handleRegister} className="modal-form-premium">
+              <div className="form-group-premium">
+                <label className="form-label-premium">
+                  <i className="fas fa-user"></i>
+                  الاسم الكامل
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="أدخل اسمك"
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem 1rem",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "12px",
-                    fontSize: "1rem",
-                    transition: "all 0.3s ease",
-                  }}
-                />
+                <div className="input-wrapper-premium">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="أدخل اسمك الكامل"
+                    required
+                    className="form-input-premium"
+                  />
+                </div>
               </div>
 
-              {/* Email */}
-              <div style={{ marginBottom: "1rem" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: "600",
-                    color: "#374151",
-                  }}
-                >
-                  <i
-                    className="fas fa-envelope"
-                    style={{ marginLeft: "0.5rem", color: "#8B5CF6" }}
-                  ></i>
+              <div className="form-group-premium">
+                <label className="form-label-premium">
+                  <i className="fas fa-envelope"></i>
                   البريد الإلكتروني
                 </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="example@email.com"
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem 1rem",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "12px",
-                    fontSize: "1rem",
-                    transition: "all 0.3s ease",
-                  }}
-                />
+                <div className="input-wrapper-premium">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="example@email.com"
+                    required
+                    className="form-input-premium"
+                  />
+                </div>
               </div>
 
-              {/* Phone */}
-              <div style={{ marginBottom: "1.5rem" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "0.5rem",
-                    fontWeight: "600",
-                    color: "#374151",
-                  }}
-                >
-                  <i
-                    className="fas fa-phone"
-                    style={{ marginLeft: "0.5rem", color: "#8B5CF6" }}
-                  ></i>
+              <div className="form-group-premium">
+                <label className="form-label-premium">
+                  <i className="fas fa-phone"></i>
                   رقم الجوال
                 </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="05xxxxxxxx"
-                  required
-                  pattern="^(05|5)[0-9]{8}$"
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem 1rem",
-                    border: "2px solid #e5e7eb",
-                    borderRadius: "12px",
-                    fontSize: "1rem",
-                    direction: "ltr",
-                    textAlign: "right",
-                    transition: "all 0.3s ease",
-                  }}
-                />
+                <div className="input-wrapper-premium">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="05xxxxxxxx"
+                    required
+                    pattern="^(05|5)[0-9]{8}$"
+                    className="form-input-premium"
+                    style={{ direction: "ltr", textAlign: "right" }}
+                  />
+                </div>
               </div>
 
-              {/* Message */}
               {formMessage.text && (
                 <div
-                  style={{
-                    padding: "1rem",
-                    borderRadius: "12px",
-                    marginBottom: "1rem",
-                    background:
-                      formMessage.type === "success" ? "#d1fae5" : "#fee2e2",
-                    color:
-                      formMessage.type === "success" ? "#065f46" : "#991b1b",
-                    textAlign: "center",
-                    fontWeight: "600",
-                  }}
+                  className={`form-message-premium ${
+                    formMessage.type === "success"
+                      ? "message-success"
+                      : "message-error"
+                  }`}
                 >
-                  {formMessage.text}
+                  <i
+                    className={`fas ${
+                      formMessage.type === "success"
+                        ? "fa-check-circle"
+                        : "fa-exclamation-circle"
+                    }`}
+                  ></i>
+                  <span>{formMessage.text}</span>
                 </div>
               )}
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={formSubmitting}
-                style={{
-                  width: "100%",
-                  padding: "1rem",
-                  background: formSubmitting
-                    ? "#9ca3af"
-                    : "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "12px",
-                  fontSize: "1.1rem",
-                  fontWeight: "700",
-                  cursor: formSubmitting ? "not-allowed" : "pointer",
-                  transition: "all 0.3s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.5rem",
-                }}
+                className="btn-submit-premium"
               >
+                <div className="btn-submit-shine"></div>
                 {formSubmitting ? (
                   <>
-                    <i className="fas fa-spinner fa-spin"></i>
-                    جاري الإرسال...
+                    <div className="spinner-submit"></div>
+                    <span>جاري الإرسال...</span>
                   </>
                 ) : (
                   <>
                     <i className="fas fa-paper-plane"></i>
-                    إرسال
+                    <span>إرسال الطلب</span>
                   </>
                 )}
               </button>
+
+              <p className="form-note-premium">
+                <i className="fas fa-shield-alt"></i>
+                سيتم التواصل معك خلال 24 ساعة
+              </p>
             </form>
           </div>
         </div>
