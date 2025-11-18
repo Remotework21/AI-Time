@@ -290,6 +290,9 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 1rem;
+  text-align: center !important;  /* 👈 هنا الإضافة */
+  display: block;
+  width: 100%;
 }
 
 .section-subtitle {

@@ -7,6 +7,13 @@ import "../styles/products.css";
 import { saveGiftRegistration } from "../services/firebaseService";
 import { Link } from "react-router-dom";
 
+const AUDIENCE_FILTERS = {
+  business: { label: "للشركات", code: "audience_3" },
+  individuals: { label: "للأفراد", code: "audience_4" },
+  associations: { label: "للجمعيات", code: "audience_5" },
+  programmers: { label: "للمبرمجين", code: "audience_2" },
+};
+
 // ✅ Product Card Component - خارج Home (غير مستخدم حالياً في السكشن الرئيسي)
 const ProductCard = ({ product, navigate, getProductIcon }) => {
   const isAvailable = product.readinessStatus === "متاح";
@@ -170,6 +177,10 @@ export default function Home() {
 
   // ✅ navigator لاستخدامه في زر "اكتشف المزيد" و غيره
   const navigate = useNavigate();
+
+  const goToAudienceProducts = (code) => {
+    navigate(`/products?audience=${encodeURIComponent(code)}`);
+  };
 
   // ✅ ==== inquiry function ====
   const [formData, setFormData] = useState({
@@ -550,9 +561,12 @@ await app.deploy();`;
       <section className="categories-bar">
         <div className="container">
           <div className="categories-container" data-aos="fade-up">
+            {/* للشركات */}
             <div
               className="category-item"
-              onClick={() => scrollToSection("business")}
+              onClick={() =>
+                goToAudienceProducts(AUDIENCE_FILTERS.business.code)
+              }
             >
               <div className="category-icon">
                 <i className="fas fa-building"></i>
@@ -561,9 +575,12 @@ await app.deploy();`;
               <div className="category-desc">حلول مؤسسية متكاملة</div>
             </div>
 
+            {/* للأفراد */}
             <div
               className="category-item"
-              onClick={() => scrollToSection("individuals")}
+              onClick={() =>
+                goToAudienceProducts(AUDIENCE_FILTERS.individuals.code)
+              }
             >
               <div className="category-icon">
                 <i className="fas fa-user-tie"></i>
@@ -572,20 +589,26 @@ await app.deploy();`;
               <div className="category-desc">طور مهاراتك في الذكاء</div>
             </div>
 
+            {/* للجمعيات */}
             <div
               className="category-item"
-              onClick={() => scrollToSection("free-gifts")}
+              onClick={() =>
+                goToAudienceProducts(AUDIENCE_FILTERS.associations.code)
+              }
             >
               <div className="category-icon">
                 <i className="fas fa-gift"></i>
               </div>
               <div className="category-title">للجمعيات</div>
-              <div className="category-desc">اختر الانسب لمؤسستك</div>
+              <div className="category-desc">اختر الأنسب لمؤسستك</div>
             </div>
 
+            {/* للمبرمجين */}
             <div
               className="category-item"
-              onClick={() => scrollToSection("students")}
+              onClick={() =>
+                goToAudienceProducts(AUDIENCE_FILTERS.programmers.code)
+              }
             >
               <div className="category-icon">
                 <i className="fas fa-graduation-cap"></i>
@@ -600,7 +623,7 @@ await app.deploy();`;
       <section className="products-section" id="products">
         <div className="container">
           <div className="section-header" data-aos="fade-up">
-            <h2 className="section-title">منتجاتنا وخدماتنا</h2>
+            <h2 className="section-title ">استكشف منتجاتنا وخدماتنا</h2>
             <p className="section-subtitle">حلول ذكية متكاملة لتحويل أعمالك</p>
           </div>
 

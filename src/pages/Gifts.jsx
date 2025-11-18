@@ -1,10 +1,96 @@
 // Gifts.jsx
-// صفحة عرض جميع الهدايا
+// صفحة عرض جميع الهدايا - محسنة بالكامل
 // API: https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiGifts
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/gifts.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/gifts.css";
+
+// Gift Card Component - منفصل ومحسن
+const GiftCard = ({ gift }) => {
+  const navigate = useNavigate();
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const description =
+    gift.description || gift.purpose || "هدية مميزة من منصة وقت الذكاء";
+  const shortDescription =
+    description.length > 120
+      ? description.substring(0, 120) + "..."
+      : description;
+  const hasMoreContent = description.length > 120;
+
+  const handleCardClick = () => {
+    navigate(`/gift/${gift.id}`);
+  };
+
+  const handleButtonClick = (e) => {
+    e.stopPropagation();
+    navigate(`/gift/${gift.id}`);
+  };
+
+  const toggleDescription = (e) => {
+    e.stopPropagation();
+    setShowFullDescription(!showFullDescription);
+  };
+
+  return (
+    <div className="gift-card-new" onClick={handleCardClick}>
+      {/* Header with Gradient */}
+      <div className="gift-header-gradient">
+        <div className="gift-icon-large">
+          <i className="fas fa-gift"></i>
+        </div>
+
+        {/* Status Badge */}
+        <div className="status-badge-top">
+          <span className="status-badge status-gift">
+            <i className="fas fa-star"></i>
+            هدية مجانية
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="gift-content-white">
+        <h3 className="gift-title-new">{gift.giftName}</h3>
+
+        {/* Description with Fixed Height */}
+        <div className="gift-description-container">
+          <p
+            className={`gift-description-new ${
+              showFullDescription ? "expanded" : ""
+            }`}
+          >
+            {showFullDescription ? description : shortDescription}
+          </p>
+
+          {/* Show More Button */}
+          {hasMoreContent && (
+            <button className="gift-show-more-btn" onClick={toggleDescription}>
+              {showFullDescription ? (
+                <>
+                  <i className="fas fa-chevron-up"></i>
+                  عرض أقل
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-chevron-down"></i>
+                  عرض المزيد
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Action Button - Fixed at Bottom */}
+        <button className="gift-action-btn" onClick={handleButtonClick}>
+          احصل على هديتك الآن
+          <i className="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const Gifts = () => {
   const navigate = useNavigate();
@@ -12,10 +98,10 @@ const Gifts = () => {
   const [filteredGifts, setFilteredGifts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Filters
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
 
   // API: جلب الهدايا من Firebase
   useEffect(() => {
@@ -26,24 +112,24 @@ const Gifts = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch(
-        'https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiGifts?limit=200'
+        "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiGifts?limit=200"
       );
-      
+
       if (!response.ok) {
-        throw new Error('فشل تحميل الهدايا');
+        throw new Error("فشل تحميل الهدايا");
       }
-      
+
       const data = await response.json();
-      
+
       if (data.ok && data.items) {
         setGifts(data.items);
         setFilteredGifts(data.items);
       }
     } catch (err) {
-      setError('حدث خطأ أثناء تحميل الهدايا');
-      console.error('Error:', err);
+      setError("حدث خطأ أثناء تحميل الهدايا");
+      console.error("Error:", err);
     } finally {
       setLoading(false);
     }
@@ -56,26 +142,27 @@ const Gifts = () => {
     // البحث
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(gift => 
-        gift.giftName?.toLowerCase().includes(term) ||
-        gift.description?.toLowerCase().includes(term) ||
-        gift.purpose?.toLowerCase().includes(term)
+      result = result.filter(
+        (gift) =>
+          gift.giftName?.toLowerCase().includes(term) ||
+          gift.description?.toLowerCase().includes(term) ||
+          gift.purpose?.toLowerCase().includes(term)
       );
     }
 
     // الترتيب
     switch (sortBy) {
-      case 'newest':
+      case "newest":
         result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
-      case 'oldest':
+      case "oldest":
         result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         break;
-      case 'name-asc':
-        result.sort((a, b) => a.giftName.localeCompare(b.giftName, 'ar'));
+      case "name-asc":
+        result.sort((a, b) => a.giftName.localeCompare(b.giftName, "ar"));
         break;
-      case 'name-desc':
-        result.sort((a, b) => b.giftName.localeCompare(a.giftName, 'ar'));
+      case "name-desc":
+        result.sort((a, b) => b.giftName.localeCompare(a.giftName, "ar"));
         break;
       default:
         break;
@@ -83,108 +170,6 @@ const Gifts = () => {
 
     setFilteredGifts(result);
   }, [gifts, searchTerm, sortBy]);
-
-  // ✅ Gift Card Component - خارج Home
-const GiftCard = ({ gift, navigate }) => {
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  
-  const description = gift.description || gift.purpose || 'هدية مميزة من منصة وقت الذكاء';
-  const shortDescription = description.split('\n').slice(0, 3).join('\n');
-  const hasMoreContent = description.split('\n').length > 3 || description.length > 150;
-
-  return (
-    <div className="gift-card-new" onClick={() => navigate('/gifts')}>
-      {/* Header with Gradient */}
-      <div className="gift-header-gradient">
-        <div className="gift-icon-large">
-          <i className="fas fa-gift"></i>
-        </div>
-        
-        {/* Status Badge */}
-        <div className="status-badge-top">
-          <span className="status-badge status-gift">
-            هدية مجانية
-          </span>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="gift-content-white">
-        <h3 className="gift-title-new">{gift.giftName}</h3>
-        
-        {/* Description with Show More - 3 سطور فقط */}
-        <p 
-          className="gift-description-new" 
-          style={{ 
-            display: '-webkit-box',
-            WebkitLineClamp: showFullDescription ? 'unset' : 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            minHeight: '3.4rem',
-            marginBottom: '0.5rem'
-          }}
-        >
-          {showFullDescription ? description : shortDescription}
-        </p>
-
-        {/* زرار عرض المزيد - يظهر لو الوصف أطول من 3 سطور */}
-        {hasMoreContent && (
-          <button 
-            onClick={(e) => {
-              e.stopPropagation(); // عشان ميروحش للصفحة لما تضغط الزرار
-              setShowFullDescription(!showFullDescription);
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#8B5CF6',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              padding: '0.5rem 0',
-              marginBottom: '0.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#7C3AED';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#8B5CF6';
-            }}
-          >
-            {showFullDescription ? (
-              <>
-                <i className="fas fa-chevron-up"></i>
-                عرض أقل
-              </>
-            ) : (
-              <>
-                <i className="fas fa-chevron-down"></i>
-                عرض المزيد
-              </>
-            )}
-          </button>
-        )}
-
-        {/* Action Button */}
-        <button 
-          className="gift-action-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate('/gifts');
-          }}
-        >
-          احصل على هديتك الآن
-          <i className="fas fa-arrow-left"></i>
-        </button>
-      </div>
-    </div>
-  );
-};
 
   return (
     <div className="gifts-page">
@@ -216,7 +201,10 @@ const GiftCard = ({ gift, navigate }) => {
                 className="search-input"
               />
               {searchTerm && (
-                <button className="clear-search" onClick={() => setSearchTerm('')}>
+                <button
+                  className="clear-search"
+                  onClick={() => setSearchTerm("")}
+                >
                   <i className="fas fa-times"></i>
                 </button>
               )}
@@ -241,7 +229,11 @@ const GiftCard = ({ gift, navigate }) => {
           {/* Results Count */}
           <div className="results-count">
             <i className="fas fa-gift"></i>
-            <span>{loading ? 'جاري التحميل...' : `${filteredGifts.length} هدية متاحة`}</span>
+            <span>
+              {loading
+                ? "جاري التحميل..."
+                : `${filteredGifts.length} هدية متاحة`}
+            </span>
           </div>
         </div>
       </section>
@@ -276,7 +268,7 @@ const GiftCard = ({ gift, navigate }) => {
 
           {!loading && !error && filteredGifts.length > 0 && (
             <div className="gifts-grid">
-              {filteredGifts.map(gift => (
+              {filteredGifts.map((gift) => (
                 <GiftCard key={gift.id} gift={gift} />
               ))}
             </div>
@@ -288,20 +280,48 @@ const GiftCard = ({ gift, navigate }) => {
       <section className="gifts-cta">
         <div className="container">
           <div className="cta-content">
-            <i className="fas fa-sparkles"></i>
+            <div className="cta-icon">
+              <i className="fas fa-gift"></i>
+            </div>
             <h2>هل تريد المزيد من الهدايا؟</h2>
-            <p>تابعنا على منصات التواصل الاجتماعي لتحصل على أحدث الهدايا والعروض</p>
+            <p>
+              تابعنا على منصات التواصل الاجتماعي لتحصل على أحدث الهدايا والعروض
+            </p>
             <div className="social-buttons">
-              <a href="#" className="social-btn twitter">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn twitter"
+                aria-label="Twitter"
+              >
                 <i className="fab fa-twitter"></i>
               </a>
-              <a href="#" className="social-btn facebook">
-                <i className="fab fa-facebook"></i>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn facebook"
+                aria-label="Facebook"
+              >
+                <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#" className="social-btn instagram">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn instagram"
+                aria-label="Instagram"
+              >
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#" className="social-btn whatsapp">
+              <a
+                href="https://wa.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn whatsapp"
+                aria-label="WhatsApp"
+              >
                 <i className="fab fa-whatsapp"></i>
               </a>
             </div>

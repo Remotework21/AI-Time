@@ -427,54 +427,6 @@ const News = () => {
           </div>
         </div>
       </section>
-
-    
-
-      {/* Info Button */}
-      <div className="info-button" onClick={toggleInfo}>
-        <i className="fas fa-info"></i>
-      </div>
-
-      {/* Info Panel */}
-      <div className={`info-panel ${showInfoPanel ? 'active' : ''}`} id="infoPanel">
-        <span
-          onClick={toggleInfo}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '15px',
-            fontSize: '1.5rem',
-            cursor: 'pointer'
-          }}
-        >
-          ✕
-        </span>
-        <h3 style={{ color: 'var(--primary-color)', marginBottom: '1.5rem' }}>
-          📋 معلومات صفحة الأخبار
-        </h3>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🎯 الهدف من الصفحة:</h4>
-        <p>عرض آخر أخبار ومستجدات الذكاء الاصطناعي مع إمكانية المشاركة على السوشيال ميديا</p>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>✨ المميزات:</h4>
-        <ul style={{ listStyle: 'none', paddingRight: '1rem' }}>
-          <li>• فلترة الأخبار حسب الفئة</li>
-          <li>• البحث في الأخبار</li>
-          <li>• مشاركة على السوشيال ميديا</li>
-          <li>• تحميل المزيد (Pagination)</li>
-          <li>• نشرة بريدية</li>
-        </ul>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🔧 للمطور البرمجي:</h4>
-        <ul style={{ listStyle: 'none', paddingRight: '1rem' }}>
-          <li>• ربط مع API للأخبار</li>
-          <li>• تنفيذ البحث والفلترة</li>
-          <li>• Share API للمشاركة</li>
-          <li>• Lazy loading للصور</li>
-          <li>• Newsletter integration</li>
-          <li>• RSS Feed</li>
-        </ul>
-      </div>
     </div>
   );
 };

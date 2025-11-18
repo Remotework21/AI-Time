@@ -26,9 +26,12 @@ const Products = () => {
   const [categories, setCategories] = useState(["الكل"]);
   const statuses = ["الكل", "متاح", "قريباً", "تحت التطوير"];
 
-  // Modal & Form States
-  const [showModal, setShowModal] = useState(false);
+  // Modal States
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // Form States
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,6 +39,15 @@ const Products = () => {
   });
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formMessage, setFormMessage] = useState({ type: "", text: "" });
+  const [audienceFilter, setAudienceFilter] = useState("");
+
+  // ماب لتحويل الكود لليبل عربي نظيف
+  const AUDIENCE_LABELS = {
+    audience_3: "للشركات",
+    audience_4: "للأفراد",
+    audience_5: "للجمعيات",
+    audience_2: "للمبرمجين",
+  };
 
   // جلب المنتجات من API
   const fetchProducts = async () => {
@@ -44,9 +56,15 @@ const Products = () => {
       setError(null);
       console.log("📦 Products - Fetching products...");
 
-      const response = await fetch(
-        "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=100"
-      );
+      let url =
+        "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=100";
+
+      // لو فيه audience جاي من الـ URL ضيفه
+      if (audienceFilter) {
+        url += `&audience=${encodeURIComponent(audienceFilter)}`;
+      }
+
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error("فشل تحميل المنتجات");
@@ -66,6 +84,10 @@ const Products = () => {
           ),
         ];
         setCategories(uniqueCategories);
+      } else {
+        setProducts([]);
+        setFilteredProducts([]);
+        setCategories(["الكل"]);
       }
     } catch (error) {
       console.error("❌ Products - Error fetching products:", error);
@@ -77,7 +99,17 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audienceFilter]);
+
+  useEffect(() => {
+    const audienceFromUrl = searchParams.get("audience");
+    if (audienceFromUrl && /^audience_\d+$/.test(audienceFromUrl)) {
+      setAudienceFilter(audienceFromUrl);
+    } else {
+      setAudienceFilter(""); // يعني كل المنتجات
+    }
+  }, [searchParams]);
 
   // Handle form input change
   const handleInputChange = (e) => {
@@ -97,7 +129,6 @@ const Products = () => {
     setFormSubmitting(true);
     setFormMessage({ type: "", text: "" });
 
-    // Validation
     if (!formData.name.trim()) {
       setFormMessage({ type: "error", text: "الرجاء إدخال الاسم" });
       setFormSubmitting(false);
@@ -142,7 +173,7 @@ const Products = () => {
       setFormData({ name: "", email: "", phone: "" });
 
       setTimeout(() => {
-        setShowModal(false);
+        setShowOrderModal(false);
         setFormMessage({ type: "", text: "" });
       }, 2500);
     } catch (error) {
@@ -156,20 +187,32 @@ const Products = () => {
     }
   };
 
-  // Open Modal
-  const openModal = (product) => {
+  // Open Order Modal
+  const openOrderModal = (product) => {
     setSelectedProduct(product);
-    setShowModal(true);
+    setShowOrderModal(true);
     setFormData({ name: "", email: "", phone: "" });
     setFormMessage({ type: "", text: "" });
   };
 
-  // Close Modal
-  const closeModal = () => {
-    setShowModal(false);
+  // Close Order Modal
+  const closeOrderModal = () => {
+    setShowOrderModal(false);
     setSelectedProduct(null);
     setFormData({ name: "", email: "", phone: "" });
     setFormMessage({ type: "", text: "" });
+  };
+
+  // Open Details Modal
+  const openDetailsModal = (product) => {
+    setSelectedProduct(product);
+    setShowDetailsModal(true);
+  };
+
+  // Close Details Modal
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false);
+    setSelectedProduct(null);
   };
 
   // تطبيق الفلاتر
@@ -178,12 +221,17 @@ const Products = () => {
 
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(
-        (product) =>
+      result = result.filter((product) => {
+        const audiencesText = Array.isArray(product.targetAudiences)
+          ? product.targetAudiences.join(" ")
+          : String(product.targetAudiences || "");
+
+        return (
           product.name?.toLowerCase().includes(term) ||
-          product.targetAudiences?.toLowerCase().includes(term) ||
+          audiencesText.toLowerCase().includes(term) ||
           product.subCategory?.toLowerCase().includes(term)
-      );
+        );
+      });
     }
 
     if (selectedCategory !== "الكل") {
@@ -242,15 +290,10 @@ const Products = () => {
   // بطاقة المنتج المحسّنة
   const ProductCard = ({ product }) => {
     const isAvailable = product.readinessStatus === "متاح";
-    const getReleaseDate = () => {
-      if (isAvailable) return null;
-      const date = new Date(product.createdAt);
-      date.setMonth(date.getMonth() + 2);
-      return date.toLocaleDateString("ar-SA", {
-        year: "numeric",
-        month: "long",
-      });
-    };
+
+    // عرض أول 3 features أو sellingPoints
+    const displayFeatures =
+      product.features?.slice(0, 3) || product.sellingPoints?.slice(0, 3) || [];
 
     return (
       <div className="product-card-premium">
@@ -277,7 +320,7 @@ const Products = () => {
                   isAvailable ? "fa-check-circle" : "fa-clock"
                 }`}
               ></i>
-              {isAvailable ? "متاح الآن" : `قريباً`}
+              {isAvailable ? "متاح الآن" : "قريباً"}
             </span>
           </div>
         </div>
@@ -290,32 +333,36 @@ const Products = () => {
 
           <h3 className="product-title-modern">{product.name}</h3>
 
-          <p className="product-description-modern">
+          {/* <p className="product-description-modern">
             {product.targetAudiences ||
               "حلول ذكاء اصطناعي متطورة لتحسين أعمالك"}
-          </p>
+          </p> */}
 
-          {!isAvailable && getReleaseDate() && (
-            <div className="release-date-badge">
-              <i className="fas fa-calendar-alt"></i>
-              متوقع: {getReleaseDate()}
+          {displayFeatures.length > 0 && (
+            <div className="product-features-list">
+              {displayFeatures.map((feature, index) => (
+                <div key={index} className="feature-item">
+                  <i className="fas fa-check-circle"></i>
+                  <span>{feature}</span>
+                </div>
+              ))}
             </div>
           )}
 
           <div className="product-actions-modern">
             <button
               className="btn-details-modern"
-              onClick={() => navigate(`/product/${product.id}`)}
+              onClick={() => openDetailsModal(product)}
             >
               <span>التفاصيل</span>
-              <i className="fas fa-arrow-left"></i>
+              <i className="fas fa-info-circle"></i>
             </button>
 
             <button
               className="btn-order-modern"
               onClick={(e) => {
                 e.stopPropagation();
-                openModal(product);
+                openOrderModal(product);
               }}
             >
               <div className="btn-shine"></div>
@@ -347,8 +394,7 @@ const Products = () => {
           </div>
 
           <h1 className="hero-title-premium">
-            منتجات الذكاء الاصطناعي
-            <span className="title-gradient">المبتكرة</span>
+            منتجات الذكاء الاصطناعي المبتكرة
           </h1>
 
           <p className="hero-subtitle-premium">
@@ -357,19 +403,32 @@ const Products = () => {
 
           <div className="hero-stats">
             <div className="stat-item">
-              <div className="stat-number">{filteredProducts.length}+</div>
+              <div
+                className="stat-number"
+                style={{ color: "#fff", opacity: 1 }}
+              >
+                {filteredProducts.length}+
+              </div>
               <div className="stat-label">منتج متاح</div>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
-              <div className="stat-number">
+              <div
+                className="stat-number"
+                style={{ color: "#fff", opacity: 1 }}
+              >
                 {products.filter((p) => p.readinessStatus === "متاح").length}
               </div>
               <div className="stat-label">جاهز للاستخدام</div>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
-              <div className="stat-number">24/7</div>
+              <div
+                className="stat-number"
+                style={{ color: "#fff", opacity: 1 }}
+              >
+                24/7
+              </div>
               <div className="stat-label">دعم فني</div>
             </div>
           </div>
@@ -509,8 +568,19 @@ const Products = () => {
               <div className="empty-icon">
                 <i className="fas fa-search"></i>
               </div>
-              <h3>لا توجد نتائج</h3>
-              <p>لم نجد منتجات تطابق معايير البحث. جرب تغيير الفلاتر.</p>
+              <h3>
+                {audienceFilter
+                  ? "لا توجد منتجات لهذه الفئة حالياً"
+                  : "لا توجد نتائج"}
+              </h3>
+              <p>
+                {audienceFilter
+                  ? `لا توجد حالياً منتجات متاحة ${
+                      AUDIENCE_LABELS[audienceFilter] || ""
+                    }. تابعنا، سنضيف المزيد قريباً.`
+                  : "لم نجد منتجات تطابق معايير البحث. جرب تغيير الفلاتر."}
+              </p>
+
               <button
                 className="btn-reset-modern"
                 onClick={() => {
@@ -518,10 +588,14 @@ const Products = () => {
                   setSelectedCategory("الكل");
                   setSelectedStatus("الكل");
                   setSortBy("newest");
+                  if (audienceFilter) {
+                    // نرجع لصفحة كل المنتجات
+                    window.location.href = "/products";
+                  }
                 }}
               >
                 <i className="fas fa-undo"></i>
-                إعادة تعيين الفلاتر
+                {audienceFilter ? "عرض جميع المنتجات" : "إعادة تعيين الفلاتر"}
               </button>
             </div>
           )}
@@ -542,14 +616,140 @@ const Products = () => {
         </div>
       </section>
 
-      {/* Modal للفورم المحسّن */}
-      {showModal && (
-        <div className="modal-overlay-premium" onClick={closeModal}>
+      {/* Modal التفاصيل */}
+      {showDetailsModal && selectedProduct && (
+        <div className="modal-overlay-premium" onClick={closeDetailsModal}>
+          <div
+            className="modal-content-details"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close-btn" onClick={closeDetailsModal}>
+              <i className="fas fa-times"></i>
+            </button>
+
+            <div className="modal-header-details">
+              <div className="modal-icon-wrapper">
+                <div className="modal-icon-bg"></div>
+                <i
+                  className={`fas ${getProductIcon(
+                    selectedProduct.subCategory
+                  )} modal-icon`}
+                ></i>
+              </div>
+              <h2 className="modal-title">{selectedProduct.name}</h2>
+              <p className="modal-subtitle">{selectedProduct.subCategory}</p>
+              <div className="modal-divider"></div>
+            </div>
+
+            <div className="modal-body-details">
+              {selectedProduct.targetAudiences && (
+                <div className="details-section">
+                  <h3>
+                    <i className="fas fa-users"></i> الفئة المستهدفة
+                  </h3>
+                  <p>{selectedProduct.targetAudiences}</p>
+                </div>
+              )}
+
+              {selectedProduct.features &&
+                selectedProduct.features.length > 0 && (
+                  <div className="details-section">
+                    <h3>
+                      <i className="fas fa-star"></i> المميزات
+                    </h3>
+                    <ul className="details-list">
+                      {selectedProduct.features.map((feature, index) => (
+                        <li key={index}>
+                          <i className="fas fa-check-circle"></i>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+              {selectedProduct.sellingPoints &&
+                selectedProduct.sellingPoints.length > 0 && (
+                  <div className="details-section">
+                    <h3>
+                      <i className="fas fa-bolt"></i> نقاط البيع الرئيسية
+                    </h3>
+                    <ul className="details-list">
+                      {selectedProduct.sellingPoints.map((point, index) => (
+                        <li key={index}>
+                          <i className="fas fa-arrow-left"></i>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+              {selectedProduct.links && selectedProduct.links.length > 0 && (
+                <div className="details-section">
+                  <h3>
+                    <i className="fas fa-link"></i> روابط مفيدة
+                  </h3>
+                  <div className="links-grid">
+                    {selectedProduct.links.map((link, index) => (
+                      <a
+                        key={index}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link-item"
+                      >
+                        <i className="fas fa-external-link-alt"></i>
+                        {link.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="details-section">
+                <h3>
+                  <i className="fas fa-info-circle"></i> معلومات إضافية
+                </h3>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="info-label">الحالة:</span>
+                    <span className="info-value">
+                      {selectedProduct.readinessStatus || "غير محدد"}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">السعر:</span>
+                    <span className="info-value">
+                      {formatPrice(selectedProduct.customerPrice)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                className="btn-order-details"
+                onClick={() => {
+                  closeDetailsModal();
+                  openOrderModal(selectedProduct);
+                }}
+              >
+                <i className="fas fa-shopping-cart"></i>
+                <span>اطلب الآن</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal الطلب */}
+      {showOrderModal && selectedProduct && (
+        <div className="modal-overlay-premium" onClick={closeOrderModal}>
           <div
             className="modal-content-premium"
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="modal-close-btn" onClick={closeModal}>
+            <button className="modal-close-btn" onClick={closeOrderModal}>
               <i className="fas fa-times"></i>
             </button>
 
@@ -559,7 +759,7 @@ const Products = () => {
                 <i className="fas fa-shopping-cart modal-icon"></i>
               </div>
               <h2 className="modal-title">اطلب منتجك الآن</h2>
-              <p className="modal-subtitle">{selectedProduct?.name}</p>
+              <p className="modal-subtitle">{selectedProduct.name}</p>
               <div className="modal-divider"></div>
             </div>
 

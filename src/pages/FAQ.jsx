@@ -490,52 +490,6 @@ const FAQ = () => {
           </div>
         </div>
       </section>
-
-      
-
-      {/* Info Button */}
-      <div className="info-button" onClick={toggleInfo}>
-        <i className="fas fa-info"></i>
-      </div>
-
-      {/* Info Panel */}
-      <div className={`info-panel ${showInfoPanel ? 'active' : ''}`}>
-        <span
-          onClick={toggleInfo}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '15px',
-            fontSize: '1.5rem',
-            cursor: 'pointer'
-          }}
-        >
-          ✕
-        </span>
-        <h3 style={{ color: 'var(--primary-color)', marginBottom: '1.5rem' }}>
-          ❓ معلومات صفحة الأسئلة الشائعة
-        </h3>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🎯 الهدف من الصفحة:</h4>
-        <p>تقديم إجابات شاملة وواضحة عن أكثر الأسئلة شيوعاً حول المنصة والخدمات</p>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>✨ المميزات:</h4>
-        <ul style={{ listStyle: 'none', paddingRight: '1rem' }}>
-          <li>• فلترة حسب الفئات (6 فئات)</li>
-          <li>• 15 سؤال شامل</li>
-          <li>• فتح/إغلاق الأسئلة</li>
-          <li>• مشاركة على السوشيال ميديا</li>
-          <li>• روابط سريعة</li>
-        </ul>
-        
-        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem' }}>🔧 للمطور البرمجي:</h4>
-        <ul style={{ listStyle: 'none', paddingRight: '1rem' }}>
-          <li>• إضافة/تعديل الأسئلة من faqData</li>
-          <li>• ربط مع API للأسئلة الديناميكية</li>
-          <li>• إضافة بحث في الأسئلة</li>
-          <li>• تتبع الأسئلة الأكثر مشاهدة</li>
-        </ul>
-      </div>
     </div>
   );
 };
