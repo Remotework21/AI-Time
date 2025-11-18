@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
-import FloatingBtn from "./common/FloatingBtn"
+import FloatingBtn from "./common/FloatingBtn";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -12,7 +12,7 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import VibeCode from "./pages/VibeCode";
 import ProductRequest from "./pages/ProductRequest";
-import Gifts from "./pages/Gifts"
+import Gifts from "./pages/Gifts";
 
 export default function App() {
   return (
@@ -24,7 +24,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
-                    <Route path="/Gifts" element={<Gifts />} />
+          <Route path="/gifts" element={<Gifts />} />
 
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/vibecode" element={<VibeCode />} />
@@ -36,7 +36,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-      
     </>
   );
 }

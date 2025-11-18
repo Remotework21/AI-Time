@@ -119,40 +119,10 @@ export default function FloatingBtn() {
       </a>
 
       {/* Info Button */}
-      <button
-        type="button"
-        className={`info-button ${isVisible ? "visible" : ""}`}
-        onClick={openInfoPanel}
-        aria-label="لوحة المعلومات"
-      >
-        <i className="fas fa-info"></i>
-      </button>
+      
 
       {/* Info Panel */}
-      <aside className="info-panel">
-        <button
-          className="close-info"
-          onClick={closeInfoPanel}
-          aria-label="إغلاق"
-        >
-          <i className="fas fa-times"></i>
-        </button>
-        
-        <h3>معلومات المنصة</h3>
-        
-        <h4>عن وقت الذكاء</h4>
-        <p>
-          منصة رائدة في تقديم حلول الذكاء الاصطناعي للشركات والأفراد في العالم العربي.
-        </p>
-        
-        <h4>ماذا نقدم؟</h4>
-        <ul>
-          <li>منتجات ذكاء اصطناعي جاهزة</li>
-          <li>حلول أتمتة ذكية (Vibe Code)</li>
-          <li>دورات ومواد تعليمية</li>
-          <li>أخبار وتحديثات مستمرة</li>
-        </ul>
-      </aside>
+      
     </>
   );
 }
