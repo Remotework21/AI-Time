@@ -5,23 +5,9 @@ import logo from "../assets/AI-time-logo_cr.png";
 import { scrollToSection } from "../utils/scroll";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-  const location = useLocation();
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+const location = useLocation();
 
-  // init theme from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("theme") || "light";
-    setIsDark(saved === "dark");
-    document.documentElement.setAttribute("data-theme", saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = isDark ? "light" : "dark";
-    setIsDark(!isDark);
-    localStorage.setItem("theme", next);
-    document.documentElement.setAttribute("data-theme", next);
-  };
 
   const isActive = (to) => location.pathname === to;
 
@@ -67,7 +53,11 @@ export default function Header() {
             <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>
               من نحن
             </Link>
-            <Link to="/products" className="mobile-nav-link" onClick={closeMenu}>
+            <Link
+              to="/products"
+              className="mobile-nav-link"
+              onClick={closeMenu}
+            >
               المنتجات
             </Link>
             {/* <a 
@@ -119,20 +109,17 @@ export default function Header() {
             <Link to="/contact" className="mobile-nav-link" onClick={closeMenu}>
               تواصل معنا
             </Link>
-
-
-            <div className="mobile-theme-toggle">
-              <button className="theme-toggle" onClick={toggleTheme}>
-                <i className={isDark ? "fas fa-sun" : "fas fa-moon"}></i>
-                <span>{isDark ? "وضع النهار" : "وضع الليل"}</span>
-              </button>
-            </div>
           </div>
         </nav>
 
         <div className="header-content">
           {/* Mobile Hamburger */}
-          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={isMenuOpen}>
+          <button
+            className="mobile-menu-btn"
+            onClick={toggleMenu}
+            aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={isMenuOpen}
+          >
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
@@ -143,56 +130,49 @@ export default function Header() {
             <Link to="/" className="logo-link" onClick={closeMenu}>
               <img src={logo} alt="AI Time Logo" className="logo-image" />
             </Link>
-            <button
-              className="theme-toggle desktop-theme-toggle"
-              onClick={toggleTheme}
-              aria-label={isDark ? "تبديل إلى الوضع النهاري" : "تبديل إلى الوضع الليلي"}
-            >
-              <i className={isDark ? "fas fa-sun" : "fas fa-moon"}></i>
-            </button>
           </div>
 
           {/* LEFT: Desktop Nav (hidden on mobile) */}
           <div className="desktop-nav-group">
             <nav className="nav-menu desktop-menu">
-            <Link
-              to="/"
-              className={`nav-link${isActive("/") ? " active" : ""}`}
-            >
-              الرئيسية
-            </Link>
-            <Link
-              to="/about"
-              className={`nav-link${isActive("/about") ? " active" : ""}`}
-            >
-              من نحن
-            </Link>
-            <Link
-              to="/products" 
-              className={`nav-link${isActive("/products") ? " active" : ""}`}
-            >
-              المنتجات
-            </Link>
-            <Link
-              to="/vibecode" 
-              className={`nav-link${isActive("/vibecode") ? " active" : ""}`}
-            >
-              الفايب كود
-            </Link>
-            <Link
-              to="/videos" 
-              className={`nav-link${isActive("/videos") ? " active" : ""}`}
-            >
-              الفيديوهات
-            </Link>
+              <Link
+                to="/"
+                className={`nav-link${isActive("/") ? " active" : ""}`}
+              >
+                الرئيسية
+              </Link>
+              <Link
+                to="/about"
+                className={`nav-link${isActive("/about") ? " active" : ""}`}
+              >
+                من نحن
+              </Link>
+              <Link
+                to="/products"
+                className={`nav-link${isActive("/products") ? " active" : ""}`}
+              >
+                المنتجات
+              </Link>
+              <Link
+                to="/vibecode"
+                className={`nav-link${isActive("/vibecode") ? " active" : ""}`}
+              >
+                الفايب كود
+              </Link>
+              <Link
+                to="/videos"
+                className={`nav-link${isActive("/videos") ? " active" : ""}`}
+              >
+                الفيديوهات
+              </Link>
 
-            <Link
-              to="/news" 
-              className={`nav-link${isActive("/news") ? " active" : ""}`}
-            >
-              أخبار الذكاء
-            </Link> 
-          </nav>
+              <Link
+                to="/news"
+                className={`nav-link${isActive("/news") ? " active" : ""}`}
+              >
+                أخبار الذكاء
+              </Link>
+            </nav>
           </div>
         </div>
       </div>

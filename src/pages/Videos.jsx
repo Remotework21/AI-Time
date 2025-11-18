@@ -5,7 +5,7 @@ const videoData = [
   {
     id: "featured",
     type: "featured",
-    src: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    src: "https://www.youtube.com/embed/QK4X2AYjXn0",
     title: "كيف تبدأ رحلتك مع الذكاء الاصطناعي",
     description:
       "دليل شامل للمبتدئين يشرح أساسيات الذكاء الاصطناعي وكيفية البدء في استخدامه في حياتك العملية والشخصية بطريقة بسيطة وفعالة.",
@@ -19,7 +19,7 @@ const videoData = [
   },
   {
     id: "1",
-    src: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    src: "https://www.youtube.com/embed/QK4X2AYjXn0",
     title: "دليل استخدام ChatGPT للمبتدئين",
     description:
       "تعلم كيفية استخدام ChatGPT بشكل احترافي من البداية حتى الاحتراف",
@@ -69,7 +69,8 @@ const videoData = [
     id: "5",
     src: "",
     title: "إنشاء صور احترافية بالذكاء الاصطناعي",
-    description: "تعلم استخدام أدوات الذكاء الاصطناعي لإنشاء صور احترافية مذهلة",
+    description:
+      "تعلم استخدام أدوات الذكاء الاصطناعي لإنشاء صور احترافية مذهلة",
     category: "دروس تعليمية",
     duration: "12:15",
     views: "6.5K مشاهدة",
@@ -80,8 +81,7 @@ const videoData = [
     id: "6",
     src: "",
     title: "أتمتة أعمالك باستخدام Vibe Code",
-    description:
-      "دليل عملي لاستخدام تقنية Vibe Code في أتمتة العمليات اليومية",
+    description: "دليل عملي لاستخدام تقنية Vibe Code في أتمتة العمليات اليومية",
     category: "نصائح وحيل",
     duration: "28:30",
     views: "4.2K مشاهدة",
@@ -122,7 +122,7 @@ export default function Videos() {
 
   // تشغيل الفيديو في المودال
   function playVideo(v) {
-    setModalVideo(v.src || "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1");
+    setModalVideo(v.src || "https://www.youtube.com/embed/QK4X2AYjXn0");
   }
   function closeModal() {
     setModalVideo(null);
@@ -144,7 +144,7 @@ export default function Videos() {
         shareUrl = `https://wa.me/?text=${encodeURIComponent(title + " " + url)}`;
         break;
       case "youtube":
-        shareUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        shareUrl = "https://www.youtube.com/embed/QK4X2AYjXn0";
         break;
       default:
         break;
@@ -244,7 +244,7 @@ export default function Videos() {
                 <div className="video-thumbnail">
                   {i === 0 ? (
                     <iframe
-                      src={v.src || "https://www.youtube.com/embed/dQw4w9WgXcQ"}
+                      src={v.src || "https://www.youtube.com/embed/QK4X2AYjXn0"}
                       title={v.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
