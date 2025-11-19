@@ -42,3 +42,18 @@ export const saveProductRegistration = async (formData) => {
     throw error;
   }
 };
+
+// 🟢 حفظ استفسارات صفحة الهوم في generalInquiries
+export const saveGeneralInquiry = async (formData) => {
+  try {
+    const payload = buildPayload(formData, "home_inquiry");
+
+    const docRef = await addDoc(collection(db, "generalInquiries"), payload);
+
+    console.log("✅ تم إرسال الاستفسار! ID:", docRef.id);
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("❌ خطأ في إرسال الاستفسار:", error);
+    throw error;
+  }
+};

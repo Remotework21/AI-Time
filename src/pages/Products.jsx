@@ -31,10 +31,9 @@ const Products = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Form States
+  // Form States (بدون البريد الإلكتروني)
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
     phone: "",
   });
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -123,7 +122,7 @@ const Products = () => {
     }
   };
 
-  // Handle form submit
+  // Handle form submit (بدون إيميل)
   const handleRegister = async (e) => {
     e.preventDefault();
     setFormSubmitting(true);
@@ -131,15 +130,6 @@ const Products = () => {
 
     if (!formData.name.trim()) {
       setFormMessage({ type: "error", text: "الرجاء إدخال الاسم" });
-      setFormSubmitting(false);
-      return;
-    }
-
-    if (!formData.email.trim() || !formData.email.includes("@")) {
-      setFormMessage({
-        type: "error",
-        text: "الرجاء إدخال بريد إلكتروني صحيح",
-      });
       setFormSubmitting(false);
       return;
     }
@@ -155,7 +145,7 @@ const Products = () => {
 
     try {
       const registrationData = {
-        ...formData,
+        ...formData, // name + phone فقط
         productId: selectedProduct?.id,
         productName: selectedProduct?.name,
         source: "products_page",
@@ -170,7 +160,7 @@ const Products = () => {
         text: "🎉 تم إرسال طلبك بنجاح! سنتواصل معك قريباً",
       });
 
-      setFormData({ name: "", email: "", phone: "" });
+      setFormData({ name: "", phone: "" });
 
       setTimeout(() => {
         setShowOrderModal(false);
@@ -191,7 +181,7 @@ const Products = () => {
   const openOrderModal = (product) => {
     setSelectedProduct(product);
     setShowOrderModal(true);
-    setFormData({ name: "", email: "", phone: "" });
+    setFormData({ name: "", phone: "" });
     setFormMessage({ type: "", text: "" });
   };
 
@@ -199,7 +189,7 @@ const Products = () => {
   const closeOrderModal = () => {
     setShowOrderModal(false);
     setSelectedProduct(null);
-    setFormData({ name: "", email: "", phone: "" });
+    setFormData({ name: "", phone: "" });
     setFormMessage({ type: "", text: "" });
   };
 
@@ -332,11 +322,6 @@ const Products = () => {
           </div>
 
           <h3 className="product-title-modern">{product.name}</h3>
-
-          {/* <p className="product-description-modern">
-            {product.targetAudiences ||
-              "حلول ذكاء اصطناعي متطورة لتحسين أعمالك"}
-          </p> */}
 
           {displayFeatures.length > 0 && (
             <div className="product-features-list">
@@ -775,23 +760,7 @@ const Products = () => {
                 </div>
               </div>
 
-              <div className="form-group-premium">
-                <label className="form-label-premium">
-                  <i className="fas fa-envelope"></i>
-                  البريد الإلكتروني
-                </label>
-                <div className="input-wrapper-premium">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="example@email.com"
-                    required
-                    className="form-input-premium"
-                  />
-                </div>
-              </div>
+              {/* تم إزالة حقل البريد الإلكتروني */}
 
               <div className="form-group-premium">
                 <label className="form-label-premium">

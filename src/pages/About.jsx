@@ -126,33 +126,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-5 bg-white" style={{ background: "#f8f8fc" }}>
-        <div className="container">
-          <div className="text-center mb-4">
-            <h2 className="fw-bold mb-1">فريقنا المتميز</h2>
-            <p className="text-muted mb-0">خبراء متخصصون في الذكاء الاصطناعي والتقنية</p>
-          </div>
-          <div className="row g-4">
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm text-center p-4">
-                <div className="mx-auto mb-3 bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style={{ width: 90, height: 90 }}>
-                  <i className="fas fa-user text-white fs-2"></i>
-                </div>
-                <h4 className="mb-1">أحمد محمد</h4>
-                <div className="text-primary mb-2">المؤسس والرئيس التنفيذي</div>
-                <div className="d-flex justify-content-center gap-2">
-                  <a href="#" className="btn btn-light rounded-circle"><i className="fab fa-linkedin"></i></a>
-                  <a href="#" className="btn btn-light rounded-circle"><i className="fab fa-twitter"></i></a>
-                  <a href="#" className="btn btn-light rounded-circle"><i className="fab fa-github"></i></a>
-                </div>
-              </div>
-            </div>
-            {/* ... كرر أعضاء الفريق حسب الحاجة ... */}
-          </div>
-        </div>
-      </section>
-
       {/* Timeline Section */}
       <section className="py-5">
         <div className="container">
@@ -224,37 +197,6 @@ export default function About() {
       <a href="https://wa.me/966500000000" className="position-fixed bottom-0 end-0 m-4 shadow-lg btn btn-success rounded-circle" style={{ zIndex: 1100, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>
         <i className="fab fa-whatsapp"></i>
       </a>
-
-      {/* Info Button */}
-      <button className="position-fixed bottom-0 start-0 m-4 btn btn-info rounded-circle shadow-lg" style={{ zIndex: 1100, width: 54, height: 54, fontSize: 22 }}
-        onClick={() => setShowInfo((s) => !s)}
-      >
-        <i className="fas fa-info"></i>
-      </button>
-
-      {/* Info Panel */}
-      {showInfo && (
-        <div className="position-fixed bottom-0 start-0 mb-5 ms-4 bg-white border shadow-lg rounded-4 p-4" style={{ width: 350, maxWidth: "95vw", zIndex: 1200 }}>
-          <span onClick={() => setShowInfo(false)} style={{ position: "absolute", top: 15, left: 15, fontSize: "1.5rem", cursor: "pointer" }}>✕</span>
-          <h3 className="mb-3 text-primary">📋 معلومات صفحة من نحن</h3>
-          <h4 className="mb-1 mt-2">🎯 الهدف من الصفحة:</h4>
-          <p>تعريف الزوار بالمنصة وقصتها ورؤيتها وفريق العمل</p>
-          <h4 className="mb-1 mt-2">✨ المميزات:</h4>
-          <ul className="ps-3">
-            <li>• قصة المنصة</li>
-            <li>• الرؤية والرسالة</li>
-            <li>• القيم</li>
-            <li>• فريق العمل</li>
-            <li>• Timeline للإنجازات</li>
-          </ul>
-          <h4 className="mb-1 mt-2">🔧 للمطور البرمجي:</h4>
-          <ul className="ps-3">
-            <li>• إضافة صور حقيقية للفريق</li>
-            <li>• تحديث Timeline ديناميكياً</li>
-            <li>• ربط Social Media</li>
-          </ul>
-        </div>
-      )}
     </div>
   );
 }

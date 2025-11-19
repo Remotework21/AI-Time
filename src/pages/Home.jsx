@@ -2,9 +2,13 @@
 import { useEffect, useState, useRef } from "react";
 import { scrollToSection } from "../utils/scroll";
 import { useNavigate } from "react-router-dom";
-import { submitGiftLead, submitGeneralInquiry } from "../services/api";
+import { submitGiftLead } from "../services/api"; // لو مش مستخدم ممكن تشيليه
 import "../styles/products.css";
-import { saveGiftRegistration } from "../services/firebaseService";
+import {
+  saveGiftRegistration,
+  saveGeneralInquiry,
+} from "../services/firebaseService";
+
 import { Link } from "react-router-dom";
 
 const AUDIENCE_FILTERS = {
@@ -361,15 +365,13 @@ export default function Home() {
     setIsSubmitting(true);
 
     try {
-      // إرسال البيانات للداتابيز
-      await submitGeneralInquiry({
+      // 🟢 حفظ البيانات في Firestore مباشرة
+      await saveGeneralInquiry({
         name: formData.name.trim(),
         phone: formData.phone.trim(),
-        notes: formData.inquiry.trim(),
-        ref: "",
-        sessionId: "",
-        utm: {},
-        eventId: "",
+        inquiry: formData.inquiry.trim(),
+        // ممكن تضيفي حقول إضافية لو حابة (مثلاً: page: "home")
+        page: "home",
       });
 
       // نجح الإرسال
