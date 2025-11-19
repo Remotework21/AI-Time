@@ -8,73 +8,54 @@
 }
 
 /* Hero Section */
+/* Hero Section */
 .hero {
   padding: 6rem 0;
-  background: radial-gradient(
-      ellipse at top left,
-      rgba(139, 92, 246, 0.3) 0%,
-      transparent 40%
-    ),
-    radial-gradient(
-      ellipse at top right,
-      rgba(236, 72, 153, 0.25) 0%,
-      transparent 40%
-    ),
-    radial-gradient(
-      ellipse at bottom left,
-      rgba(167, 139, 250, 0.2) 0%,
-      transparent 40%
-    ),
-    radial-gradient(
-      ellipse at bottom right,
-      rgba(249, 168, 212, 0.2) 0%,
-      transparent 40%
-    ),
+  background:
     linear-gradient(
       135deg,
-      rgba(237, 233, 254, 0.4) 0%,
-      rgba(243, 232, 255, 0.3) 20%,
-      rgba(251, 207, 232, 0.25) 40%,
-      rgba(233, 213, 255, 0.3) 60%,
-      rgba(254, 226, 254, 0.25) 80%,
-      rgba(237, 233, 254, 0.3) 100%
+      #f9fafb 0%,
+      #f5f3ff 35%,
+      #fdf2ff 100%
     );
   position: relative;
   overflow: hidden;
-  background-color: #faf8ff;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle at 30% 50%,
-    rgba(139, 92, 246, 0.15) 0%,
-    rgba(236, 72, 153, 0.08) 30%,
-    transparent 70%
-  );
-  animation: rotate 20s linear infinite;
-}
-
+/* نخلي الإضاءة خفيفة جداً بس تضيف عمق بسيط */
+.hero::before,
 .hero::after {
   content: "";
   position: absolute;
-  bottom: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hero::before {
+  top: -60px;
+  right: 10%;
   background: radial-gradient(
-    circle at 70% 50%,
-    rgba(236, 72, 153, 0.12) 0%,
-    rgba(167, 139, 250, 0.08) 30%,
+    circle,
+    rgba(123, 63, 242, 0.35) 0%,
     transparent 70%
   );
-  animation: rotate-reverse 25s linear infinite;
 }
+
+.hero::after {
+  bottom: -80px;
+  left: 12%;
+  background: radial-gradient(
+    circle,
+    rgba(233, 30, 140, 0.30) 0%,
+    transparent 70%
+  );
+}
+
 
 @keyframes rotate-reverse {
   0% {
@@ -104,12 +85,10 @@
   font-size: 3rem;
   font-weight: 900;
   margin-bottom: 1rem;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary-color);
   animation: slideInDown 0.8s;
 }
+
 
 @keyframes slideInDown {
   from {
@@ -123,11 +102,12 @@
 }
 
 .hero-subtitle {
-  font-size: 1.7rem;
-  color: var(--text-light);
+  font-size: 1.3rem;
+  color: var(--text-muted);
   margin-bottom: 2rem;
   animation: slideInUp 0.8s 0.2s both;
 }
+
 
 @keyframes slideInUp {
   from {
@@ -1772,5 +1752,21 @@
   .register-form h3 {
     font-size: 1rem;
   }
+}
+
+/* Hero Section */
+.hero {
+  padding: 6rem 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.16) 0%, transparent 60%),
+    linear-gradient(
+      135deg,
+      var(--logo-purple) 0%,
+      #9d6ff6 40%,
+      var(--logo-pink) 100%
+    );
+  position: relative;
+  overflow: hidden;
 }
 
