@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import "../styles/ProductRequest.css"; // هذا هو ملف الستايل الخارجي
+import "../styles/ProductRequest.css";
+import { saveRequestedProduct } from "../services/firebaseService"; // ✅ ADDED IMPORT
 
 export default function ProductRequest() {
   const [showInfo, setShowInfo] = useState(false);
@@ -10,7 +11,6 @@ export default function ProductRequest() {
 
   const handleColorClick = (color) => setSelectedColor(color);
   const handleRadioChange = (e) => setSelectedRadio(e.target.value);
-
   const handleFeatureToggle = (feature) => {
     setSelectedFeatures((prev) =>
       prev.includes(feature)
@@ -18,12 +18,11 @@ export default function ProductRequest() {
         : [...prev, feature]
     );
   };
-
   const handleFileClick = () => fileInputRef.current.click();
 
-  const handleSubmit = (e) => {
+  // ✅ UPDATED handleSubmit with Firebase integration
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // اجمع البيانات
     const form = e.target;
     const data = {
       fullName: form.fullName.value,
@@ -44,12 +43,20 @@ export default function ProductRequest() {
       notes: form.notes.value,
       timestamp: new Date().toISOString(),
     };
-    // ... يمكنك إضافة رفع الملفات أو ربط الـAPI هنا
-    alert("شكراً لك! تم استلام طلبك بنجاح.");
-    form.reset();
-    setSelectedColor("");
-    setSelectedRadio("");
-    setSelectedFeatures([]);
+
+    try {
+      const result = await saveRequestedProduct(data);
+      if (result.success) {
+        alert("شكراً لك! تم استلام طلبك بنجاح وحفظه في قاعدة البيانات.");
+        form.reset();
+        setSelectedColor("");
+        setSelectedRadio("");
+        setSelectedFeatures([]);
+      }
+    } catch (error) {
+      alert("عذراً، حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.");
+      console.error("Submission error:", error);
+    }
   };
 
   return (
@@ -131,7 +138,6 @@ export default function ProductRequest() {
                 </div>
               </div>
             </div>
-
             {/* 2. Project Type */}
             <div className="form-section">
               <h2 className="section-title">
@@ -197,7 +203,6 @@ export default function ProductRequest() {
                 </div>
               </div>
             </div>
-
             {/* 3. Problem Description */}
             <div className="form-section">
               <h2 className="section-title">
@@ -261,7 +266,6 @@ export default function ProductRequest() {
                 </div>
               </div>
             </div>
-
             {/* 4. Design Preferences */}
             <div className="form-section">
               <h2 className="section-title">
@@ -335,7 +339,6 @@ export default function ProductRequest() {
                 </div>
               </div>
             </div>
-
             {/* 5. Budget & Timeline */}
             <div className="form-section">
               <h2 className="section-title">
@@ -368,7 +371,6 @@ export default function ProductRequest() {
                 </div>
               </div>
             </div>
-
             {/* 6. Files */}
             <div className="form-section">
               <h2 className="section-title">
@@ -391,7 +393,6 @@ export default function ProductRequest() {
                 />
               </div>
             </div>
-
             {/* 7. Additional Notes */}
             <div className="form-section">
               <h2 className="section-title">
@@ -404,7 +405,6 @@ export default function ProductRequest() {
                 ></textarea>
               </div>
             </div>
-
             {/* Submit */}
             <div className="submit-section">
               <button type="submit" className="submit-btn">

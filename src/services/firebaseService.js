@@ -57,3 +57,16 @@ export const saveGeneralInquiry = async (formData) => {
     throw error;
   }
 };
+
+// 🟢 حفظ طلبات المنتجات المخصصة في "RequestedProducts" ✅ NEW
+export const saveRequestedProduct = async (formData) => {
+  try {
+    const payload = buildPayload(formData, "product_request_page");
+    const docRef = await addDoc(collection(db, "RequestedProducts"), payload);
+    console.log("✅ تم حفظ طلب المنتج المخصص! ID:", docRef.id);
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("❌ خطأ في حفظ طلب المنتج المخصص:", error);
+    throw error;
+  }
+};
