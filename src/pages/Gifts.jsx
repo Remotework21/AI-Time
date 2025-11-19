@@ -5,9 +5,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/gifts.css";
+import { saveGiftRegistration } from "../services/firebaseService";
 
 // Gift Card Component - منفصل ومحسن
-const GiftCard = ({ gift }) => {
+const GiftCard = ({ gift, onRedeem }) => {
   const navigate = useNavigate();
   const [showFullDescription, setShowFullDescription] = useState(false);
 
@@ -25,7 +26,7 @@ const GiftCard = ({ gift }) => {
 
   const handleButtonClick = (e) => {
     e.stopPropagation();
-    navigate(`/gift/${gift.id}`);
+    onRedeem(gift); // فتح مودال طلب الهدية
   };
 
   const toggleDescription = (e) => {
@@ -103,6 +104,19 @@ const Gifts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
 
+  // Modal + Form State
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [selectedGift, setSelectedGift] = useState(null);
+  const [giftFormData, setGiftFormData] = useState({
+    name: "",
+    phone: "",
+  });
+  const [giftFormSubmitting, setGiftFormSubmitting] = useState(false);
+  const [giftFormMessage, setGiftFormMessage] = useState({
+    type: "",
+    text: "",
+  });
+
   // API: جلب الهدايا من Firebase
   useEffect(() => {
     fetchGifts();
@@ -170,6 +184,86 @@ const Gifts = () => {
 
     setFilteredGifts(result);
   }, [gifts, searchTerm, sortBy]);
+
+  // Modal handlers
+  const openGiftModal = (gift) => {
+    setSelectedGift(gift);
+    setShowGiftModal(true);
+    setGiftFormData({ name: "", phone: "" });
+    setGiftFormMessage({ type: "", text: "" });
+  };
+
+  const closeGiftModal = () => {
+    setShowGiftModal(false);
+    setSelectedGift(null);
+    setGiftFormData({ name: "", phone: "" });
+    setGiftFormMessage({ type: "", text: "" });
+  };
+
+  const handleGiftInputChange = (e) => {
+    const { name, value } = e.target;
+    setGiftFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (giftFormMessage.text) {
+      setGiftFormMessage({ type: "", text: "" });
+    }
+  };
+
+  const handleGiftRegister = async (e) => {
+    e.preventDefault();
+    setGiftFormSubmitting(true);
+    setGiftFormMessage({ type: "", text: "" });
+
+    if (!giftFormData.name.trim()) {
+      setGiftFormMessage({ type: "error", text: "الرجاء إدخال الاسم" });
+      setGiftFormSubmitting(false);
+      return;
+    }
+
+    if (!giftFormData.phone.match(/^(05|5)[0-9]{8}$/)) {
+      setGiftFormMessage({
+        type: "error",
+        text: "رقم الجوال يجب أن يكون بصيغة: 05xxxxxxxx",
+      });
+      setGiftFormSubmitting(false);
+      return;
+    }
+
+    try {
+      const registrationData = {
+        name: giftFormData.name.trim(),
+        phone: giftFormData.phone.trim(),
+        email: "",
+        giftId: selectedGift?.id,
+        giftName: selectedGift?.giftName,
+        source: "gifts_page",
+      };
+
+      const result = await saveGiftRegistration(registrationData);
+      console.log("🎁 Gift registration saved:", result.id);
+
+      setGiftFormMessage({
+        type: "success",
+        text: "🎉 تم استلام بياناتك بنجاح! سنتواصل معك قريباً بخصوص هديتك",
+      });
+
+      setGiftFormData({ name: "", phone: "" });
+
+      setTimeout(() => {
+        closeGiftModal();
+      }, 2500);
+    } catch (error) {
+      console.error("❌ Error:", error);
+      setGiftFormMessage({
+        type: "error",
+        text: "حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى",
+      });
+    } finally {
+      setGiftFormSubmitting(false);
+    }
+  };
 
   return (
     <div className="gifts-page">
@@ -269,7 +363,7 @@ const Gifts = () => {
           {!loading && !error && filteredGifts.length > 0 && (
             <div className="gifts-grid">
               {filteredGifts.map((gift) => (
-                <GiftCard key={gift.id} gift={gift} />
+                <GiftCard key={gift.id} gift={gift} onRedeem={openGiftModal} />
               ))}
             </div>
           )}
@@ -328,6 +422,113 @@ const Gifts = () => {
           </div>
         </div>
       </section>
+
+      {/* Modal Gift Registration */}
+      {showGiftModal && selectedGift && (
+        <div className="modal-overlay-premium" onClick={closeGiftModal}>
+          <div
+            className="modal-content-premium"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close-btn" onClick={closeGiftModal}>
+              <i className="fas fa-times"></i>
+            </button>
+
+            <div className="modal-header-premium">
+              <div className="modal-icon-wrapper">
+                <div className="modal-icon-bg"></div>
+                <i className="fas fa-gift modal-icon"></i>
+              </div>
+              <h2 className="modal-title">احصل على هديتك الآن</h2>
+              <p className="modal-subtitle">{selectedGift.giftName}</p>
+              <div className="modal-divider"></div>
+            </div>
+
+            <form onSubmit={handleGiftRegister} className="modal-form-premium">
+              <div className="form-group-premium">
+                <label className="form-label-premium">
+                  <i className="fas fa-user"></i>
+                  الاسم الكامل
+                </label>
+                <div className="input-wrapper-premium">
+                  <input
+                    type="text"
+                    name="name"
+                    value={giftFormData.name}
+                    onChange={handleGiftInputChange}
+                    placeholder="أدخل اسمك الكامل"
+                    required
+                    className="form-input-premium"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group-premium">
+                <label className="form-label-premium">
+                  <i className="fas fa-phone"></i>
+                  رقم الجوال
+                </label>
+                <div className="input-wrapper-premium">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={giftFormData.phone}
+                    onChange={handleGiftInputChange}
+                    placeholder="05xxxxxxxx"
+                    required
+                    pattern="^(05|5)[0-9]{8}$"
+                    className="form-input-premium"
+                    style={{ direction: "ltr", textAlign: "right" }}
+                  />
+                </div>
+              </div>
+
+              {giftFormMessage.text && (
+                <div
+                  className={`form-message-premium ${
+                    giftFormMessage.type === "success"
+                      ? "message-success"
+                      : "message-error"
+                  }`}
+                >
+                  <i
+                    className={`fas ${
+                      giftFormMessage.type === "success"
+                        ? "fa-check-circle"
+                        : "fa-exclamation-circle"
+                    }`}
+                  ></i>
+                  <span>{giftFormMessage.text}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="btn-submit-premium"
+                disabled={giftFormSubmitting}
+              >
+                <div className="btn-submit-shine"></div>
+                {giftFormSubmitting ? (
+                  <>
+                    <div className="spinner-submit"></div>
+                    <span>جاري الإرسال...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane"></i>
+                    <span>إرسال البيانات</span>
+                  </>
+                )}
+              </button>
+
+              <div className="form-note-premium">
+                <i className="fas fa-shield-alt"></i>
+                <span>بياناتك سرية ولا نشاركها مع أي طرف ثالث</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

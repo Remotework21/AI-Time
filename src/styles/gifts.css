@@ -715,9 +715,7 @@
   .gifts-page {
     background: #0f172a;
   }
-  
-  /* gifts-filters يفضل أبيض دايماً - تم إلغاء الـ dark mode له */
-  
+    
   .gift-card-new {
     background: #1e293b;
   }

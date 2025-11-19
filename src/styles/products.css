@@ -147,6 +147,8 @@
   gap: 2rem;
   margin-top: 3rem;
   animation: fadeInUp 1.4s ease-out;
+  position: relative;
+  z-index: 3;        /* 🔥 مهم: نخلي الأرقام فوق الخلفية */
 }
 
 .stat-item {
@@ -160,7 +162,9 @@
   line-height: 1;
   margin-bottom: 0.5rem;
   color: #fff !important;
-  text-shadow: none !important;
+  text-shadow: none !important;   /* إلغاء أي شادو */
+  opacity: 1 !important;          /* إلغاء أي شفافية */
+  mix-blend-mode: normal;         /* لو فيه أي تأثير Blending */
 }
 
 .stat-label {
@@ -170,6 +174,7 @@
   font-weight: 500;
   text-shadow: none !important;
 }
+
 
 
 
@@ -1440,4 +1445,44 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== Fix hero stats numbers color ===== */
+.products-hero-premium .hero-stats .stat-number {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.products-hero-premium .hero-stats .stat-label {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* نتأكد إن الأرقام فوق أي طبقة خلفية متحركة */
+.products-hero-premium .hero-stats {
+  position: relative;
+  z-index: 3;
+}
+
+/* ===== Force plain white hero stats numbers ===== */
+.hero-stat-number-plain {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  opacity: 1;
+  text-shadow: none;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* نتأكد إنها فوق الخلفية المتحركة */
+.products-hero-premium .hero-stats {
+  position: relative;
+  z-index: 3;
 }

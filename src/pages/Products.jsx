@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/products.css";
-import { saveGiftRegistration } from "../services/firebaseService";
+import { saveProductRegistration } from "../services/firebaseService";
 
 const Products = () => {
   const navigate = useNavigate();
@@ -161,7 +161,7 @@ const Products = () => {
         source: "products_page",
       };
 
-      const result = await saveGiftRegistration(registrationData);
+      const result = await saveProductRegistration(registrationData);
 
       console.log("🎉 تم التسجيل بنجاح! Document ID:", result.id);
 
@@ -403,32 +403,25 @@ const Products = () => {
 
           <div className="hero-stats">
             <div className="stat-item">
-              <div
-                className="stat-number"
-                style={{ color: "#fff", opacity: 1 }}
-              >
+              <div className="hero-stat-number-plain">
                 {filteredProducts.length}+
               </div>
               <div className="stat-label">منتج متاح</div>
             </div>
+
             <div className="stat-divider"></div>
+
             <div className="stat-item">
-              <div
-                className="stat-number"
-                style={{ color: "#fff", opacity: 1 }}
-              >
+              <div className="hero-stat-number-plain">
                 {products.filter((p) => p.readinessStatus === "متاح").length}
               </div>
               <div className="stat-label">جاهز للاستخدام</div>
             </div>
+
             <div className="stat-divider"></div>
+
             <div className="stat-item">
-              <div
-                className="stat-number"
-                style={{ color: "#fff", opacity: 1 }}
-              >
-                24/7
-              </div>
+              <div className="hero-stat-number-plain">24/7</div>
               <div className="stat-label">دعم فني</div>
             </div>
           </div>
