@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useScrollToTop } from "./utils/useScrollToTop";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
 import FloatingBtn from "./common/FloatingBtn";
@@ -16,6 +17,7 @@ import Gifts from "./pages/Gifts"
 import Article from './pages/Article';
 
 export default function App() {
+  useScrollToTop();
   return (
     <>
       <FloatingBtn />
