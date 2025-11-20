@@ -1332,10 +1332,10 @@ await app.deploy();`;
 
             {/* View More Button */}
             <div className="news-more" data-aos="fade-up" data-aos-delay="800">
-              <a href="/news" className="btn-view-more">
+            <Link to="/news" className="btn-view-more">
                 <span>اكتشف المزيد من الأخبار</span>
                 <i className="fas fa-arrow-left"></i>
-              </a>
+            </Link>
             </div>
           </div>
         </div>
