@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import "../styles/ProductRequest.css";
-import { saveRequestedProduct } from "../services/firebaseService"; // ✅ ADDED IMPORT
+// ✅ Use the NEW enhanced function (with files + validation)
+import { saveRequestedProductWithFiles } from "../services/firebaseService";
 
 export default function ProductRequest() {
   const [showInfo, setShowInfo] = useState(false);
@@ -20,41 +21,93 @@ export default function ProductRequest() {
   };
   const handleFileClick = () => fileInputRef.current.click();
 
-  // ✅ UPDATED handleSubmit with Firebase integration
+  // ✅ UPDATED handleSubmit: strict validation + file upload
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
+
+    // 🛡️ Client-side validation (fast feedback, same as Firebase-side)
+    const fullName = form.fullName.value.trim();
+    const phone = form.phone.value.trim();
+    const email = form.email.value.trim();
+    const industry = form.industry.value.trim();
+    const problemDescription = form.problemDescription.value.trim();
+
+    if (!fullName) {
+      alert("الاسم الكامل مطلوب");
+      form.fullName.focus();
+      return;
+    }
+    if (!/^05[0-9]{8}$/.test(phone)) {
+      alert("رقم الجوال غير صالح. مثال: 05XXXXXXXX");
+      form.phone.focus();
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert("البريد الإلكتروني غير صالح");
+      form.email.focus();
+      return;
+    }
+    if (!form.businessType.value) {
+      alert("يرجى اختيار نوع النشاط التجاري");
+      return;
+    }
+    if (!industry) {
+      alert("القطاع/الصناعة مطلوب");
+      form.industry.focus();
+      return;
+    }
+    if (!selectedRadio) {
+      alert("يرجى تحديد حالة المشروع");
+      return;
+    }
+    if (!problemDescription) {
+      alert("وصف المشكلة مطلوب");
+      form.problemDescription.focus();
+      return;
+    }
+
+    // ✅ Build data (same as before)
     const data = {
-      fullName: form.fullName.value,
-      phone: form.phone.value,
-      email: form.email.value,
-      businessName: form.businessName.value,
+      fullName,
+      phone,
+      email: email.toLowerCase(),
+      businessName: form.businessName.value.trim(),
       businessType: form.businessType.value,
-      industry: form.industry.value,
+      industry,
       projectStatus: selectedRadio,
-      problemDescription: form.problemDescription.value,
-      solutionVision: form.solutionVision.value,
+      problemDescription,
+      solutionVision: form.solutionVision.value.trim(),
       features: selectedFeatures,
       designStyle: form.designStyle.value,
       language: form.language.value,
       preferredColors: selectedColor,
       budget: form.budget.value,
       urgency: form.urgency.value,
-      notes: form.notes.value,
+      notes: form.notes.value.trim(),
       timestamp: new Date().toISOString(),
     };
 
     try {
-      const result = await saveRequestedProduct(data);
+      // 🔥 Submit with files
+      const result = await saveRequestedProductWithFiles(data, fileInputRef.current);
       if (result.success) {
-        alert("شكراً لك! تم استلام طلبك بنجاح وحفظه في قاعدة البيانات.");
+        let message = "شكراً لك! تم استلام طلبك بنجاح وحفظه في قاعدة البيانات.";
+        if (result.files && result.files.length > 0) {
+          message += `\nتم رفع ${result.files.length} ملفات.`;
+        }
+        alert(message);
+        
+        // ✅ Reset (same as before)
         form.reset();
         setSelectedColor("");
         setSelectedRadio("");
         setSelectedFeatures([]);
+        if (fileInputRef.current) fileInputRef.current.value = ""; // clear file input
       }
     } catch (error) {
-      alert("عذراً، حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.");
+      const msg = error.message || "عذراً، حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.";
+      alert("❌ " + msg);
       console.error("Submission error:", error);
     }
   };
@@ -114,7 +167,8 @@ export default function ProductRequest() {
                     name="phone"
                     required
                     placeholder="05xxxxxxxx"
-                    pattern="[0-9]{10}"
+                    pattern="05[0-9]{8}"
+                    title="يجب أن يبدأ بـ 05 ويتبعه 8 أرقام"
                   />
                 </div>
                 <div className="form-group">

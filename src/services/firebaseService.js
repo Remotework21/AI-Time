@@ -1,6 +1,7 @@
 // src/services/firebaseService.js
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // دالة مساعدة لبناء الداتا المشتركة
 const buildPayload = (data, defaultSource) => ({
@@ -56,6 +57,108 @@ export const saveGeneralInquiry = async (formData) => {
     console.error("❌ خطأ في إرسال الاستفسار:", error);
     throw error;
   }
+};
+
+// =============================================================================
+// ✅ NEW: Validation & File Upload Utilities
+// =============================================================================
+
+const storage = getStorage();
+
+// 🛡️ Saudi phone validation: must be 10 digits, start with 05
+export const isValidSaudiPhone = (phone) => {
+  const trimmed = phone?.trim();
+  return trimmed && /^05[0-9]{8}$/.test(trimmed);
+};
+
+// 🛡️ Email validation (RFC 5322 simplified)
+export const isValidEmail = (email) => {
+  const trimmed = email?.trim();
+  if (!trimmed) return false;
+  const re =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return re.test(trimmed);
+};
+
+// 📤 Upload files to Firebase Storage
+export const uploadFilesToStorage = async (files, docId) => {
+  if (!files || files.length === 0) return [];
+
+  const uploadPromises = Array.from(files).map((file) => {
+    const fileExt = file.name.split(".").pop()?.toLowerCase() || "bin";
+    const safeName = `req_${docId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+    const storageRef = ref(storage, `product_requests/${docId}/${safeName}`);
+
+    return new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(storageRef, file, {
+        contentType: file.type || "application/octet-stream",
+        customMetadata: {
+          originalName: file.name,
+          size: file.size.toString(),
+          type: file.type,
+        },
+      });
+
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => reject(error),
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve({
+            url,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            uploadedAt: new Date().toISOString(),
+          });
+        }
+      );
+    });
+  });
+
+  return Promise.all(uploadPromises);
+};
+
+// 📥 Enhanced save: creates doc → uploads files → updates with URLs
+export const saveRequestedProductWithFiles = async (formData, fileInput) => {
+  // 🔹 Step 1: Validate essential fields
+  if (!formData.fullName?.trim()) throw new Error("الاسم الكامل مطلوب");
+  if (!isValidSaudiPhone(formData.phone)) throw new Error("رقم الجوال غير صالح. مثال: 05XXXXXXXX");
+  if (!isValidEmail(formData.email)) throw new Error("البريد الإلكتروني غير صالح");
+  if (!formData.projectStatus) throw new Error("يرجى تحديد حالة المشروع");
+  if (!formData.problemDescription?.trim()) throw new Error("وصف المشكلة مطلوب");
+
+  // 🔹 Step 2: Create Firestore doc first (to get docId for folder naming)
+  const payload = {
+    ...formData,
+    source: formData.source || "product_request_page",
+    status: formData.status || "new",
+    registeredAt: serverTimestamp(),
+    files: [],
+  };
+
+  const docRef = await addDoc(collection(db, "RequestedProducts"), payload);
+  console.log("✅ Document created. ID:", docRef.id);
+
+  // 🔹 Step 3: Upload files (if any)
+  let fileUrls = [];
+  if (fileInput?.files?.length) {
+    try {
+      fileUrls = await uploadFilesToStorage(fileInput.files, docRef.id);
+    } catch (uploadErr) {
+      console.warn("⚠️ File upload failed (request still saved):", uploadErr);
+    }
+  }
+
+  // 🔹 Step 4: Update doc with file URLs
+  if (fileUrls.length > 0) {
+    await updateDoc(doc(db, "RequestedProducts", docRef.id), {
+      files: fileUrls,
+    });
+  }
+
+  return { success: true, id: docRef.id, files: fileUrls };
 };
 
 // 🟢 حفظ طلبات المنتجات المخصصة في "RequestedProducts" ✅ NEW
