@@ -216,11 +216,11 @@ const Gifts = () => {
     setGiftFormSubmitting(true);
     setGiftFormMessage({ type: "", text: "" });
 
-    if (!giftFormData.name.trim()) {
-      setGiftFormMessage({ type: "error", text: "الرجاء إدخال الاسم" });
-      setGiftFormSubmitting(false);
-      return;
-    }
+    // if (!giftFormData.name.trim()) {
+    //   setGiftFormMessage({ type: "error", text: "الرجاء إدخال الاسم" });
+    //   setGiftFormSubmitting(false);
+    //   return;
+    // }
 
     if (!giftFormData.phone.match(/^(05|5)[0-9]{8}$/)) {
       setGiftFormMessage({
@@ -244,10 +244,14 @@ const Gifts = () => {
       const result = await saveGiftRegistration(registrationData);
       console.log("🎁 Gift registration saved:", result.id);
 
-      setGiftFormMessage({
-        type: "success",
-        text: "🎉 تم استلام بياناتك بنجاح! سنتواصل معك قريباً بخصوص هديتك",
-      });
+
+     
+
+     setGiftFormMessage({
+  type: "success",
+  text: "✅ تم إرسال طلبك بنجاح! سنتواصل معك قريباً لتسليم هديتك",
+});
+
 
       setGiftFormData({ name: "", phone: "" });
 
@@ -446,22 +450,21 @@ const Gifts = () => {
 
             <form onSubmit={handleGiftRegister} className="modal-form-premium">
               <div className="form-group-premium">
-                <label className="form-label-premium">
-                  <i className="fas fa-user"></i>
-                  الاسم الكامل
-                </label>
-                <div className="input-wrapper-premium">
-                  <input
-                    type="text"
-                    name="name"
-                    value={giftFormData.name}
-                    onChange={handleGiftInputChange}
-                    placeholder="أدخل اسمك الكامل"
-                    required
-                    className="form-input-premium"
-                  />
-                </div>
-              </div>
+  <label className="form-label-premium">
+    <i className="fas fa-user"></i>
+    الاسم (اختياري)
+  </label>
+  <div className="input-wrapper-premium">
+    <input
+      type="text"
+      name="name"
+      value={giftFormData.name}
+      onChange={handleGiftInputChange}
+      placeholder="أدخل اسمك"
+      className="form-input-premium"
+    />
+  </div>
+</div>
 
               <div className="form-group-premium">
                 <label className="form-label-premium">
@@ -502,29 +505,36 @@ const Gifts = () => {
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="btn-submit-premium"
-                disabled={giftFormSubmitting}
-              >
-                <div className="btn-submit-shine"></div>
-                {giftFormSubmitting ? (
-                  <>
-                    <div className="spinner-submit"></div>
-                    <span>جاري الإرسال...</span>
-                  </>
-                ) : (
-                  <>
-                    <i className="fas fa-paper-plane"></i>
-                    <span>إرسال البيانات</span>
-                  </>
-                )}
-              </button>
+             <button
+  type="submit"
+  className="btn-submit-premium"
+  disabled={giftFormSubmitting}
+>
+  <div className="btn-submit-shine"></div>
+  {giftFormSubmitting ? (
+    <>
+      <div className="spinner-submit"></div>
+      <span>جاري الإرسال...</span>
+    </>
+  ) : (
+    <>
+      <i className="fas fa-paper-plane"></i>
+      <span>إرسال الهدية لك</span>
+    </>
+  )}
+</button>
 
               <div className="form-note-premium">
-                <i className="fas fa-shield-alt"></i>
-                <span>بياناتك سرية ولا نشاركها مع أي طرف ثالث</span>
-              </div>
+  <i className="fas fa-lock"></i>
+  <a href="/privacy-policy" target="_blank" style={{color: 'inherit', textDecoration: 'none'}}>
+    سياسة الخصوصية
+  </a>
+</div>
+
+<div className="form-note-premium" style={{marginTop: '10px', fontSize: '0.85rem'}}>
+  <i className="fas fa-clock"></i>
+  <span>إذا لم تصلك الهدية في خلال 24 ساعة تواصل معنا</span>
+</div>
             </form>
           </div>
         </div>

@@ -831,137 +831,7 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* Inquiry Section */}
-      <section className="inquiry-section" id="inquiry">
-        <div className="container">
-          <div className="inquiry-container">
-            <div
-              className="register-form"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <h3 className="inquiry-title">أرسل استفسارك</h3>
-              <p className="inquiry-subtitle">
-                نحن هنا للإجابة على جميع استفساراتك
-              </p>
-
-              {/* رسالة النجاح */}
-              {submitStatus === "success" && (
-                <div className="alert alert-success">
-                  <i className="fas fa-check-circle"></i>
-                  <span>تم إرسال استفسارك بنجاح! سنتواصل معك قريباً.</span>
-                </div>
-              )}
-
-              {/* رسالة الخطأ */}
-              {submitStatus === "error" && formErrors.submit && (
-                <div className="alert alert-error">
-                  <i className="fas fa-exclamation-circle"></i>
-                  <span>{formErrors.submit}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleRegister}>
-                {/* حقل الاسم */}
-                <div className="inquiry-form-group">
-                  <label className="inquiry-label">
-                    الاسم الكامل <span className="required-mark">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    placeholder="أدخل اسمك الكامل"
-                    className={`inquiry-input ${
-                      formErrors.name ? "error" : ""
-                    }`}
-                  />
-                  {formErrors.name && (
-                    <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i>{" "}
-                      {formErrors.name}
-                    </span>
-                  )}
-                </div>
-
-                {/* حقل رقم الواتساب */}
-                <div className="inquiry-form-group">
-                  <label className="inquiry-label">
-                    رقم الواتساب <span className="required-mark">*</span>
-                  </label>
-                  <div className="phone-input-wrapper">
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
-                      }
-                      placeholder="05xxxxxxxx"
-                      maxLength="10"
-                      className={`inquiry-input phone-input ${
-                        formErrors.phone ? "error" : ""
-                      }`}
-                    />
-                    <i className="fab fa-whatsapp whatsapp-icon"></i>
-                  </div>
-                  {formErrors.phone && (
-                    <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i>{" "}
-                      {formErrors.phone}
-                    </span>
-                  )}
-                </div>
-
-                {/* حقل الاستفسار */}
-                <div className="inquiry-form-group">
-                  <label className="inquiry-label">
-                    استفسارك <span className="required-mark">*</span>
-                  </label>
-                  <textarea
-                    value={formData.inquiry}
-                    onChange={(e) =>
-                      setFormData({ ...formData, inquiry: e.target.value })
-                    }
-                    placeholder="اكتب استفسارك هنا..."
-                    rows="5"
-                    className={`inquiry-textarea ${
-                      formErrors.inquiry ? "error" : ""
-                    }`}
-                  ></textarea>
-                  {formErrors.inquiry && (
-                    <span className="error-message">
-                      <i className="fas fa-exclamation-circle"></i>{" "}
-                      {formErrors.inquiry}
-                    </span>
-                  )}
-                </div>
-
-                {/* زر الإرسال */}
-                <button
-                  type="submit"
-                  className={`btn btn-primary inquiry-submit-btn ${
-                    isSubmitting ? "submitting" : ""
-                  }`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-paper-plane"></i> إرسال الاستفسار
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
       {/* Videos Section */}
       <section className="videos-section" id="videos">
         <div className="container">
@@ -1340,6 +1210,138 @@ await app.deploy();`;
           </div>
         </div>
       </section>
+
+      {/* Inquiry Section */}
+      <section className="inquiry-section" id="inquiry">
+        <div className="container">
+          <div className="inquiry-container">
+            <div
+              className="register-form"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              <h3 className="inquiry-title">أرسل استفسارك</h3>
+              <p className="inquiry-subtitle">
+                نحن هنا للإجابة على جميع استفساراتك
+              </p>
+
+              {/* رسالة النجاح */}
+              {submitStatus === "success" && (
+                <div className="alert alert-success">
+                  <i className="fas fa-check-circle"></i>
+                  <span>تم إرسال استفسارك بنجاح! سنتواصل معك قريباً.</span>
+                </div>
+              )}
+
+              {/* رسالة الخطأ */}
+              {submitStatus === "error" && formErrors.submit && (
+                <div className="alert alert-error">
+                  <i className="fas fa-exclamation-circle"></i>
+                  <span>{formErrors.submit}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleRegister}>
+                {/* حقل الاسم */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    الاسم الكامل <span className="required-mark">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="أدخل اسمك الكامل"
+                    className={`inquiry-input ${
+                      formErrors.name ? "error" : ""
+                    }`}
+                  />
+                  {formErrors.name && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.name}
+                    </span>
+                  )}
+                </div>
+
+                {/* حقل رقم الواتساب */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    رقم الواتساب <span className="required-mark">*</span>
+                  </label>
+                  <div className="phone-input-wrapper">
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      placeholder="05xxxxxxxx"
+                      maxLength="10"
+                      className={`inquiry-input phone-input ${
+                        formErrors.phone ? "error" : ""
+                      }`}
+                    />
+                    <i className="fab fa-whatsapp whatsapp-icon"></i>
+                  </div>
+                  {formErrors.phone && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.phone}
+                    </span>
+                  )}
+                </div>
+
+                {/* حقل الاستفسار */}
+                <div className="inquiry-form-group">
+                  <label className="inquiry-label">
+                    استفسارك <span className="required-mark">*</span>
+                  </label>
+                  <textarea
+                    value={formData.inquiry}
+                    onChange={(e) =>
+                      setFormData({ ...formData, inquiry: e.target.value })
+                    }
+                    placeholder="اكتب استفسارك هنا..."
+                    rows="5"
+                    className={`inquiry-textarea ${
+                      formErrors.inquiry ? "error" : ""
+                    }`}
+                  ></textarea>
+                  {formErrors.inquiry && (
+                    <span className="error-message">
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {formErrors.inquiry}
+                    </span>
+                  )}
+                </div>
+
+                {/* زر الإرسال */}
+                <button
+                  type="submit"
+                  className={`btn btn-primary inquiry-submit-btn ${
+                    isSubmitting ? "submitting" : ""
+                  }`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-paper-plane"></i> إرسال الاستفسار
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </>
   );
 }

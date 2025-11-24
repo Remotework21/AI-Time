@@ -157,7 +157,7 @@ const location = useLocation();
                 to="/vibecode"
                 className={`nav-link${isActive("/vibecode") ? " active" : ""}`}
               >
-                الفايب كود
+                برمجة بالذكاء الاصطناعي
               </Link>
               <Link
                 to="/videos"

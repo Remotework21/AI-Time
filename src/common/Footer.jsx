@@ -21,7 +21,7 @@ export default function Footer() {
             <h3>روابط سريعة</h3>
             <ul>
               <li><Link to="/products">المنتجات</Link></li>
-              <li><Link to="/vibecode">الفايب كود</Link></li>
+              <li><Link to="/vibecode">برمجة بالذكاء الاصطناعي</Link></li>
               <li><Link to="/videos">الفيديوهات</Link></li>
               <li><Link to="/news">أخبار الذكاء</Link></li>
             </ul>
@@ -29,7 +29,7 @@ export default function Footer() {
           <div className="footer-section">
             <h3>خدمات العملاء</h3>
             <ul>
-              <li><Link to="/product_request">طلب منتج</Link></li>
+              {/* <li><Link to="/product_request">طلب منتج</Link></li> */}
               <li><Link to="/faq">الأسئلة الشائعة</Link></li>
               <li><Link to="/contact">تواصل معنا</Link></li>
             </ul>

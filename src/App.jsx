@@ -12,7 +12,7 @@ import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import VibeCode from "./pages/VibeCode";
-import ProductRequest from "./pages/ProductRequest";
+// import ProductRequest from "./pages/ProductRequest";
 import Gifts from "./pages/Gifts"
 import Article from './pages/Article';
 
@@ -36,7 +36,7 @@ export default function App() {
           <Route path="/article" element={<Article />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/product_request" element={<ProductRequest />} />
+          {/* <Route path="/product_request" element={<ProductRequest />} /> */}
         </Routes>
       </main>
       <Footer />
