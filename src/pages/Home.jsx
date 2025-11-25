@@ -558,6 +558,9 @@ await app.deploy();`;
 
       {/* Categories Bar */}
       <section className="categories-bar">
+        <div>
+          <h2 className="section-title py-5 ">استكشف منتجاتنا</h2>
+        </div>
         <div className="container">
           <div className="categories-container" data-aos="fade-up">
             {/* للشركات */}
@@ -797,7 +800,7 @@ await app.deploy();`;
                 </div>
                 <div className="vibe-feature">
                   <i className="fas fa-brain"></i>
-                  <span>بعد: الفايب كود</span>
+                  <span>بعد: برمجة بالذكاء الاصطناعي</span>
                 </div>
                 <div className="vibe-feature">
                   <i className="fas fa-users"></i>
@@ -810,7 +813,7 @@ await app.deploy();`;
               </a>
             </div>
 
-            <div className="code-comparison">
+            {/* <div className="code-comparison">
               <div className="code-before">
                 <div className="code-label">
                   <i className="fas fa-times-circle"></i>
@@ -826,12 +829,11 @@ await app.deploy();`;
                 </div>
                 <div className="code-block" ref={codeAfterRef}></div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
 
-      
       {/* Videos Section */}
       <section className="videos-section" id="videos">
         <div className="container">
@@ -1202,10 +1204,10 @@ await app.deploy();`;
 
             {/* View More Button */}
             <div className="news-more" data-aos="fade-up" data-aos-delay="800">
-            <Link to="/news" className="btn-view-more">
+              <Link to="/news" className="btn-view-more">
                 <span>اكتشف المزيد من الأخبار</span>
                 <i className="fas fa-arrow-left"></i>
-            </Link>
+              </Link>
             </div>
           </div>
         </div>
@@ -1341,7 +1343,6 @@ await app.deploy();`;
           </div>
         </div>
       </section>
-
     </>
   );
 }
