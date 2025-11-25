@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const cron = require('node-cron');
+const { db, admin } = require('./firebase/firebase');
 
 // ==================== 🔥 Import Firebase Functions ====================
 const {
@@ -304,6 +305,104 @@ cron.schedule('0 2 * * 0', async () => {
   }
 });
 */
+
+// ==================== ✉️ Subscription Endpoint (ADD THIS) ====================
+
+app.post('/api/subscribe', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 🔹 Validate email
+    if (!email || typeof email !== 'string' || !email.trim().includes('@')) {
+      return res.status(400).json({
+        success: false,
+        error: 'البريد الإلكتروني مطلوب ويجب أن يحتوي على @'
+      });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const subscribersRef = db.collection('subscribers');
+
+    // 🔹 Check for duplicates (active subscribers only)
+    const existing = await subscribersRef
+      .where('email', '==', cleanEmail)
+      .where('isActive', '==', true)
+      .limit(1)
+      .get();
+
+    if (!existing.empty) {
+      return res.json({
+        success: true,
+        message: '✅ أنت مشترك مسبقًا'
+      });
+    }
+
+    // 🔹 Save to Firebase
+    await subscribersRef.add({
+      email: cleanEmail,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      isActive: true,
+      source: 'website_form' // optional tracking
+    });
+
+    console.log(`✅ اشتراك جديد: ${cleanEmail}`);
+
+    // 🔹 Trigger n8n webhook (if configured)
+    const webhookUrl = process.env.N8N_SUBSCRIBE_WEBHOOK;
+    if (webhookUrl) {
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail })
+      }).catch(err => {
+        console.warn('⚠️ n8n webhook failed:', err.message);
+      });
+    }
+
+    // ✅ Success response
+    res.json({
+      success: true,
+      message: 'تم الاشتراك بنجاح'
+    });
+
+  } catch (error) {
+    console.error('❌ خطأ في /api/subscribe:', error);
+    res.status(500).json({
+      success: false,
+      error: 'فشل حفظ الاشتراك',
+      details: error.message
+    });
+  }
+});
+
+// ==================== 👥 Get All Active Subscribers ====================
+/**
+ * Get all active subscribers' emails
+ * GET /api/subscribers
+ */
+ app.get('/api/subscribers', async (req, res) => {
+  try {
+    const snapshot = await db.collection('subscribers')
+      .where('isActive', '==', true)
+      .select('email') // only fetch email (efficient)
+      .get();
+
+    const emails = snapshot.docs.map(doc => doc.data().email);
+    
+    res.json({ 
+      success: true, 
+      count: emails.length,
+      emails 
+    });
+  } catch (error) {
+    console.error('❌ خطأ في جلب المشتركين:', error.message);
+    res.status(500).json({ 
+      success: false, 
+      error: 'فشل جلب قائمة المشتركين',
+      details: error.message 
+    });
+  }
+});
 
 // ==================== 🚀 Start Server ====================
 const PORT = process.env.PORT || 5000;

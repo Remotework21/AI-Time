@@ -108,10 +108,42 @@ const News = () => {
   const toggleInfo = () => setShowInfoPanel(!showInfoPanel);
   const filterNews = (category) => setActiveCategory(category);
   const loadMore = () => alert('سيتم تحميل المزيد — قيد التطوير');
+
+  /*
   const subscribeNewsletter = (e) => {
     e.preventDefault();
     alert('✅ تم الاشتراك! سنرسل أحدث أخبار الذكاء الاصطناعي قريباً.');
     e.target.reset();
+  };
+  */
+
+  //=========== N8N NewsLetter ===========
+  const subscribeNewsletter = async (e) => {
+    e.preventDefault();
+    const email = e.target.querySelector('input[type="email"]').value.trim();
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      alert('⚠️ يرجى إدخال بريد إلكتروني صحيح');
+      return;
+    }
+  
+    try {
+      const res = await fetch('https://undelusively-cordate-alysia.ngrok-free.dev/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+  
+      const data = await res.json();
+      if (data.success) {
+        alert('✅ تم الاشتراك بنجاح! ستصلك رسالة ترحيب قريباً.');
+        e.target.reset();
+      } else {
+        throw new Error(data.error || 'فشل الاشتراك');
+      }
+    } catch (err) {
+      console.error('❌ Subscribe error:', err);
+      alert(`فشل الاشتراك: ${err.message}`);
+    }
   };
 
   const shareArticle = (platform, articleId, title = 'خبر من وقت الذكاء') => {
