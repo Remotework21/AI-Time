@@ -760,12 +760,12 @@
   font-size: 0.9rem;
 }
 
-.featured-content {
+.featured-news-content {
   padding: 2rem;
   flex: 1;
 }
 
-.featured-title {
+.featured-news-title {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-dark);
@@ -773,7 +773,7 @@
   line-height: 1.3;
 }
 
-.featured-excerpt {
+.featured-news-excerpt {
   color: var(--text-light);
   line-height: 1.8;
   margin-bottom: 1.5rem;
@@ -2795,3 +2795,52 @@
     gap: 1rem;
   }
 }
+
+/* =============================================================================
+   🛠️ FIX: Featured News Layout — Ensure Title & Excerpt Stack Vertically
+   ✅ Added to fix: "featured-excerpt beside title" + "big empty space"
+   ✅ Zero impact on other sections — scoped to .featured-article only
+   ============================================================================= */
+
+   .featured-article .featured-news-content {
+    /* Ensure natural block flow — no flex interference in this container */
+    display: block !important;
+    flex-direction: column !important;
+  }
+  
+  /* Title: block, full width, margin-bottom for spacing */
+  .featured-article .featured-news-title {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 1rem 0 !important; /* Space below title */
+    font-size: 1.75rem !important;
+    line-height: 1.3 !important;
+    color: var(--text-dark) !important;
+    text-align: right !important; /* Arabic: right-aligned */
+  }
+  
+  /* Excerpt: block, full width, sits directly under title */
+  .featured-article .featured-news-excerpt {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 1.05rem !important;
+    line-height: 1.8 !important;
+    color: var(--text-light) !important;
+    text-align: right !important; /* Arabic: right-aligned */
+    /* Prevent any floating or inline behavior */
+    float: none !important;
+    clear: both !important;
+    /* Optional: subtle top padding if needed */
+    /* padding-top: 0.5rem !important; */
+  }
+  
+  /* Optional: Add subtle divider or breathing room if desired */
+  /* .featured-article .featured-news-content::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--border-color);
+    margin: 1.5rem 0;
+  } */

@@ -967,11 +967,11 @@ await app.deploy();`;
                   <i className="fas fa-robot"></i>
                   <span className="featured-badge">حصري</span>
                 </div>
-                <div className="featured-content">
-                  <h3 className="featured-title">
+                <div className="featured-news-content">
+                  <h3 className="featured-news-title">
                     OpenAI تطلق GPT-5 بقدرات غير مسبوقة
                   </h3>
-                  <p className="featured-excerpt">
+                  <p className="featured-news-excerpt">
                     في تطور مذهل، أعلنت شركة OpenAI عن إطلاق الجيل الخامس من
                     نموذج GPT بقدرات تفوق كل التوقعات، حيث يمكنه الآن فهم السياق
                     بشكل أعمق والقيام بمهام معقدة كانت تعتبر مستحيلة سابقاً...
