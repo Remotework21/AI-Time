@@ -766,211 +766,254 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* AI Programming Section - NEW DESIGN */}
-      <section className="ai-programming-section" id="vibe-code">
-        {/* Decorative Background Elements */}
-        <div className="ai-bg-decoration">
-          <div className="floating-shape shape-1"></div>
-          <div className="floating-shape shape-2"></div>
-          <div className="floating-shape shape-3"></div>
-          <div className="grid-pattern"></div>
+      {/* 
+  ═══════════════════════════════════════════════════════════════════════════
+  📍 مكان الاستبدال: Home.jsx
+  ═══════════════════════════════════════════════════════════════════════════
+  
+  استبدل السكشن الكامل من السطر 769 إلى السطر 1067
+  
+  ═══════════════════════════════════════════════════════════════════════════
+*/}
+
+      {/* AI Transformation Section */}
+      <section className="ai-transform-section" id="vibe-code">
+        {/* Animated Background */}
+        <div className="transform-bg">
+          <div className="gradient-orb orb-1"></div>
+          <div className="gradient-orb orb-2"></div>
+          <div className="gradient-orb orb-3"></div>
+          <div className="mesh-grid"></div>
         </div>
 
         <div className="container">
-          {/* Section Header */}
-          <div className="ai-section-header" data-aos="fade-up">
-            <span className="section-eyebrow">
-              <i className="fas fa-microchip"></i>
-              تقنية Vibe Coding
-            </span>
-            <h2 className="ai-main-title">برمجة بالذكاء الاصطناعي</h2>
-            <p className="ai-main-subtitle">
-              نحوّل أفكارك إلى تطبيقات حقيقية في وقت قياسي باستخدام أحدث تقنيات
-              الذكاء الاصطناعي
+          {/* Header with Animated Badge */}
+          <div className="transform-header" data-aos="fade-up">
+            <div className="live-badge">
+              <span className="pulse-ring"></span>
+              <span className="badge-text">
+                <i className="fas fa-bolt"></i>
+                تقنية ثورية
+              </span>
+            </div>
+            <h2 className="transform-title">
+              حوّل فكرتك إلى
+              <span className="gradient-text"> تطبيق حقيقي</span>
+            </h2>
+            <p className="transform-subtitle">
+              بالذكاء الاصطناعي، نختصر شهور العمل إلى أيام معدودة
             </p>
           </div>
 
-          {/* Main Bento Grid */}
-          <div className="ai-bento-grid">
-            {/* Hero Card - Large */}
+          {/* Main Interactive Area */}
+          <div className="transform-showcase">
+            {/* Left: The Journey */}
             <div
-              className="bento-card bento-hero"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div className="hero-card-content">
-                <div className="hero-icon-wrapper">
-                  <div className="icon-glow"></div>
-                  <div className="hero-icon">
-                    <i className="fas fa-wand-magic-sparkles"></i>
-                  </div>
-                </div>
-                <h3>من الفكرة للتطبيق</h3>
-                <p>
-                  فقط أخبرنا بفكرتك، والذكاء الاصطناعي يتولى الباقي. لا تحتاج
-                  خبرة تقنية أو فريق مبرمجين.
-                </p>
-                <div className="hero-tags">
-                  <span className="tag">
-                    <i className="fas fa-check"></i> بدون كود
-                  </span>
-                  <span className="tag">
-                    <i className="fas fa-check"></i> سريع
-                  </span>
-                  <span className="tag">
-                    <i className="fas fa-check"></i> احترافي
-                  </span>
-                </div>
-              </div>
-              <div className="hero-visual">
-                <div className="code-mockup">
-                  <div className="mockup-header">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <div className="mockup-lines">
-                    <div className="line line-1"></div>
-                    <div className="line line-2"></div>
-                    <div className="line line-3"></div>
-                    <div className="line line-4"></div>
-                    <div className="line line-5"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Stats Card 1 - Time */}
-            <div
-              className="bento-card bento-stat stat-time"
-              data-aos="fade-up"
+              className="journey-panel"
+              data-aos="fade-left"
               data-aos-delay="200"
             >
-              <div className="stat-icon-ring">
-                <i className="fas fa-bolt"></i>
+              <div className="panel-header">
+                <div className="panel-icon">
+                  <i className="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <div className="panel-title">
+                  <h3>رحلتك معنا</h3>
+                  <span>3 خطوات بسيطة</span>
+                </div>
               </div>
-              <div className="stat-content">
-                <span className="stat-number">3-5</span>
-                <span className="stat-unit">أيام</span>
-                <span className="stat-desc">بدلاً من شهور</span>
+
+              <div className="journey-timeline">
+                <div className="timeline-track">
+                  <div className="track-progress"></div>
+                </div>
+
+                <div className="timeline-item">
+                  <div className="timeline-marker">
+                    <div className="marker-dot"></div>
+                    <div className="marker-ring"></div>
+                  </div>
+                  <div className="timeline-content">
+                    <div className="content-icon">💡</div>
+                    <div className="content-text">
+                      <h4>أخبرنا بفكرتك</h4>
+                      <p>بكلماتك البسيطة، بدون أي تعقيدات تقنية</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="timeline-item">
+                  <div className="timeline-marker">
+                    <div className="marker-dot"></div>
+                    <div className="marker-ring"></div>
+                  </div>
+                  <div className="timeline-content">
+                    <div className="content-icon">🤖</div>
+                    <div className="content-text">
+                      <h4>الذكاء الاصطناعي يبدع</h4>
+                      <p>نحول رؤيتك لكود احترافي في ساعات</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="timeline-item">
+                  <div className="timeline-marker">
+                    <div className="marker-dot"></div>
+                    <div className="marker-ring"></div>
+                  </div>
+                  <div className="timeline-content">
+                    <div className="content-icon">🚀</div>
+                    <div className="content-text">
+                      <h4>مشروعك جاهز!</h4>
+                      <p>تطبيق متكامل جاهز للإطلاق والنجاح</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="stat-decoration"></div>
             </div>
 
-            {/* Stats Card 2 - Savings */}
-            <div
-              className="bento-card bento-stat stat-savings"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div className="stat-icon-ring">
-                <i className="fas fa-piggy-bank"></i>
+            {/* Center: Live Demo / Visualization */}
+            <div className="demo-panel" data-aos="zoom-in" data-aos-delay="300">
+              <div className="demo-screen">
+                <div className="screen-header">
+                  <div className="screen-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span className="screen-title">Vibe AI Studio</span>
+                </div>
+                <div className="screen-content">
+                  <div className="typing-demo">
+                    <div className="user-input">
+                      <span className="input-label">فكرتك:</span>
+                      <span className="input-text">
+                        "أريد متجر إلكتروني لبيع منتجاتي"
+                      </span>
+                    </div>
+                    <div className="ai-processing">
+                      <div className="processing-icon">
+                        <i className="fas fa-microchip"></i>
+                      </div>
+                      <div className="processing-bars">
+                        <div className="bar bar-1"></div>
+                        <div className="bar bar-2"></div>
+                        <div className="bar bar-3"></div>
+                      </div>
+                      <span>AI يعمل...</span>
+                    </div>
+                    <div className="output-preview">
+                      <div className="preview-window">
+                        <div className="preview-nav"></div>
+                        <div className="preview-hero"></div>
+                        <div className="preview-grid">
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <span className="output-label">
+                        <i className="fas fa-check-circle"></i>
+                        متجرك جاهز!
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="stat-content">
-                <span className="stat-number">80%</span>
-                <span className="stat-unit">توفير</span>
-                <span className="stat-desc">من التكلفة</span>
+
+              {/* Floating Elements */}
+              <div className="floating-elements">
+                <div className="float-item float-1">
+                  <i className="fas fa-code"></i>
+                </div>
+                <div className="float-item float-2">
+                  <i className="fas fa-database"></i>
+                </div>
+                <div className="float-item float-3">
+                  <i className="fas fa-cloud"></i>
+                </div>
+                <div className="float-item float-4">
+                  <i className="fas fa-mobile-alt"></i>
+                </div>
               </div>
-              <div className="stat-decoration"></div>
             </div>
 
-            {/* Process Steps Card */}
+            {/* Right: Stats & Benefits */}
             <div
-              className="bento-card bento-process"
-              data-aos="fade-up"
+              className="stats-panel"
+              data-aos="fade-right"
               data-aos-delay="400"
             >
-              <h4 className="process-title">
-                <i className="fas fa-route"></i>
-                كيف نعمل؟
-              </h4>
-              <div className="process-steps">
-                <div className="process-step">
-                  <div className="step-num">1</div>
-                  <div className="step-info">
-                    <strong>اشرح فكرتك</strong>
-                    <span>بكلماتك البسيطة</span>
-                  </div>
+              <div className="stat-card-3d">
+                <div className="stat-face stat-front">
+                  <div className="big-number">3-5</div>
+                  <div className="stat-label">أيام فقط</div>
+                  <div className="stat-compare">بدلاً من 3-6 شهور</div>
                 </div>
-                <div className="step-connector">
-                  <i className="fas fa-chevron-down"></i>
+                <div className="stat-icon-float">⚡</div>
+              </div>
+
+              <div className="stat-card-3d">
+                <div className="stat-face stat-front">
+                  <div className="big-number">80%</div>
+                  <div className="stat-label">توفير</div>
+                  <div className="stat-compare">من التكلفة التقليدية</div>
                 </div>
-                <div className="process-step">
-                  <div className="step-num">2</div>
-                  <div className="step-info">
-                    <strong>نبرمج لك</strong>
-                    <span>بالذكاء الاصطناعي</span>
-                  </div>
+                <div className="stat-icon-float">💰</div>
+              </div>
+
+              <div className="stat-card-3d">
+                <div className="stat-face stat-front">
+                  <div className="big-number">∞</div>
+                  <div className="stat-label">إمكانيات</div>
+                  <div className="stat-compare">بلا حدود مع AI</div>
                 </div>
-                <div className="step-connector">
-                  <i className="fas fa-chevron-down"></i>
-                </div>
-                <div className="process-step">
-                  <div className="step-num">3</div>
-                  <div className="step-info">
-                    <strong>استلم مشروعك</strong>
-                    <span>جاهز للإطلاق</span>
-                  </div>
-                </div>
+                <div className="stat-icon-float">🎯</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom: Trust & CTA */}
+          <div
+            className="transform-footer"
+            data-aos="fade-up"
+            data-aos-delay="500"
+          >
+            {/* Trust Indicators */}
+            <div className="trust-bar">
+              <div className="trust-item">
+                <i className="fas fa-shield-check"></i>
+                <span>جودة مضمونة</span>
+              </div>
+              <div className="trust-divider"></div>
+              <div className="trust-item">
+                <i className="fas fa-headset"></i>
+                <span>دعم متواصل</span>
+              </div>
+              <div className="trust-divider"></div>
+              <div className="trust-item">
+                <i className="fas fa-sync-alt"></i>
+                <span>تعديلات مجانية</span>
+              </div>
+              <div className="trust-divider"></div>
+              <div className="trust-item">
+                <i className="fas fa-lock"></i>
+                <span>سرية تامة</span>
               </div>
             </div>
 
-            {/* Features Card */}
-            <div
-              className="bento-card bento-features"
-              data-aos="fade-up"
-              data-aos-delay="500"
-            >
-              <h4 className="features-title">
-                <i className="fas fa-sparkles"></i>
-                لماذا نحن؟
-              </h4>
-              <div className="features-list">
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-robot"></i>
-                  </div>
-                  <span>AI يكتب الكود</span>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-shield-check"></i>
-                  </div>
-                  <span>جودة مضمونة</span>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-headset"></i>
-                  </div>
-                  <span>دعم متواصل</span>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-icon">
-                    <i className="fas fa-arrows-rotate"></i>
-                  </div>
-                  <span>تعديلات مجانية</span>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Card */}
-            <div
-              className="bento-card bento-cta"
-              data-aos="fade-up"
-              data-aos-delay="600"
-            >
-              <div className="cta-content">
-                <div className="cta-icon">
+            {/* CTA */}
+            <div className="mega-cta">
+              <a href="/VibeCode" className="cta-mega-btn">
+                <span className="cta-bg"></span>
+                <span className="cta-content">
                   <i className="fas fa-rocket"></i>
-                </div>
-                <div className="cta-text">
-                  <h4>جاهز تبدأ؟</h4>
-                  <p>استشارة مجانية لمشروعك</p>
-                </div>
-              </div>
-              <a href="/VibeCode" className="cta-btn">
-                <span>ابدأ الآن</span>
-                <i className="fas fa-arrow-left"></i>
+                  <span className="cta-text-main">ابدأ مشروعك الآن</span>
+                  <span className="cta-text-sub">استشارة مجانية</span>
+                </span>
+                <span className="cta-arrow">
+                  <i className="fas fa-arrow-left"></i>
+                </span>
               </a>
             </div>
           </div>
