@@ -112,7 +112,7 @@ export const uploadFilesToStorage = async (files, docId) => {
 // 📥 Enhanced save: creates doc → uploads files → updates with URLs
 export const saveRequestedProductWithFiles = async (formData, fileInput) => {
   // 🔹 Step 1: Validate essential fields
-  if (!formData.fullName?.trim()) throw new Error("الاسم الكامل مطلوب");
+  if (!formData.fullName?.trim()) throw new Error("الاسم مطلوب");
   if (!isValidSaudiPhone(formData.phone)) throw new Error("رقم الجوال غير صالح. مثال: 05XXXXXXXX");
   if (!isValidEmail(formData.email)) throw new Error("البريد الإلكتروني غير صالح");
   if (!formData.projectStatus) throw new Error("يرجى تحديد حالة المشروع");

@@ -171,14 +171,14 @@ export default function Contact() {
               <form id="contactForm" onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">الاسم الكامل *</label>
+                    <label className="form-label">الاسم *</label>
                     <input
                       type="text"
                       className="form-input"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="أدخل اسمك الكامل"
+                      placeholder="أدخل اسمك "
                       required
                     />
                   </div>

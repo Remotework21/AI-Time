@@ -1247,7 +1247,7 @@ await app.deploy();`;
                 {/* حقل الاسم */}
                 <div className="inquiry-form-group">
                   <label className="inquiry-label">
-                    الاسم الكامل <span className="required-mark">*</span>
+                    الاسم  <span className="required-mark">*</span>
                   </label>
                   <input
                     type="text"
@@ -1255,7 +1255,7 @@ await app.deploy();`;
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    placeholder="أدخل اسمك الكامل"
+                    placeholder="أدخل اسمك "
                     className={`inquiry-input ${
                       formErrors.name ? "error" : ""
                     }`}
