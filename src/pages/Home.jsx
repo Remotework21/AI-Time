@@ -612,10 +612,12 @@ await app.deploy();`;
 
       <section className="products-section" id="products">
         <div className="section-header" data-aos="fade-up">
-          <h2 className="section-title ">منتجات مختارة بعناية</h2>
-          <p className="section-subtitle">
+          <h2 className="section-title ">
             حلول مبتكرة، مصممة لكل فئة باحترافية
-          </p>
+          </h2>
+          {/* <p className="section-subtitle">
+            حلول مبتكرة، مصممة لكل فئة باحترافية
+          </p> */}
         </div>
         <div className="container">
           <div className="products-grid">
