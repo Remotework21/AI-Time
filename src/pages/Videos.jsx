@@ -90,12 +90,12 @@ const videoData = [
   },
 ];
 
-const videoStats = [
-  { num: "150+", label: "فيديو تعليمي" },
-  { num: "50K+", label: "مشاهدة" },
-  { num: "25+", label: "ساعة محتوى" },
-  { num: "4.8", label: "تقييم المشاهدين" },
-];
+// const videoStats = [
+//   { num: "150+", label: "فيديو تعليمي" },
+//   { num: "50K+", label: "مشاهدة" },
+//   { num: "25+", label: "ساعة محتوى" },
+//   { num: "4.8", label: "تقييم المشاهدين" },
+// ];
 
 const categories = [
   { key: "all", label: "جميع الفيديوهات", icon: "fas fa-th" },
@@ -135,13 +135,19 @@ export default function Videos() {
     let shareUrl = "";
     switch (platform) {
       case "facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          url
+        )}`;
         break;
       case "twitter":
-        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          url
+        )}&text=${encodeURIComponent(title)}`;
         break;
       case "whatsapp":
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(title + " " + url)}`;
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(
+          title + " " + url
+        )}`;
         break;
       case "youtube":
         shareUrl = "https://www.youtube.com/embed/QK4X2AYjXn0";
@@ -154,12 +160,13 @@ export default function Videos() {
 
   return (
     <div lang="ar" dir="rtl" className="videos-page">
-     
       {/* Hero */}
       <section className="page-hero">
         <div className="container">
           <h1 className="page-title">مكتبة الفيديوهات</h1>
-          <p className="page-subtitle">تعلم واكتشف عالم الذكاء الاصطناعي من خلال فيديوهات تعليمية متنوعة</p>
+          <p className="page-subtitle">
+            تعلم واكتشف عالم الذكاء الاصطناعي من خلال فيديوهات تعليمية متنوعة
+          </p>
         </div>
       </section>
       {/* Filters */}
@@ -170,7 +177,9 @@ export default function Videos() {
               {categories.map((c) => (
                 <button
                   key={c.key}
-                  className={`tab-btn${selectedCategory === c.key ? " active" : ""}`}
+                  className={`tab-btn${
+                    selectedCategory === c.key ? " active" : ""
+                  }`}
                   onClick={() => setSelectedCategory(c.key)}
                 >
                   <i className={c.icon}></i> {c.label}
@@ -208,18 +217,32 @@ export default function Videos() {
               <div className="featured-info">
                 <span className="featured-badge">{videoData[0].category}</span>
                 <h2 className="featured-title">{videoData[0].title}</h2>
-                <p className="featured-description">{videoData[0].description}</p>
+                <p className="featured-description">
+                  {videoData[0].description}
+                </p>
                 <div className="share-buttons">
-                  <div className="share-btn share-facebook" onClick={() => shareVideo("facebook", "featured")}>
+                  <div
+                    className="share-btn share-facebook"
+                    onClick={() => shareVideo("facebook", "featured")}
+                  >
                     <i className="fab fa-facebook-f"></i>
                   </div>
-                  <div className="share-btn share-twitter" onClick={() => shareVideo("twitter", "featured")}>
+                  <div
+                    className="share-btn share-twitter"
+                    onClick={() => shareVideo("twitter", "featured")}
+                  >
                     <i className="fab fa-twitter"></i>
                   </div>
-                  <div className="share-btn share-whatsapp" onClick={() => shareVideo("whatsapp", "featured")}>
+                  <div
+                    className="share-btn share-whatsapp"
+                    onClick={() => shareVideo("whatsapp", "featured")}
+                  >
                     <i className="fab fa-whatsapp"></i>
                   </div>
-                  <div className="share-btn share-youtube" onClick={() => shareVideo("youtube", "featured")}>
+                  <div
+                    className="share-btn share-youtube"
+                    onClick={() => shareVideo("youtube", "featured")}
+                  >
                     <i className="fab fa-youtube"></i>
                   </div>
                 </div>
@@ -227,15 +250,21 @@ export default function Videos() {
             </div>
           </div>
           {/* Statistics */}
-          <div className="stats-section">
+          {/* <div className="stats-section">
             <div className="stats-grid">
               {videoStats.map((s) => (
                 <div className="stat-item" key={s.label}>
                   <div className="stat-number">{s.num}</div>
-<div className="stat-label" style={{ color: '#8B5CF6 !important' }}>{s.label}</div>              </div>
+                  <div
+                    className="stat-label"
+                    style={{ color: "#8B5CF6 !important" }}
+                  >
+                    {s.label}
+                  </div>{" "}
+                </div>
               ))}
             </div>
-          </div>
+          </div> */}
           {/* Video Grid */}
           <div className="videos-grid">
             {filteredVideos.map((v, i) => (
@@ -249,7 +278,10 @@ export default function Videos() {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <div className="video-play-btn" onClick={() => playVideo(v)}>
+                    <div
+                      className="video-play-btn"
+                      onClick={() => playVideo(v)}
+                    >
                       <i className="fas fa-play"></i>
                     </div>
                   )}
@@ -259,19 +291,36 @@ export default function Videos() {
                 <div className="video-content">
                   <h3 className="video-title">{v.title}</h3>
                   <div className="video-meta">
-                    <span><i className="far fa-eye"></i> {v.views}</span>
-                    <span><i className="far fa-calendar"></i> {v.date}</span>
+                    <span>
+                      <i className="far fa-eye"></i> {v.views}
+                    </span>
+                    <span>
+                      <i className="far fa-calendar"></i> {v.date}
+                    </span>
                   </div>
                   <p className="video-description">{v.description}</p>
                   <div className="video-footer">
-                    <a href="#" className="watch-btn" onClick={(e) => { e.preventDefault(); playVideo(v); }}>
+                    <a
+                      href="#"
+                      className="watch-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        playVideo(v);
+                      }}
+                    >
                       مشاهدة الآن <i className="fas fa-play-circle"></i>
                     </a>
                     <div className="share-buttons">
-                      <div className="share-btn share-facebook" onClick={() => shareVideo("facebook", v.id)}>
+                      <div
+                        className="share-btn share-facebook"
+                        onClick={() => shareVideo("facebook", v.id)}
+                      >
                         <i className="fab fa-facebook-f"></i>
                       </div>
-                      <div className="share-btn share-whatsapp" onClick={() => shareVideo("whatsapp", v.id)}>
+                      <div
+                        className="share-btn share-whatsapp"
+                        onClick={() => shareVideo("whatsapp", v.id)}
+                      >
                         <i className="fab fa-whatsapp"></i>
                       </div>
                     </div>
@@ -282,18 +331,23 @@ export default function Videos() {
           </div>
           {/* Load More */}
           <div className="load-more">
-            <button className="btn btn-primary" onClick={() => alert("سيتم تحميل المزيد من الفيديوهات...")}>
+            <button
+              className="btn btn-primary"
+              onClick={() => alert("سيتم تحميل المزيد من الفيديوهات...")}
+            >
               <i className="fas fa-plus"></i> تحميل المزيد من الفيديوهات
             </button>
           </div>
         </div>
       </section>
-      
+
       {/* Video Modal */}
       {modalVideo && (
         <div className="video-modal active" onClick={closeModal}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <span className="modal-close" onClick={closeModal}>✕</span>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="modal-close" onClick={closeModal}>
+              ✕
+            </span>
             <iframe
               src={modalVideo}
               allowFullScreen

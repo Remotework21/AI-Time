@@ -367,13 +367,13 @@ const formatAudiences = (audiences) => {
           )}
 
           <div className="product-actions-modern">
-            <button
+            {/* <button
               className="btn-details-modern"
               onClick={() => openDetailsModal(product)}
             >
               <span>التفاصيل</span>
               <i className="fas fa-info-circle"></i>
-            </button>
+            </button> */}
 
             <button
               className="btn-order-modern"

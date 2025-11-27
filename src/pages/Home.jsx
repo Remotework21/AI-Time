@@ -47,7 +47,8 @@ const ProductCard = ({ product, navigate, getProductIcon }) => {
               isAvailable ? "status-available" : "status-coming"
             }`}
           >
-{isAvailable ? "متاح الآن" : "قريباً"}          </span>
+            {isAvailable ? "متاح الآن" : "قريباً"}{" "}
+          </span>
         </div>
       </div>
 
@@ -248,14 +249,14 @@ export default function Home() {
 
   // 🟢 نص البادج + اللون حسب حالة الجاهزية
   const getHomeBadge = (product) => {
-  const isAvailable = product.readinessStatus === "متاح";
-  const text = isAvailable ? "متاح الآن" : "قريباً";
-  const colorVar = isAvailable
-    ? "var(--success-color)"
-    : "var(--danger-color)";
+    const isAvailable = product.readinessStatus === "متاح";
+    const text = isAvailable ? "متاح الآن" : "قريباً";
+    const colorVar = isAvailable
+      ? "var(--success-color)"
+      : "var(--danger-color)";
 
-  return { text, colorVar, isAvailable };
-};
+    return { text, colorVar, isAvailable };
+  };
 
   // 🟢 وصف مختصر من الـ sellingPoints / features إن وُجِدت
   const getHomeProductDescription = (product) => {
@@ -297,13 +298,13 @@ export default function Home() {
 
     // فحص الاسم
     // فحص الاسم
-if (!formData.name.trim()) {
-  errors.name = "الرجاء إدخال الاسم";
-} else if (formData.name.trim().length < 3) {
-  errors.name = "الاسم يجب أن يكون 3 أحرف على الأقل";
-} else if (/\d/.test(formData.name)) {
-  errors.name = "الاسم يجب أن لا يحتوي على أرقام";
-}
+    if (!formData.name.trim()) {
+      errors.name = "الرجاء إدخال الاسم";
+    } else if (formData.name.trim().length < 3) {
+      errors.name = "الاسم يجب أن يكون 3 أحرف على الأقل";
+    } else if (/\d/.test(formData.name)) {
+      errors.name = "الاسم يجب أن لا يحتوي على أرقام";
+    }
     // فحص رقم الهاتف
     const phoneRegex = /^(05|5)[0-9]{8}$/;
     if (!formData.phone.trim()) {
@@ -544,10 +545,12 @@ await app.deploy();`;
 
       {/* Categories Bar */}
       <section className="categories-bar">
-       <div className="section-header" data-aos="fade-up">
-            <h2 className="section-title ">استكشف منتجاتنا وخدماتنا</h2>
-            <p className="section-subtitle">حلول ذكية متكاملة لتحويل أعمالك</p>
-          </div>
+        <div className="section-header" data-aos="fade-up">
+          <h2 className="section-title ">استكشف منتجاتنا وخدماتنا</h2>
+          <p className="section-subtitle">
+            حلول مبتكرة، مصممة لكل فئة باحترافية
+          </p>
+        </div>
         <div className="container">
           <div className="categories-container" data-aos="fade-up">
             {/* للشركات */}
@@ -610,9 +613,11 @@ await app.deploy();`;
       </section>
 
       <section className="products-section" id="products">
+        <div className="section-header" data-aos="fade-up">
+          <h2 className="section-title ">منتجات مختارة بعناية</h2>
+          <p className="section-subtitle">ابدأ استكشافك الآن!</p>
+        </div>
         <div className="container">
-          
-
           <div className="products-grid">
             {/* حالة التحميل */}
             {homeProductsLoading && (
@@ -761,178 +766,216 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* Vibe Code Section */}
-      {/* Vibe Code Section */}
-<section className="vibe-code" id="vibe-code">
-  <div className="container">
-    <div className="vibe-content" data-aos="fade-up">
-      <div className="vibe-text">
-        <h2>برمجة بالذكاء الاصطناعي</h2>
-        <p>
-          نحن نؤتمتها لك في أسرع وقت! حول العمليات المعقدة والمتكررة إلى
-          أنظمة ذكية تعمل تلقائياً. مع تقنية الفايب كود، نبرمج حلولك
-          بالذكاء الاصطناعي في وقت قياسي.
-        </p>
-
-        <div className="vibe-features">
-          <div className="vibe-feature">
-            <i className="fas fa-bolt"></i>
-            <span>سرعة فائقة</span>
-          </div>
-          <div className="vibe-feature">
-            <i className="fas fa-code"></i>
-            <span>قبل: الطريقة التقليدية</span>
-          </div>
-          <div className="vibe-feature">
-            <i className="fas fa-brain"></i>
-            <span>بعد: برمجة بالذكاء الاصطناعي</span>
-          </div>
-          <div className="vibe-feature">
-            <i className="fas fa-users"></i>
-            <span>عمل تعاوني</span>
-          </div>
+      {/* AI Programming Section - NEW DESIGN */}
+      <section className="ai-programming-section" id="vibe-code">
+        {/* Decorative Background Elements */}
+        <div className="ai-bg-decoration">
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
+          <div className="grid-pattern"></div>
         </div>
 
-        <a href="VibeCode" className="btn btn-primary">
-          <i className="fas fa-rocket"></i> جرب الآن مجاناً
-        </a>
-      </div>
-
-      {/* ✅ تصور الفرق بين البرمجة التقليدية والفايب كود */}
-      <div className="vibe-comparison" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem',
-        flex: 1,
-        maxWidth: '500px'
-      }}>
-        
-        {/* البرمجة التقليدية */}
-        <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          border: '2px solid rgba(239, 68, 68, 0.3)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            marginBottom: '1rem'
-          }}>
-            <div style={{
-              background: '#EF4444',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <i className="fas fa-times" style={{ color: 'white', fontSize: '1.2rem' }}></i>
-            </div>
-            <span style={{ color: '#EF4444', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              البرمجة التقليدية
+        <div className="container">
+          {/* Section Header */}
+          <div className="ai-section-header" data-aos="fade-up">
+            <span className="section-eyebrow">
+              <i className="fas fa-microchip"></i>
+              تقنية Vibe Coding
             </span>
+            <h2 className="ai-main-title">برمجة بالذكاء الاصطناعي</h2>
+            <p className="ai-main-subtitle">
+              نحوّل أفكارك إلى تطبيقات حقيقية في وقت قياسي باستخدام أحدث تقنيات
+              الذكاء الاصطناعي
+            </p>
           </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-clock" style={{ color: '#EF4444' }}></i>
-              <span>3-6 أشهر للتطوير</span>
+
+          {/* Main Bento Grid */}
+          <div className="ai-bento-grid">
+            {/* Hero Card - Large */}
+            <div
+              className="bento-card bento-hero"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div className="hero-card-content">
+                <div className="hero-icon-wrapper">
+                  <div className="icon-glow"></div>
+                  <div className="hero-icon">
+                    <i className="fas fa-wand-magic-sparkles"></i>
+                  </div>
+                </div>
+                <h3>من الفكرة للتطبيق</h3>
+                <p>
+                  فقط أخبرنا بفكرتك، والذكاء الاصطناعي يتولى الباقي. لا تحتاج
+                  خبرة تقنية أو فريق مبرمجين.
+                </p>
+                <div className="hero-tags">
+                  <span className="tag">
+                    <i className="fas fa-check"></i> بدون كود
+                  </span>
+                  <span className="tag">
+                    <i className="fas fa-check"></i> سريع
+                  </span>
+                  <span className="tag">
+                    <i className="fas fa-check"></i> احترافي
+                  </span>
+                </div>
+              </div>
+              <div className="hero-visual">
+                <div className="code-mockup">
+                  <div className="mockup-header">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div className="mockup-lines">
+                    <div className="line line-1"></div>
+                    <div className="line line-2"></div>
+                    <div className="line line-3"></div>
+                    <div className="line line-4"></div>
+                    <div className="line line-5"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-dollar-sign" style={{ color: '#EF4444' }}></i>
-              <span>تكلفة عالية جداً</span>
+
+            {/* Stats Card 1 - Time */}
+            <div
+              className="bento-card bento-stat stat-time"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div className="stat-icon-ring">
+                <i className="fas fa-bolt"></i>
+              </div>
+              <div className="stat-content">
+                <span className="stat-number">3-5</span>
+                <span className="stat-unit">أيام</span>
+                <span className="stat-desc">بدلاً من شهور</span>
+              </div>
+              <div className="stat-decoration"></div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-users" style={{ color: '#EF4444' }}></i>
-              <span>فريق كبير من المبرمجين</span>
+
+            {/* Stats Card 2 - Savings */}
+            <div
+              className="bento-card bento-stat stat-savings"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div className="stat-icon-ring">
+                <i className="fas fa-piggy-bank"></i>
+              </div>
+              <div className="stat-content">
+                <span className="stat-number">80%</span>
+                <span className="stat-unit">توفير</span>
+                <span className="stat-desc">من التكلفة</span>
+              </div>
+              <div className="stat-decoration"></div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-bug" style={{ color: '#EF4444' }}></i>
-              <span>أخطاء كثيرة ومراجعات متعددة</span>
+
+            {/* Process Steps Card */}
+            <div
+              className="bento-card bento-process"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              <h4 className="process-title">
+                <i className="fas fa-route"></i>
+                كيف نعمل؟
+              </h4>
+              <div className="process-steps">
+                <div className="process-step">
+                  <div className="step-num">1</div>
+                  <div className="step-info">
+                    <strong>اشرح فكرتك</strong>
+                    <span>بكلماتك البسيطة</span>
+                  </div>
+                </div>
+                <div className="step-connector">
+                  <i className="fas fa-chevron-down"></i>
+                </div>
+                <div className="process-step">
+                  <div className="step-num">2</div>
+                  <div className="step-info">
+                    <strong>نبرمج لك</strong>
+                    <span>بالذكاء الاصطناعي</span>
+                  </div>
+                </div>
+                <div className="step-connector">
+                  <i className="fas fa-chevron-down"></i>
+                </div>
+                <div className="process-step">
+                  <div className="step-num">3</div>
+                  <div className="step-info">
+                    <strong>استلم مشروعك</strong>
+                    <span>جاهز للإطلاق</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Features Card */}
+            <div
+              className="bento-card bento-features"
+              data-aos="fade-up"
+              data-aos-delay="500"
+            >
+              <h4 className="features-title">
+                <i className="fas fa-sparkles"></i>
+                لماذا نحن؟
+              </h4>
+              <div className="features-list">
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <i className="fas fa-robot"></i>
+                  </div>
+                  <span>AI يكتب الكود</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <i className="fas fa-shield-check"></i>
+                  </div>
+                  <span>جودة مضمونة</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <i className="fas fa-headset"></i>
+                  </div>
+                  <span>دعم متواصل</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">
+                    <i className="fas fa-arrows-rotate"></i>
+                  </div>
+                  <span>تعديلات مجانية</span>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Card */}
+            <div
+              className="bento-card bento-cta"
+              data-aos="fade-up"
+              data-aos-delay="600"
+            >
+              <div className="cta-content">
+                <div className="cta-icon">
+                  <i className="fas fa-rocket"></i>
+                </div>
+                <div className="cta-text">
+                  <h4>جاهز تبدأ؟</h4>
+                  <p>استشارة مجانية لمشروعك</p>
+                </div>
+              </div>
+              <a href="/VibeCode" className="cta-btn">
+                <span>ابدأ الآن</span>
+                <i className="fas fa-arrow-left"></i>
+              </a>
             </div>
           </div>
         </div>
-
-        {/* سهم الانتقال */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
-            borderRadius: '50%',
-            width: '50px',
-            height: '50px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)'
-          }}>
-            <i className="fas fa-arrow-down" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-          </div>
-        </div>
-
-        {/* الفايب كود */}
-        <div style={{
-          background: 'rgba(34, 197, 94, 0.1)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          border: '2px solid rgba(34, 197, 94, 0.3)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            marginBottom: '1rem'
-          }}>
-            <div style={{
-              background: '#22C55E',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <i className="fas fa-check" style={{ color: 'white', fontSize: '1.2rem' }}></i>
-            </div>
-            <span style={{ color: '#22C55E', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              الفايب كود
-            </span>
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-rocket" style={{ color: '#22C55E' }}></i>
-              <span>3-5 أيام فقط!</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-coins" style={{ color: '#22C55E' }}></i>
-              <span>توفير 80% من التكلفة</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-brain" style={{ color: '#22C55E' }}></i>
-              <span>الذكاء الاصطناعي يكتب الكود</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
-              <i className="fas fa-shield-alt" style={{ color: '#22C55E' }}></i>
-              <span>جودة عالية وأخطاء أقل</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Videos Section */}
       <section className="videos-section" id="videos">
