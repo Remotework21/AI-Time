@@ -232,8 +232,7 @@ export default function Videos() {
               {videoStats.map((s) => (
                 <div className="stat-item" key={s.label}>
                   <div className="stat-number">{s.num}</div>
-                  <div className="stat-label">{s.label}</div>
-                </div>
+<div className="stat-label" style={{ color: '#8B5CF6 !important' }}>{s.label}</div>              </div>
               ))}
             </div>
           </div>

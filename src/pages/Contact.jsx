@@ -1,20 +1,18 @@
 // src/pages/Contact.jsx
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { saveContactInquiry } from "../services/firebaseService"; // ✅ ADDED IMPORT
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/contact.css";
 
 export default function Contact() {
+   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     subject: "استفسار عام",
-    subjectLine: "", // ⚠️ added to match form input
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // 🔴 for loading state
 
   const subjects = [
     "استفسار عام",
@@ -29,39 +27,15 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // 🚧 disable & show loading
+    // ✅ In production: send to backend or EmailJS
+    console.log("Form submitted:", formData);
+    setIsSubmitted(true);
+    setFormData({ name: "", email: "", phone: "", subject: subjects[0], message: "" });
 
-    try {
-      const dataToSubmit = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone || "",
-        subject: formData.subject,
-        subjectLine: formData.subjectLine,
-        message: formData.message,
-      };
-
-      await saveContactInquiry(dataToSubmit);
-
-      // ✔️ Success
-      setIsSubmitted(true);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: subjects[0],
-        subjectLine: "",
-        message: "",
-      });
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } catch (error) {
-      alert("حدث خطأ أثناء الإرسال: " + (error.message || "يرجى المحاولة لاحقاً"));
-      console.error("Submission failed:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Hide message after 5s
+    setTimeout(() => setIsSubmitted(false), 5000);
   };
 
   // Share handler (reused from FloatingBtn logic)
@@ -69,6 +43,7 @@ export default function Contact() {
     const url = window.location.href;
     const title = "تواصل مع منصة وقت الذكاء";
     const text = "تواصل معنا للحصول على حلول الذكاء الاصطناعي المبتكرة";
+
     let shareUrl = "";
     switch (platform) {
       case "facebook":
@@ -86,6 +61,7 @@ export default function Contact() {
       default:
         return;
     }
+
     if (shareUrl) {
       window.open(shareUrl, "_blank", "width=600,height=400");
     }
@@ -112,9 +88,7 @@ export default function Contact() {
               </div>
               <h3 className="info-title">اتصل بنا</h3>
               <p className="info-content">متاحون من الأحد للخميس</p>
-              <a href="tel:+966500000000" className="info-link">
-                +966 50 000 0000
-              </a>
+              <a href="tel:+966500000000" className="info-link">+966 50 000 0000</a>
             </div>
             {/* Email */}
             <div className="info-card" data-aos="fade-up" data-aos-delay="200">
@@ -123,9 +97,7 @@ export default function Contact() {
               </div>
               <h3 className="info-title">راسلنا</h3>
               <p className="info-content">نرد خلال 24 ساعة</p>
-              <a href="mailto:info@ai-time.sa" className="info-link">
-                info@ai-time.sa
-              </a>
+              <a href="mailto:info@ai-time.sa" className="info-link">info@ai-time.sa</a>
             </div>
             {/* WhatsApp */}
             <div className="info-card" data-aos="fade-up" data-aos-delay="300">
@@ -134,12 +106,7 @@ export default function Contact() {
               </div>
               <h3 className="info-title">واتساب</h3>
               <p className="info-content">للدعم الفوري</p>
-              <a
-                href="https://wa.me/966500000000"
-                className="info-link"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://wa.me/966500000000" className="info-link" target="_blank" rel="noreferrer">
                 ابدأ المحادثة
               </a>
             </div>
@@ -150,9 +117,7 @@ export default function Contact() {
               </div>
               <h3 className="info-title">موقعنا</h3>
               <p className="info-content">جدة، المملكة العربية السعودية</p>
-              <a href="#map" className="info-link">
-                عرض الخريطة
-              </a>
+              <a href="#map" className="info-link">عرض الخريطة</a>
             </div>
           </div>
         </div>
@@ -171,14 +136,14 @@ export default function Contact() {
               <form id="contactForm" onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">الاسم *</label>
+                    <label className="form-label">الاسم الكامل *</label>
                     <input
                       type="text"
                       className="form-input"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="أدخل اسمك "
+                      placeholder="أدخل اسمك الكامل"
                       required
                     />
                   </div>
@@ -229,8 +194,6 @@ export default function Contact() {
                     type="text"
                     className="form-input"
                     name="subjectLine"
-                    value={formData.subjectLine}
-                    onChange={handleChange}
                     placeholder="موضوع الرسالة"
                     required
                   />
@@ -246,20 +209,8 @@ export default function Contact() {
                     required
                   ></textarea>
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin"></i> جاري الإرسال...
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-paper-plane"></i> إرسال الرسالة
-                    </>
-                  )}
+                <button type="submit" className="btn btn-primary">
+                  <i className="fas fa-paper-plane"></i> إرسال الرسالة
                 </button>
                 {isSubmitted && (
                   <div className="success-message show">
@@ -272,6 +223,7 @@ export default function Contact() {
             {/* Map Side */}
             <div className="map-side" data-aos="fade-left">
               <div className="map-container" id="map">
+                {/* 🔹 Replace with real Google Maps embed */}
                 <iframe
                   title="AI Time Office"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3623.151925213981!2d39.18079277506018!3d21.543341780240677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c3d4b3d3240001%3A0x2a7b9c8f7e9c7b8a!2z2KfYrtix2LnZiNiv2YjYp9mGINin2YTYqNmH2KfYqiDYp9mE2KjZhyDYp9mE2KjZhyDZhNmE2YXYs9mHINmF2KfZhNi52YjYp9mGINin2YTYqNmH2KfYqg!5e0!3m2!1sar!2ssa!4v1723456789012!5m2!1sar!2ssa"
@@ -357,9 +309,7 @@ export default function Contact() {
       {/* Social Links */}
       <section className="social-section">
         <div className="container">
-          <h2 className="social-title" data-aos="fade-up">
-            تابعنا على السوشيال ميديا
-          </h2>
+          <h2 className="social-title" data-aos="fade-up">تابعنا على السوشيال ميديا</h2>
           <p className="social-subtitle" data-aos="fade-up">
             كن على اطلاع بآخر أخبارنا وعروضنا
           </p>
@@ -370,12 +320,7 @@ export default function Contact() {
               { href: "#", cls: "social-instagram", icon: "fab fa-instagram" },
               { href: "#", cls: "social-linkedin", icon: "fab fa-linkedin-in" },
               { href: "#", cls: "social-youtube", icon: "fab fa-youtube" },
-              {
-                href: "https://wa.me/966500000000",
-                cls: "social-whatsapp",
-                icon: "fab fa-whatsapp",
-                target: "_blank",
-              },
+              { href: "https://wa.me/966500000000", cls: "social-whatsapp", icon: "fab fa-whatsapp", target: "_blank" },
             ].map((link, i) => (
               <a
                 key={i}
@@ -395,9 +340,7 @@ export default function Contact() {
       {/* Mini FAQ */}
       <section className="faq-mini-section">
         <div className="container">
-          <h2 className="faq-title" data-aos="fade-up">
-            أسئلة شائعة
-          </h2>
+          <h2 className="faq-title" data-aos="fade-up">أسئلة شائعة</h2>
           <div className="faq-grid">
             {[
               {
@@ -417,16 +360,17 @@ export default function Contact() {
                 a: "نعم، نقدم خدماتنا لجميع دول الخليج والشرق الأوسط.",
               },
             ].map((faq, i) => (
-              <div
-                className="faq-card"
-                key={i}
-                data-aos="fade-up"
-                data-aos-delay={(i + 1) * 100}
-              >
-                <h4 className="faq-question">{faq.q}</h4>
-                <p className="faq-answer">{faq.a}</p>
-              </div>
-            ))}
+  <div
+    className="faq-card"
+    key={i}
+    data-aos="fade-up"
+    data-aos-delay={(i + 1) * 100}
+    onClick={() => navigate('/faq')}
+    style={{ cursor: 'pointer' }}
+  >
+    <h4 className="faq-question">{faq.q}</h4>
+  </div>
+))}
           </div>
         </div>
       </section>

@@ -24,7 +24,12 @@ const Products = () => {
 
   // Categories
   const [categories, setCategories] = useState(["الكل"]);
-  const statuses = ["الكل", "متاح", "قريباً", "تحت التطوير"];
+const statuses = ["الكل", "متاح", "قريباً"]; // ✅ ماب لتحويل القيم المعروضة للقيم الفعلية في API
+const STATUS_MAP = {
+  "متاح": "✅ فعال/جاهز",
+  "قريباً": "🟡 نموذج أولي/تطوير/متوسط",
+  "تحت التطوير": "🟡 نموذج أولي/تطوير/متوسط"
+};
 
   // Modal States
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -48,53 +53,80 @@ const Products = () => {
     audience_2: "للمبرمجين",
   };
 
+  // ✅ دالة لتحويل كودات الفئات للنص العربي
+const formatAudiences = (audiences) => {
+  if (!audiences) return "";
+  
+  // لو Array
+  if (Array.isArray(audiences)) {
+    return audiences
+      .map((code) => AUDIENCE_LABELS[code] || code)
+      .join(" / ");
+  }
+  
+  // لو String
+  const codes = String(audiences).split(",").map(s => s.trim());
+  return codes
+    .map((code) => AUDIENCE_LABELS[code] || code)
+    .join(" / ");
+};
+
+
+
   // جلب المنتجات من API
   const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      console.log("📦 Products - Fetching products...");
+  try {
+    setLoading(true);
+    setError(null);
+    console.log("📦 Products - Fetching products...");
 
-      let url =
-        "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=100";
+    let url =
+      "https://europe-west1-qvcrm-c0e2d.cloudfunctions.net/publicAiProducts?limit=100";
 
-      // لو فيه audience جاي من الـ URL ضيفه
-      if (audienceFilter) {
-        url += `&audience=${encodeURIComponent(audienceFilter)}`;
-      }
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error("فشل تحميل المنتجات");
-      }
-
-      const data = await response.json();
-      console.log("📊 Products - API Response:", data);
-
-      if (data.ok && data.items) {
-        setProducts(data.items);
-        setFilteredProducts(data.items);
-
-        const uniqueCategories = [
-          "الكل",
-          ...Array.from(
-            new Set(data.items.map((p) => p.subCategory).filter(Boolean))
-          ),
-        ];
-        setCategories(uniqueCategories);
-      } else {
-        setProducts([]);
-        setFilteredProducts([]);
-        setCategories(["الكل"]);
-      }
-    } catch (error) {
-      console.error("❌ Products - Error fetching products:", error);
-      setError("فشل تحميل المنتجات");
-    } finally {
-      setLoading(false);
+    // لو فيه audience جاي من الـ URL ضيفه
+    if (audienceFilter) {
+      url += `&audience=${encodeURIComponent(audienceFilter)}`;
     }
-  };
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("فشل تحميل المنتجات");
+    }
+
+    const data = await response.json();
+    console.log("📊 Products - API Response:", data);
+          console.log("📋 Statuses from API:", data.items.map(p => `"${p.readinessStatus}"`));
+
+
+    if (data.ok && data.items) {
+      setProducts(data.items);
+      setFilteredProducts(data.items);
+
+      // استخراج الفئات
+      const uniqueCategories = [
+        "الكل",
+        ...Array.from(
+          new Set(data.items.map((p) => p.subCategory).filter(Boolean))
+        ),
+      ];
+      setCategories(uniqueCategories);
+
+      
+
+    } else {
+      setProducts([]);
+      setFilteredProducts([]);
+      setCategories(["الكل"]);
+      setStatuses(["الكل"]); // ✅ إضافة reset للحالات
+    }
+  } catch (error) {
+    console.error("❌ Products - Error fetching products:", error);
+    setError("فشل تحميل المنتجات");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchProducts();
@@ -228,10 +260,10 @@ const Products = () => {
       result = result.filter((p) => p.subCategory === selectedCategory);
     }
 
-    if (selectedStatus !== "الكل") {
-      result = result.filter((p) => p.readinessStatus === selectedStatus);
-    }
-
+   if (selectedStatus !== "الكل") {
+  const apiStatus = STATUS_MAP[selectedStatus];
+  result = result.filter((p) => p.readinessStatus === apiStatus);
+}
     switch (sortBy) {
       case "newest":
         result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -625,8 +657,7 @@ const Products = () => {
                   <h3>
                     <i className="fas fa-users"></i> الفئة المستهدفة
                   </h3>
-                  <p>{selectedProduct.targetAudiences}</p>
-                </div>
+<p>{formatAudiences(selectedProduct.targetAudiences)}</p>                </div>
               )}
 
               {selectedProduct.features &&

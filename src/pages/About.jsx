@@ -156,7 +156,7 @@ export default function About() {
               </div>
               <div className="col-md-6 offset-md-6 position-relative">
                 <div className="bg-white shadow-sm rounded-4 p-4 mb-4 ms-5 position-relative">
-                  <span className="badge bg-info mb-2 fs-5">2025</span>
+                  <span className="badge bg-info mb-2 fs-5">2022</span>
                   <div className="fw-bold mb-2">الابتكار</div>
                   <div className="text-muted">تطوير تقنية Vibe Code للأتمتة السريعة</div>
                   <span className="position-absolute top-50 start-0 translate-middle-y bg-info rounded-circle" style={{ width: 20, height: 20, border: "4px solid #fff", left: -40, zIndex: 1 }}></span>

@@ -1,14 +1,19 @@
-// FAQ.jsx
+ // FAQ.jsx
 // صفحة الأسئلة الشائعة - محولة من HTML إلى React Component بالكامل
 // جميع المحتويات والتفاصيل من الملف الأصلي
 
 import React, { useState, useEffect } from 'react';
 import '../styles/faq.css';
+import { saveNewsletterEmail } from '../services/firebaseService'; // ✅ أضيفي ده
+
+
 
 const FAQ = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [showInfoPanel, setShowInfoPanel] = useState(false);
   const [openQuestions, setOpenQuestions] = useState(new Set());
+  const [newsletterLoading, setNewsletterLoading] = useState(false); // ✅
+const [newsletterMessage, setNewsletterMessage] = useState({ type: '', text: '' }); // ✅
 
   // Initialize AOS animation on component mount
   useEffect(() => {
@@ -79,11 +84,29 @@ const FAQ = () => {
   };
 
   // Subscribe to Newsletter
-  const subscribeNewsletter = (event) => {
-    event.preventDefault();
-    alert('شكراً لاشتراكك! سنرسل لك آخر الأخبار على بريدك الإلكتروني.');
+ const subscribeNewsletter = async (event) => {
+  event.preventDefault();
+  const email = event.target.querySelector('input[type="email"]').value;
+  
+  setNewsletterLoading(true);
+  setNewsletterMessage({ type: '', text: '' });
+  
+  try {
+    await saveNewsletterEmail(email);
+    setNewsletterMessage({ 
+      type: 'success', 
+      text: '🎉 شكراً لاشتراكك! سنرسل لك آخر الأخبار على بريدك الإلكتروني.' 
+    });
     event.target.reset();
-  };
+  } catch (error) {
+    setNewsletterMessage({ 
+      type: 'error', 
+      text: 'حدث خطأ. الرجاء المحاولة مرة أخرى.' 
+    });
+  } finally {
+    setNewsletterLoading(false);
+  }
+};
 
   // FAQ Data Structure
   const faqData = {
@@ -453,10 +476,10 @@ const FAQ = () => {
           <div className="quick-links" data-aos="fade-up">
             <h3 className="quick-links-title">روابط سريعة</h3>
             <div className="links-grid">
-              <a href="contact.html" className="quick-link">
+              <a href="Contact" className="quick-link">
                 <i className="fas fa-phone"></i> تواصل معنا
               </a>
-              <a href="products.html" className="quick-link">
+              <a href="/products" className="quick-link">
                 <i className="fas fa-box"></i> استكشف منتجاتنا
               </a>
               <a href="request-program.html" className="quick-link">
@@ -477,16 +500,32 @@ const FAQ = () => {
             <h2 className="newsletter-title">ابق على اطلاع</h2>
             <p>اشترك في نشرتنا البريدية لتصلك آخر الأخبار والتحديثات</p>
             <form className="newsletter-form" onSubmit={subscribeNewsletter}>
-              <input
-                type="email"
-                className="newsletter-input"
-                placeholder="بريدك الإلكتروني"
-                required
-              />
-              <button type="submit" className="btn btn-primary">
-                <i className="fas fa-paper-plane"></i> اشترك
-              </button>
-            </form>
+  <input
+    type="email"
+    className="newsletter-input"
+    placeholder="بريدك الإلكتروني"
+    required
+  />
+  <button type="submit" className="btn btn-primary" disabled={newsletterLoading}>
+    {newsletterLoading ? (
+      <><i className="fas fa-spinner fa-spin"></i> جاري الاشتراك...</>
+    ) : (
+      <><i className="fas fa-paper-plane"></i> اشترك</>
+    )}
+  </button>
+</form>
+{newsletterMessage.text && (
+  <div className={`newsletter-message ${newsletterMessage.type}`} style={{
+    marginTop: '1rem',
+    padding: '0.75rem',
+    borderRadius: '8px',
+    textAlign: 'center',
+    background: newsletterMessage.type === 'success' ? '#d1fae5' : '#fee2e2',
+    color: newsletterMessage.type === 'success' ? '#065f46' : '#991b1b'
+  }}>
+    {newsletterMessage.text}
+  </div>
+)}
           </div>
         </div>
       </section>

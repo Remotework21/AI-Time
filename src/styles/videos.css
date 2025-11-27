@@ -497,11 +497,14 @@
         }
 
         .stat-label {
-            color: var(--text-light);
             font-size: 1.1rem;
             margin-top: 0.5rem;
+            
+  color: #8B5CF6 !important;
+  font-weight: 600 !important;
         }
 
+       
         /* Load More */
         .load-more {
             text-align: center;

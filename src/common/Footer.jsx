@@ -10,7 +10,13 @@ export default function Footer() {
             <p>
               منصة رائدة في تقديم حلول الذكاء الاصطناعي للشركات والأفراد في العالم العربي
             </p>
-            <div className="social-links">
+            {/* ✅ أيقونات السوشيال ميديا في المنتصف */}
+            <div className="social-links" style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '1rem',
+              marginTop: '1rem'
+            }}>
               <a href="#"><i className="fab fa-facebook-f"></i></a>
               <a href="#"><i className="fab fa-twitter"></i></a>
               <a href="#"><i className="fab fa-instagram"></i></a>

@@ -34,7 +34,7 @@ export default function ProductRequest() {
     const problemDescription = form.problemDescription.value.trim();
 
     if (!fullName) {
-      alert("الاسم مطلوب");
+      alert("الاسم الكامل مطلوب");
       form.fullName.focus();
       return;
     }
@@ -149,13 +149,13 @@ export default function ProductRequest() {
               <div className="form-grid">
                 <div className="form-group">
                   <label>
-                    الاسم <span className="required">*</span>
+                    الاسم الكامل <span className="required">*</span>
                   </label>
                   <input
                     type="text"
                     name="fullName"
                     required
-                    placeholder="أدخل اسمك "
+                    placeholder="أدخل اسمك الكامل"
                   />
                 </div>
                 <div className="form-group">
