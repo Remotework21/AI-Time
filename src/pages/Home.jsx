@@ -547,9 +547,7 @@ await app.deploy();`;
       <section className="categories-bar">
         <div className="section-header" data-aos="fade-up">
           <h2 className="section-title ">استكشف منتجاتنا وخدماتنا</h2>
-          <p className="section-subtitle">
-            حلول مبتكرة، مصممة لكل فئة باحترافية
-          </p>
+          <p className="section-subtitle">حلول ذكية متكاملة لتحويل أعمالك </p>
         </div>
         <div className="container">
           <div className="categories-container" data-aos="fade-up">
@@ -615,7 +613,9 @@ await app.deploy();`;
       <section className="products-section" id="products">
         <div className="section-header" data-aos="fade-up">
           <h2 className="section-title ">منتجات مختارة بعناية</h2>
-          <p className="section-subtitle">ابدأ استكشافك الآن!</p>
+          <p className="section-subtitle">
+            حلول مبتكرة، مصممة لكل فئة باحترافية
+          </p>
         </div>
         <div className="container">
           <div className="products-grid">
@@ -766,256 +766,173 @@ await app.deploy();`;
         </div>
       </section>
 
-      {/* 
-  ═══════════════════════════════════════════════════════════════════════════
-  📍 مكان الاستبدال: Home.jsx
-  ═══════════════════════════════════════════════════════════════════════════
-  
-  استبدل السكشن الكامل من السطر 769 إلى السطر 1067
-  
-  ═══════════════════════════════════════════════════════════════════════════
-*/}
-
-      {/* AI Transformation Section */}
-      <section className="ai-transform-section" id="vibe-code">
-        {/* Animated Background */}
-        <div className="transform-bg">
-          <div className="gradient-orb orb-1"></div>
-          <div className="gradient-orb orb-2"></div>
-          <div className="gradient-orb orb-3"></div>
-          <div className="mesh-grid"></div>
-        </div>
-
+      {/* Vibe Code Section - NEW DESIGN */}
+      <section className="vibe-code-new" id="vibe-code">
         <div className="container">
-          {/* Header with Animated Badge */}
-          <div className="transform-header" data-aos="fade-up">
-            <div className="live-badge">
-              <span className="pulse-ring"></span>
-              <span className="badge-text">
-                <i className="fas fa-bolt"></i>
-                تقنية ثورية
-              </span>
+          {/* Floating Particles Background */}
+          <div className="vibe-particles">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="particle"
+                style={{
+                  "--delay": `${i * 0.5}s`,
+                  "--x": `${Math.random() * 100}%`,
+                  "--size": `${Math.random() * 6 + 2}px`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Section Header */}
+          <div className="vibe-header" data-aos="fade-up">
+            <div className="vibe-badge">
+              <span className="badge-dot"></span>
+              مستقبل البرمجة
             </div>
-            <h2 className="transform-title">
-              حوّل فكرتك إلى
-              <span className="gradient-text"> تطبيق حقيقي</span>
+            <h2 className="vibe-title">
+              برمجة بالذكاء الاصطناعي
+              <span className="title-highlight"></span>
             </h2>
-            <p className="transform-subtitle">
-              بالذكاء الاصطناعي، نختصر شهور العمل إلى أيام معدودة
+            <p className="vibe-subtitle">
+              من الفكرة إلى التطبيق في أيام معدودة - نحوّل رؤيتك إلى واقع رقمي
             </p>
           </div>
 
-          {/* Main Interactive Area */}
-          <div className="transform-showcase">
-            {/* Left: The Journey */}
+          {/* Main Content Grid */}
+          <div className="vibe-grid">
+            {/* Left Side - Journey Steps */}
             <div
-              className="journey-panel"
+              className="journey-container"
               data-aos="fade-left"
               data-aos-delay="200"
             >
-              <div className="panel-header">
-                <div className="panel-icon">
-                  <i className="fas fa-wand-magic-sparkles"></i>
+              <div className="journey-line"></div>
+
+              {/* Step 1 */}
+              <div className="journey-step">
+                <div className="step-icon">
+                  <div className="icon-ring"></div>
+                  <i className="fas fa-lightbulb"></i>
                 </div>
-                <div className="panel-title">
-                  <h3>رحلتك معنا</h3>
-                  <span>3 خطوات بسيطة</span>
+                <div className="step-content">
+                  <span className="step-number">01</span>
+                  <h4>شاركنا فكرتك</h4>
+                  <p>اشرح لنا ما تحتاجه بكلماتك البسيطة، بدون تفاصيل تقنية</p>
                 </div>
               </div>
 
-              <div className="journey-timeline">
-                <div className="timeline-track">
-                  <div className="track-progress"></div>
+              {/* Step 2 */}
+              <div className="journey-step">
+                <div className="step-icon">
+                  <div className="icon-ring"></div>
+                  <i className="fas fa-magic"></i>
                 </div>
-
-                <div className="timeline-item">
-                  <div className="timeline-marker">
-                    <div className="marker-dot"></div>
-                    <div className="marker-ring"></div>
-                  </div>
-                  <div className="timeline-content">
-                    <div className="content-icon">💡</div>
-                    <div className="content-text">
-                      <h4>أخبرنا بفكرتك</h4>
-                      <p>بكلماتك البسيطة، بدون أي تعقيدات تقنية</p>
-                    </div>
-                  </div>
+                <div className="step-content">
+                  <span className="step-number">02</span>
+                  <h4>الذكاء يعمل</h4>
+                  <p>نستخدم أحدث تقنيات AI لتحويل فكرتك لكود احترافي</p>
                 </div>
+              </div>
 
-                <div className="timeline-item">
-                  <div className="timeline-marker">
-                    <div className="marker-dot"></div>
-                    <div className="marker-ring"></div>
-                  </div>
-                  <div className="timeline-content">
-                    <div className="content-icon">🤖</div>
-                    <div className="content-text">
-                      <h4>الذكاء الاصطناعي يبدع</h4>
-                      <p>نحول رؤيتك لكود احترافي في ساعات</p>
-                    </div>
-                  </div>
+              {/* Step 3 */}
+              <div className="journey-step">
+                <div className="step-icon">
+                  <div className="icon-ring"></div>
+                  <i className="fas fa-rocket"></i>
                 </div>
-
-                <div className="timeline-item">
-                  <div className="timeline-marker">
-                    <div className="marker-dot"></div>
-                    <div className="marker-ring"></div>
-                  </div>
-                  <div className="timeline-content">
-                    <div className="content-icon">🚀</div>
-                    <div className="content-text">
-                      <h4>مشروعك جاهز!</h4>
-                      <p>تطبيق متكامل جاهز للإطلاق والنجاح</p>
-                    </div>
-                  </div>
+                <div className="step-content">
+                  <span className="step-number">03</span>
+                  <h4>مشروعك جاهز</h4>
+                  <p>تطبيق متكامل جاهز للإطلاق في وقت قياسي</p>
                 </div>
               </div>
             </div>
 
-            {/* Center: Live Demo / Visualization */}
-            <div className="demo-panel" data-aos="zoom-in" data-aos-delay="300">
-              <div className="demo-screen">
-                <div className="screen-header">
-                  <div className="screen-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <span className="screen-title">Vibe AI Studio</span>
-                </div>
-                <div className="screen-content">
-                  <div className="typing-demo">
-                    <div className="user-input">
-                      <span className="input-label">فكرتك:</span>
-                      <span className="input-text">
-                        "أريد متجر إلكتروني لبيع منتجاتي"
-                      </span>
-                    </div>
-                    <div className="ai-processing">
-                      <div className="processing-icon">
-                        <i className="fas fa-microchip"></i>
-                      </div>
-                      <div className="processing-bars">
-                        <div className="bar bar-1"></div>
-                        <div className="bar bar-2"></div>
-                        <div className="bar bar-3"></div>
-                      </div>
-                      <span>AI يعمل...</span>
-                    </div>
-                    <div className="output-preview">
-                      <div className="preview-window">
-                        <div className="preview-nav"></div>
-                        <div className="preview-hero"></div>
-                        <div className="preview-grid">
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                        </div>
-                      </div>
-                      <span className="output-label">
-                        <i className="fas fa-check-circle"></i>
-                        متجرك جاهز!
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Elements */}
-              <div className="floating-elements">
-                <div className="float-item float-1">
-                  <i className="fas fa-code"></i>
-                </div>
-                <div className="float-item float-2">
-                  <i className="fas fa-database"></i>
-                </div>
-                <div className="float-item float-3">
-                  <i className="fas fa-cloud"></i>
-                </div>
-                <div className="float-item float-4">
-                  <i className="fas fa-mobile-alt"></i>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Stats & Benefits */}
+            {/* Right Side - Stats & Features */}
             <div
-              className="stats-panel"
+              className="vibe-showcase"
               data-aos="fade-right"
               data-aos-delay="400"
             >
-              <div className="stat-card-3d">
-                <div className="stat-face stat-front">
-                  <div className="big-number">3-5</div>
-                  <div className="stat-label">أيام فقط</div>
-                  <div className="stat-compare">بدلاً من 3-6 شهور</div>
+              {/* Animated Code Window */}
+              <div className="code-window">
+                <div className="window-header">
+                  <div className="window-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span className="window-title">vibe-ai.js</span>
                 </div>
-                <div className="stat-icon-float">⚡</div>
+                <div className="window-body">
+                  <pre className="code-content">
+                    <code>
+                      {`// ✨ Your idea becomes reality
+const project = await vibeAI.create({
+  idea: "متجر إلكتروني",
+  features: ["سلة", "دفع", "تقارير"],
+  style: "modern"
+});
+
+// 🚀 Ready to launch!
+await project.deploy();
+console.log("Live at:", project.url);`}
+                    </code>
+                  </pre>
+                  <div className="code-cursor"></div>
+                </div>
               </div>
 
-              <div className="stat-card-3d">
-                <div className="stat-face stat-front">
-                  <div className="big-number">80%</div>
-                  <div className="stat-label">توفير</div>
-                  <div className="stat-compare">من التكلفة التقليدية</div>
+              {/* Stats Cards */}
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <i className="fas fa-bolt"></i>
+                  </div>
+                  <div className="stat-info">
+                    <span className="stat-value">3-5</span>
+                    <span className="stat-label">أيام فقط</span>
+                  </div>
                 </div>
-                <div className="stat-icon-float">💰</div>
-              </div>
 
-              <div className="stat-card-3d">
-                <div className="stat-face stat-front">
-                  <div className="big-number">∞</div>
-                  <div className="stat-label">إمكانيات</div>
-                  <div className="stat-compare">بلا حدود مع AI</div>
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <i className="fas fa-percentage"></i>
+                  </div>
+                  <div className="stat-info">
+                    <span className="stat-value">80%</span>
+                    <span className="stat-label">توفير بالتكلفة</span>
+                  </div>
                 </div>
-                <div className="stat-icon-float">🎯</div>
+
+                <div className="stat-card">
+                  <div className="stat-icon">
+                    <i className="fas fa-shield-alt"></i>
+                  </div>
+                  <div className="stat-info">
+                    <span className="stat-value">100%</span>
+                    <span className="stat-label">جودة مضمونة</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom: Trust & CTA */}
-          <div
-            className="transform-footer"
-            data-aos="fade-up"
-            data-aos-delay="500"
-          >
-            {/* Trust Indicators */}
-            <div className="trust-bar">
-              <div className="trust-item">
-                <i className="fas fa-shield-check"></i>
-                <span>جودة مضمونة</span>
-              </div>
-              <div className="trust-divider"></div>
-              <div className="trust-item">
-                <i className="fas fa-headset"></i>
-                <span>دعم متواصل</span>
-              </div>
-              <div className="trust-divider"></div>
-              <div className="trust-item">
-                <i className="fas fa-sync-alt"></i>
-                <span>تعديلات مجانية</span>
-              </div>
-              <div className="trust-divider"></div>
-              <div className="trust-item">
-                <i className="fas fa-lock"></i>
-                <span>سرية تامة</span>
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div className="mega-cta">
-              <a href="/VibeCode" className="cta-mega-btn">
-                <span className="cta-bg"></span>
-                <span className="cta-content">
-                  <i className="fas fa-rocket"></i>
-                  <span className="cta-text-main">ابدأ مشروعك الآن</span>
-                  <span className="cta-text-sub">استشارة مجانية</span>
-                </span>
-                <span className="cta-arrow">
-                  <i className="fas fa-arrow-left"></i>
-                </span>
-              </a>
-            </div>
+          {/* CTA Section */}
+          <div className="vibe-cta" data-aos="fade-up" data-aos-delay="600">
+            <div className="cta-glow"></div>
+            <a href="/VibeCode" className="cta-button">
+              <span className="cta-text">ابدأ مشروعك الآن</span>
+              <span className="cta-icon">
+                <i className="fas fa-arrow-left"></i>
+              </span>
+              <div className="cta-shine"></div>
+            </a>
+            <p className="cta-note">
+              <i className="fas fa-gift"></i>
+              استشارة مجانية لمشروعك الأول
+            </p>
           </div>
         </div>
       </section>
